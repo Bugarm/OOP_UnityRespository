@@ -4,18 +4,34 @@ using UnityEngine;
 
 public class CannonScontroller : MonoBehaviour
 {
+    [SerializeField] GameObject bullet1Prefab;
+    [SerializeField] GameObject bullet2Prefab;
+    [SerializeField] Transform cannonTip;
+
     Quaternion clampRotationLow, clampRotationHigh;
     // Start is called before the first frame update
     void Start()
     {
+        GameData.Score = 0;
+
         clampRotationLow = Quaternion.Euler(0, 0, -70f);
-        clampRotationHigh = Quaternion.Euler(0, 0, 70f);
+        clampRotationHigh = Quaternion.Euler(0, 0, +70f);
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         PointatMouse();
+
+        if(Input.GetMouseButtonDown(0))
+        {
+            Instantiate(bullet1Prefab, cannonTip.position, cannonTip.rotation);
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            Instantiate(bullet2Prefab, cannonTip.position, cannonTip.rotation);
+        }
     }
 
     private void PointatMouse()

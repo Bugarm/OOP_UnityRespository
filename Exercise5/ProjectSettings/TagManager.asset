@@ -38,15 +38,6 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: Background
-    uniqueID: 2900859767
-    locked: 0
   - name: Default
     uniqueID: 0
-    locked: 0
-  - name: Bullet
-    uniqueID: 1499785569
-    locked: 0
-  - name: Cannon
-    uniqueID: 274860611
     locked: 0
