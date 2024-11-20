@@ -7,8 +7,12 @@ public class CannonScontroller : MonoBehaviour
     [SerializeField] GameObject bullet1Prefab;
     [SerializeField] GameObject bullet2Prefab;
     [SerializeField] Transform cannonTip;
+    [SerializeField] float firingRate1;
+    [SerializeField] float firingRate2;
 
     Quaternion clampRotationLow, clampRotationHigh;
+
+    Coroutine fire1coroutine, fire2coroutine;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,14 +27,44 @@ public class CannonScontroller : MonoBehaviour
     {
         PointatMouse();
 
-        if(Input.GetMouseButtonDown(0))
+        
+        if (Input.GetMouseButtonDown(0) && fire1coroutine == null)
         {
-            Instantiate(bullet1Prefab, cannonTip.position, cannonTip.rotation);
+            //Instantiate(bullet1Prefab, cannonTip.position, cannonTip.rotation);
+            fire1coroutine = StartCoroutine(FireContinously(bullet1Prefab,firingRate1));
+        }
+        
+       
+
+        if (Input.GetMouseButtonDown(1) && fire2coroutine == null)
+        {
+            //Instantiate(bullet2Prefab, cannonTip.position, cannonTip.rotation);
+            fire2coroutine = StartCoroutine(FireContinously(bullet2Prefab, firingRate2));
         }
 
-        if (Input.GetMouseButtonDown(1))
+        // Reset coroutine
+
+        if (Input.GetMouseButtonUp(0))
         {
-            Instantiate(bullet2Prefab, cannonTip.position, cannonTip.rotation);
+            StopCoroutine(fire1coroutine);
+            fire1coroutine = null;
+        }
+
+        if (Input.GetMouseButtonUp(1))
+        {
+            StopCoroutine(fire2coroutine);
+            fire2coroutine = null;
+        }
+
+
+    }
+
+    IEnumerator FireContinously(GameObject bulletPrefab, float _fireRate)
+    {
+        while (true)
+        {
+            Instantiate(bulletPrefab, cannonTip.position, cannonTip.rotation);
+            yield return new WaitForSeconds(_fireRate);
         }
     }
 
