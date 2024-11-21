@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CannonScontroller : MonoBehaviour
@@ -13,6 +15,9 @@ public class CannonScontroller : MonoBehaviour
     Quaternion clampRotationLow, clampRotationHigh;
 
     Coroutine fire1coroutine, fire2coroutine;
+
+    public ObjectPooling cannonBallPool, misslePool;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,50 +25,78 @@ public class CannonScontroller : MonoBehaviour
 
         clampRotationLow = Quaternion.Euler(0, 0, -70f);
         clampRotationHigh = Quaternion.Euler(0, 0, +70f);
+
+        
     }
 
     // Update is called once per frame
     void Update()
     {
         PointatMouse();
-
         
-        if (Input.GetMouseButtonDown(0) && fire1coroutine == null)
+        FireCannon();
+    }
+
+    void FireCannon()
+    {
+        GameObject poolCannonBall = cannonBallPool.GetPoolObject();
+
+        if (Input.GetMouseButtonDown(0) && fire1coroutine == null && fire2coroutine == null)
         {
             //Instantiate(bullet1Prefab, cannonTip.position, cannonTip.rotation);
-            fire1coroutine = StartCoroutine(FireContinously(bullet1Prefab,firingRate1));
+           
+            if(poolCannonBall != null)
+            {
+                fire1coroutine = StartCoroutine(FireContinously(poolCannonBall, firingRate1));
+            }
         }
-        
-       
 
-        if (Input.GetMouseButtonDown(1) && fire2coroutine == null)
+
+        GameObject poolMissile = misslePool.GetPoolObject();
+
+        if (Input.GetMouseButtonDown(1) && fire2coroutine == null && fire1coroutine == null)
         {
             //Instantiate(bullet2Prefab, cannonTip.position, cannonTip.rotation);
-            fire2coroutine = StartCoroutine(FireContinously(bullet2Prefab, firingRate2));
+            
+
+            if(poolMissile != null)
+            {
+                fire2coroutine = StartCoroutine(FireContinously(poolMissile, firingRate2));
+            }
+
         }
 
         // Reset coroutine
 
         if (Input.GetMouseButtonUp(0))
         {
+
             StopCoroutine(fire1coroutine);
             fire1coroutine = null;
         }
 
         if (Input.GetMouseButtonUp(1))
         {
+
             StopCoroutine(fire2coroutine);
             fire2coroutine = null;
+            
+            
         }
-
-
     }
 
-    IEnumerator FireContinously(GameObject bulletPrefab, float _fireRate)
+    IEnumerator FireContinously(GameObject bulletPooled, float _fireRate)
     {
         while (true)
         {
-            Instantiate(bulletPrefab, cannonTip.position, cannonTip.rotation);
+            bulletPooled.transform.rotation = cannonTip.rotation;
+            bulletPooled.transform.position = cannonTip.position;
+
+
+            //Instantiate(bulletPrefab, cannonTip.position, cannonTip.rotation);
+            bulletPooled.SetActive(true);
+            
+
             yield return new WaitForSeconds(_fireRate);
         }
     }

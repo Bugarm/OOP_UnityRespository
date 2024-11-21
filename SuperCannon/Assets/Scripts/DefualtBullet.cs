@@ -13,8 +13,13 @@ public class DefualtBullet : MonoBehaviour
         rb.gravityScale = 0;
     }
 
-    // Start is called before the first frame update
     protected virtual void Start()
+    {
+
+    }
+
+    // Start is called before the first frame update
+    protected virtual void OnEnable()
     {
         rb.velocity = transform.up * speed;
 
@@ -23,7 +28,8 @@ public class DefualtBullet : MonoBehaviour
 
     void OnBecameInvisible()
     {
-        Destroy(this.gameObject);    
+        //Destroy(this.gameObject);
+        this.gameObject.SetActive(false);
     }
 
 }
