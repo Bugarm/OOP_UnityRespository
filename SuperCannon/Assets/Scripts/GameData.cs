@@ -6,6 +6,7 @@ public abstract class GameData : MonoBehaviour
 {
     private static float _padding = 0f;
     private static int _score;
+ 
 
     public static int Score
     {

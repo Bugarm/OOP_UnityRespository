@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class CannonScontroller : MonoBehaviour
 {
+    [SerializeField] public int Hp;
+
     [SerializeField] GameObject bullet1Prefab;
     [SerializeField] GameObject bullet2Prefab;
     [SerializeField] Transform cannonTip;
@@ -35,13 +37,18 @@ public class CannonScontroller : MonoBehaviour
         PointatMouse();
         
         FireCannon();
+
+        if (Hp <= 0)
+        {
+            Destroy(this.gameObject);
+        }
     }
 
     void FireCannon()
     {
         GameObject poolCannonBall = cannonBallPool.GetPoolObject();
 
-        if (Input.GetMouseButtonDown(0) && fire1coroutine == null && fire2coroutine == null)
+        if (Input.GetMouseButtonDown(0) && fire1coroutine == null)
         {
             //Instantiate(bullet1Prefab, cannonTip.position, cannonTip.rotation);
            
@@ -54,7 +61,7 @@ public class CannonScontroller : MonoBehaviour
 
         GameObject poolMissile = misslePool.GetPoolObject();
 
-        if (Input.GetMouseButtonDown(1) && fire2coroutine == null && fire1coroutine == null)
+        if (Input.GetMouseButtonDown(1) && fire2coroutine == null)
         {
             //Instantiate(bullet2Prefab, cannonTip.position, cannonTip.rotation);
             
@@ -68,14 +75,14 @@ public class CannonScontroller : MonoBehaviour
 
         // Reset coroutine
 
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) && poolCannonBall != null)
         {
 
             StopCoroutine(fire1coroutine);
             fire1coroutine = null;
         }
 
-        if (Input.GetMouseButtonUp(1))
+        if (Input.GetMouseButtonUp(1) && poolMissile != null)
         {
 
             StopCoroutine(fire2coroutine);
