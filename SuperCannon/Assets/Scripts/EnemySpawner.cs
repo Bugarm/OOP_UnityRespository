@@ -6,8 +6,10 @@ public class EnemySpawner : MonoBehaviour
 {
     public List<EnemyScriptableObject> enemySOList;
 
-    public GameObject SpawnPoint1;
-    public GameObject SpawnPoint2;
+    //public GameObject SpawnPoint1;
+    //public GameObject SpawnPoint2;
+
+    public float enemySpawnInterval = 1f;
 
     private Coroutine enemyRoutine;
 
@@ -33,17 +35,25 @@ public class EnemySpawner : MonoBehaviour
 
     IEnumerator SpawnRandomEnemy()
     {
-        int randomTime = Random.Range(0, 4);
-        randomEnemy = Random.Range(0, enemySOList.Count);
-        float randomLocation = Random.Range(SpawnPoint1.transform.position.x, SpawnPoint2.transform.position.x);
+        while(true)
+        {
+            int randomTime = Random.Range(3, 6);
+            randomEnemy = Random.Range(0, enemySOList.Count);
+            //float randomLocation = Random.Range(SpawnPoint1.transform.position.x, SpawnPoint2.transform.position.x);
+            float randomLocation = Random.Range(GameData.XMin, GameData.XMax);
+            Vector3 enemyPos = new Vector3(randomLocation, GameData.XMax, 0);
 
-        yield return new WaitForSeconds(randomTime);
+            GameObject enemyInstance = Instantiate(enemySOList[randomEnemy].enemyGO, enemyPos, Quaternion.identity);
+            enemyInstance.GetComponent<EnemyScript>().strength = enemySOList[randomEnemy].strength;
+            enemyInstance.GetComponent<EnemyScript>().speed = enemySOList[randomEnemy].speed;
+            enemyInstance.GetComponent<EnemyScript>().hitpoints = enemySOList[randomEnemy].hitpoints;
 
-        enemySOList[randomEnemy].enemyGO.GetComponent<Rigidbody2D>().gravityScale = enemySOList[randomEnemy].speed;
+            yield return new WaitForSeconds(enemySpawnInterval);
 
-        Instantiate(enemySOList[randomEnemy].enemyGO, new Vector2(randomLocation, thisGameobj.y), Quaternion.identity);
-
-        StopCoroutine(enemyRoutine);
-        enemyRoutine = null;
+            
+        }
+        
     }
+
+
 }

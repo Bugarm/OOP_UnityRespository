@@ -5,12 +5,14 @@ using UnityEngine;
 public class EnemyScript : MonoBehaviour
 {
     EnemySpawner enemySpawn;
-    CannonScontroller cannonHp;
+
+    public int strength;
+    public int hitpoints;
+    public float speed;
 
     // Start is called before the first frame update
     void Start()
     {
-        enemySpawn = GetComponent<EnemySpawner>();
         
     }
 
@@ -20,16 +22,26 @@ public class EnemyScript : MonoBehaviour
         
     }
 
-    private void OnBecameInvisible()
-    {
-        Destroy(gameObject);
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("player"))
+        
+        if (collision.gameObject.tag == "Bullet")
         {
-            cannonHp.Hp -= enemySpawn.enemySOList[enemySpawn.randomEnemy].strength;
+            hitpoints -= 1;
+        }
+
+        if (hitpoints <= 0)
+        {
+            GameData.Score += 1;
+            Debug.Log("Score: " +  GameData.Score.ToString());
+            Destroy(this.gameObject);
+        }
+
+        if (collision.gameObject.tag == "OutofBounds")
+        {
+            GameData.Hp -= strength;
+            Debug.Log("Player Health: " + GameData.Hp.ToString());
+            Destroy(gameObject);
         }
     }
 }

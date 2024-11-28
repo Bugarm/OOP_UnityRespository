@@ -8,7 +8,7 @@ public class EnemyScriptableObject : ScriptableObject
 {
 
     public GameObject enemyGO;
-    public int scorevalue, strength;
+    public int hitpoints, strength;
     public float speed;
     
 }

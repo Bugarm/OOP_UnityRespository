@@ -32,4 +32,12 @@ public class DefualtBullet : MonoBehaviour
         this.gameObject.SetActive(false);
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Enemy")
+        {
+            this.gameObject.SetActive(false);
+        }
+    }
+
 }

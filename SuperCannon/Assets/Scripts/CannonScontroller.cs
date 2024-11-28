@@ -6,8 +6,6 @@ using UnityEngine;
 
 public class CannonScontroller : MonoBehaviour
 {
-    [SerializeField] public int Hp;
-
     [SerializeField] GameObject bullet1Prefab;
     [SerializeField] GameObject bullet2Prefab;
     [SerializeField] Transform cannonTip;
@@ -38,7 +36,7 @@ public class CannonScontroller : MonoBehaviour
         
         FireCannon();
 
-        if (Hp <= 0)
+        if (GameData.Hp <= 0)
         {
             Destroy(this.gameObject);
         }
