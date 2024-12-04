@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8417510114810302047}
   - component: {fileID: 3713906678236491859}
   - component: {fileID: 2420584632143127294}
-  - component: {fileID: -8592623608318501899}
+  - component: {fileID: 3963080759320792830}
   m_Layer: 0
   m_Name: Buh
   m_TagString: Enemy
@@ -159,7 +159,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &-8592623608318501899
+--- !u!114 &3963080759320792830
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -168,6 +168,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 2390586749361538513}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2aaae96f34c0744da61fcda136156d9, type: 3}
+  m_Script: {fileID: 11500000, guid: d4b852630ef657c4696896ca52e064d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  strength: 0
+  hitpoints: 0
+  speed: 0
+  direction:
+  - -2
+  - 2

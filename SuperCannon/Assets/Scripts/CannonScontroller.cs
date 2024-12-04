@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class CannonScontroller : MonoBehaviour
+public class CannonScontroller : Singleton<CannonScontroller>
 {
+    public static CannonScontroller instance;
+
     [SerializeField] GameObject bullet1Prefab;
     [SerializeField] GameObject bullet2Prefab;
     [SerializeField] Transform cannonTip;
