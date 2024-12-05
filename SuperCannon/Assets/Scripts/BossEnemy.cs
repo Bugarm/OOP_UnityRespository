@@ -39,7 +39,7 @@ public class BossEnemy : EnemyScript
             
             yield return new WaitForSeconds(1);
             enemyRig2D.velocity = new Vector2(0f, 0f);
-            enemyRig2D.gravityScale = 0.3f;
+            enemyRig2D.gravityScale = speed;
         }
         
     }

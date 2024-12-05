@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public interface ITakeDamage
+{
+    public void ApplyDamage(int hitpoints);
+}
+
 public class EnemyScript : MonoBehaviour
 {
     EnemySpawner enemySpawn;
@@ -13,7 +18,8 @@ public class EnemyScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        rb.gravityScale = speed;
     }
 
     // Update is called once per frame
@@ -27,21 +33,15 @@ public class EnemyScript : MonoBehaviour
         
         if (collision.gameObject.tag == "Bullet")
         {
-            hitpoints -= 1;
+            GetComponent<ITakeDamage>().ApplyDamage(hitpoints);
         }
 
-        if (hitpoints <= 0)
-        {
-            GameData.Score += 1;
-            Debug.Log("Score: " +  GameData.Score.ToString());
-            Destroy(this.gameObject);
-        }
+    }
 
-        if (collision.gameObject.tag == "OutofBounds")
-        {
-            GameData.Hp -= strength;
-            Debug.Log("Player Health: " + GameData.Hp.ToString());
-            Destroy(gameObject);
-        }
+    private void OnBecameInvisible()
+    {
+        GameData.Hp -= 1;
+        Debug.Log("Player health: " + GameData.Hp);
+        Destroy(this.gameObject);
     }
 }

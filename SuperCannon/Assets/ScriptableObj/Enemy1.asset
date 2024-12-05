@@ -15,4 +15,4 @@ MonoBehaviour:
   enemyGO: {fileID: 2390586749361538513, guid: d732fd924bb2e284695ffccf99f8f63b, type: 3}
   hitpoints: 3
   strength: 2
-  speed: 1
+  speed: 0.3
