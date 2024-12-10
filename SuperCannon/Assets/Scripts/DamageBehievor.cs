@@ -6,13 +6,13 @@ public class DamageBehievor : MonoBehaviour, ITakeDamage
 {
     public void ApplyDamage(int hitpoints)
     {
-        GameManager.myGameManager.OnEnemyDie(hitpoints);
+       // GameManager.myGameManager.OnEnemyDie(hitpoints);
         EnemyScript _enemy = GetComponent<EnemyScript>();
         _enemy.strength--;
         StartCoroutine(ApplyDamageEffect());
         if (_enemy.strength <= 0)
         {
-            GameManager.myGameManager.OnEnemyDie(hitpoints);
+           // GameManager.myGameManager.OnEnemyDie(hitpoints);
             Destroy(this.gameObject);
         }
     }
