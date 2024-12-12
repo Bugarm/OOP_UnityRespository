@@ -36,12 +36,21 @@ public class EnemyScript : MonoBehaviour
             GetComponent<ITakeDamage>().ApplyDamage(hitpoints);
         }
 
+        if(collision.gameObject.name == "DespawnBox")
+        {
+            EnemyHits();
+        }
+
     }
 
-    private void OnBecameInvisible()
+    private void EnemyHits()
     {
+
         GameData.Hp -= 1;
-        Debug.Log("Player health: " + GameData.Hp);
+        //Debug.Log("Player health: " + GameData.Hp);
+        GameManager.Instance.OnPlayerHP();
         Destroy(this.gameObject);
+        
+       
     }
 }

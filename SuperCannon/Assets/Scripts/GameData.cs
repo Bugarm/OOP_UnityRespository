@@ -6,7 +6,7 @@ public abstract class GameData : MonoBehaviour
 {
     private static float _padding = 0f;
     private static int _score;
-    private static int _hp = 20;
+    private static int _hp = 100;
 
     public static int Hp
     {

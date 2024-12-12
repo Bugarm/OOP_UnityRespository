@@ -7,37 +7,31 @@ public class DefualtBullet : MonoBehaviour
     [SerializeField] float speed;
     protected Rigidbody2D rb;
 
-    public void Awake() // so it sets up before start
+    public void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = 0;
     }
-
-    protected virtual void Start()
-    {
-
-    }
-
-    // Start is called before the first frame update
     protected virtual void OnEnable()
     {
+        rb = GetComponent<Rigidbody2D>();
         rb.velocity = transform.up * speed;
 
 
     }
 
-    void OnBecameInvisible()
+    protected virtual void Start()
     {
-        //Destroy(this.gameObject);
-        this.gameObject.SetActive(false);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    void OnBecameInvisible()
     {
-        if (collision.tag == "Enemy")
-        {
-            this.gameObject.SetActive(false);
-        }
+
+        this.gameObject.SetActive(false);//Destroy(this.gameObject);
+        rb.velocity = new Vector3(0, 0, 0);
+        this.gameObject.transform.position = new Vector3(0, 0, 0);
+        this.gameObject.transform.rotation = Quaternion.identity;
+
     }
 
 }

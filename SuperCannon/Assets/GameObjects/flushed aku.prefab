@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5658452770803655508}
   - component: {fileID: 3344417722028103141}
   - component: {fileID: 2745421889147743293}
+  - component: {fileID: -3993304771372290292}
   - component: {fileID: -3303297921838523434}
   m_Layer: 0
   m_Name: flushed aku
@@ -159,6 +160,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &-3993304771372290292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8355297072302744399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10bcd3f751abb6b409cb315abae937b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &-3303297921838523434
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -171,3 +184,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2aaae96f34c0744da61fcda136156d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  strength: 0
+  hitpoints: 0
+  speed: 0

@@ -7,7 +7,7 @@ public class KillBehievor : MonoBehaviour, ITakeDamage
     public void ApplyDamage(int hitpoints)
     {
 
-            //GameManager.myGameManager.OnEnemyDie(hitpoints);
+            GameManager.Instance.OnEnemyDie(hitpoints);
             Destroy(this.gameObject);
         
     }

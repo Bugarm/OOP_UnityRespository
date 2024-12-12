@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyGO: {fileID: 3457208743755120858, guid: 1971b9d226649b043ae6325cbf1e923f, type: 3}
   hitpoints: 2
-  strength: 1
+  strength: 3
   speed: 0.3
