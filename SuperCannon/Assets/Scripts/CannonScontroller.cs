@@ -46,43 +46,41 @@ public class CannonScontroller : Singleton<CannonScontroller>
 
     void FireCannon()
     {
-        GameObject poolCannonBall = cannonBallPool.GetPoolObject();
 
         if (Input.GetMouseButtonDown(0) && fire1coroutine == null)
         {
             //Instantiate(bullet1Prefab, cannonTip.position, cannonTip.rotation);
            
-            if(poolCannonBall != null)
+            if(cannonBallPool != null)
             {
-                fire1coroutine = StartCoroutine(FireContinously(poolCannonBall, firingRate1));
+                fire1coroutine = StartCoroutine(FireContinously(cannonBallPool, firingRate1));
             }
         }
 
 
-        GameObject poolMissile = misslePool.GetPoolObject();
 
         if (Input.GetMouseButtonDown(1) && fire2coroutine == null)
         {
             //Instantiate(bullet2Prefab, cannonTip.position, cannonTip.rotation);
             
 
-            if(poolMissile != null)
+            if(misslePool != null)
             {
-                fire2coroutine = StartCoroutine(FireContinously(poolMissile, firingRate2));
+                fire2coroutine = StartCoroutine(FireContinously(misslePool, firingRate2));
             }
 
         }
 
         // Reset coroutine
 
-        if (Input.GetMouseButtonUp(0) && poolCannonBall != null)
+        if (Input.GetMouseButtonUp(0) && cannonBallPool != null)
         {
 
             StopCoroutine(fire1coroutine);
             fire1coroutine = null;
         }
 
-        if (Input.GetMouseButtonUp(1) && poolMissile != null)
+        if (Input.GetMouseButtonUp(1) && misslePool != null)
         {
 
             StopCoroutine(fire2coroutine);
@@ -92,16 +90,17 @@ public class CannonScontroller : Singleton<CannonScontroller>
         }
     }
 
-    IEnumerator FireContinously(GameObject bulletPooled, float _fireRate)
+    IEnumerator FireContinously(ObjectPooling bulletPooled, float _fireRate)
     {
         while (true)
         {
-            bulletPooled.transform.rotation = cannonTip.rotation;
-            bulletPooled.transform.position = cannonTip.position;
+            GameObject pooledBullet = bulletPooled.GetPoolObject();
+            pooledBullet.transform.rotation = cannonTip.rotation;
+            pooledBullet.transform.position = cannonTip.position;
 
 
             //Instantiate(bulletPrefab, cannonTip.position, cannonTip.rotation);
-            bulletPooled.SetActive(true);
+            pooledBullet.SetActive(true);
             
 
             yield return new WaitForSeconds(_fireRate);

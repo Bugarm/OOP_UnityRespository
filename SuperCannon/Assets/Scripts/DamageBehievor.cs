@@ -14,7 +14,7 @@ public class DamageBehievor : MonoBehaviour, ITakeDamage
     {
         EnemyScript _enemy = GetComponent<EnemyScript>();
         _enemy.strength--;
-        Debug.Log("Enemy strength: " + _enemy.strength.ToString());
+        //Debug.Log("Enemy strength: " + _enemy.strength.ToString());
         if (_enemy.strength <= 0)
         {
             GameManager.Instance.OnEnemyDie(hitpoints);

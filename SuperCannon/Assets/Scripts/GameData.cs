@@ -7,6 +7,22 @@ public abstract class GameData : MonoBehaviour
     private static float _padding = 0f;
     private static int _score;
     private static int _hp = 100;
+    private static int _enemyCount;
+    private static int _levelCount = 0;
+
+    public static int LevelCount
+    {
+        get { return _levelCount; }
+
+        set { _levelCount = value; }
+    }
+
+    public static int EnemyCount
+    {
+        get { return _enemyCount; }
+
+        set { _enemyCount = value; }
+    }
 
     public static int Hp
     {
