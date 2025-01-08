@@ -9,7 +9,7 @@ public class GameManager : Singleton<GameManager>
 {
     [SerializeField] TMP_Text playerScoreText;
     [SerializeField] TMP_Text playerHP;
-    [SerializeField] TMP_Text gameTimerText;
+    [SerializeField] TMP_Text enemyLeftText;
     [SerializeField] TMP_Text levelText;
 
     public int fadeSpeed = 1;
@@ -24,7 +24,7 @@ public class GameManager : Singleton<GameManager>
         GameData.Score = 0;
         DisplayScore();
         GameData.EnemyCount = enemyCount;
-        DisplayECount();
+        //DisplayECount();
         GameData.LevelCount = 0;
         levelText.alpha = 0;
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -57,10 +57,10 @@ public class GameManager : Singleton<GameManager>
             }
             
         }
-        else
-        {
-            DisplayECount();
-        }
+        //else
+        //{
+        //    //DisplayECount();
+        //}
         
     }
 
@@ -87,6 +87,7 @@ public class GameManager : Singleton<GameManager>
     public void DisplayScore()
     {
         playerScoreText.text = "Score: " + GameData.Score.ToString();
+        SaveLoadManager.Instance.SaveData(); //used like this cause of singleton
     }
 
     public void DisplayHP()
@@ -94,10 +95,10 @@ public class GameManager : Singleton<GameManager>
         playerHP.text = "HP: " + GameData.Hp.ToString();
     }
 
-    public void DisplayECount()
-    {
-        gameTimerText.text = "Enemies Left: " + GameData.EnemyCount.ToString();
-    }
+    //public void DisplayECount()
+    //{
+    //    enemyLeftText.text = "Enemies Left: " + GameData.EnemyCount.ToString();
+    //}
 
     public void DisplayLevel()
     {
