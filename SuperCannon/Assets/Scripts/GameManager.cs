@@ -14,6 +14,7 @@ public class GameManager : Singleton<GameManager>
 
     public int fadeSpeed = 1;
     public int enemyCount = 5;
+    int startHp = 100;
 
     Coroutine levelTrans;
 
@@ -21,12 +22,12 @@ public class GameManager : Singleton<GameManager>
     {
         base.Awake();
         DontDestroyOnLoad(this.gameObject); // won't destroy when scene loads again
-        GameData.Score = 0;
-        DisplayScore();
+
         GameData.EnemyCount = enemyCount;
         //DisplayECount();
         GameData.LevelCount = 0;
         levelText.alpha = 0;
+
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
@@ -87,7 +88,7 @@ public class GameManager : Singleton<GameManager>
     public void DisplayScore()
     {
         playerScoreText.text = "Score: " + GameData.Score.ToString();
-        SaveLoadManager.Instance.SaveData(); //used like this cause of singleton
+        SaveLoadManager.Instance.SaveData();
     }
 
     public void DisplayHP()
@@ -108,7 +109,10 @@ public class GameManager : Singleton<GameManager>
     // Start is called before the first frame update
     void Start()
     {
-        GameData.Hp = 100;
+        GameData.Score = 0;
+        GameData.Hp = startHp;
+        SaveLoadManager.Instance.LoadData();
+        DisplayScore();
         DisplayHP();
     }
 
@@ -149,12 +153,21 @@ public class GameManager : Singleton<GameManager>
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        //Destory Enemy Spawner
         if(scene.name == "Lose Screen" || scene.name == "Win Screen")
         {
             EnemySpawner myEnemySpawner = GetComponent<EnemySpawner>();
             Destroy(myEnemySpawner);
         }
-        
+
+        //Reset at lose
+        if (scene.name == "Lose Screen")
+        {
+            GameData.Hp = startHp;
+            //GameData.Score = 0;
+            SaveLoadManager.Instance.SaveData();
+        }
+
         Debug.Log("OnSceneLoaded: " + scene.name);
         Debug.Log(mode);
     }
