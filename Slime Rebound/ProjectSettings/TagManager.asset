@@ -3,7 +3,12 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Enemies
+  - Obsticales
+  - Doors
+  - Collectables
+  - PlayerDamageBox
   layers:
   - Default
   - TransparentFX
@@ -11,8 +16,8 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
+  - Entities
+  - Player
   - 
   - 
   - 
@@ -40,4 +45,28 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Back_Layer1
+    uniqueID: 2166125653
+    locked: 0
+  - name: Back_Layer2
+    uniqueID: 1358869589
+    locked: 0
+  - name: Back_Front
+    uniqueID: 2564675867
+    locked: 0
+  - name: Decor
+    uniqueID: 4081415639
+    locked: 0
+  - name: Level_Map
+    uniqueID: 1355850935
+    locked: 0
+  - name: Player
+    uniqueID: 3337123431
+    locked: 0
+  - name: Entities
+    uniqueID: 2228594883
+    locked: 0
+  - name: Front_Decor
+    uniqueID: 1681514863
     locked: 0
