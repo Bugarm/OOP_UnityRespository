@@ -9,11 +9,12 @@ TagManager:
   - Doors
   - Collectables
   - PlayerDamageBox
+  - Level
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Level
   - Water
   - UI
   - Entities

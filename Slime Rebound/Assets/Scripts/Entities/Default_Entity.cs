@@ -6,16 +6,16 @@ using UnityEditor;
 
 public class Default_Entity : MonoBehaviour
 {
-    
+    private Rigidbody2D enemyVel;
 
     //
     protected virtual void Awake()
     {
-        
+        enemyVel = GetComponent<Rigidbody2D>();
     }
 
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
 
     }
@@ -26,7 +26,6 @@ public class Default_Entity : MonoBehaviour
         
     }
     
-
     private void OnTriggerEnter2D(Collider2D hit)
     {
         // check when player attacked it [first]
