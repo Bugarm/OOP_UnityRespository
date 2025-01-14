@@ -16,13 +16,15 @@ public class EnemyGround : Default_Entity
     //Points
     public float point1OffsetX;
     public float point2OffsetX;
-    // Pointer Y val
-    public float setPointY;
+
+    [Header("FreeRoam Mode")]
+    public bool freeRoamMode;
+
     // set up
     [Header("Settings")]
-    public bool isStartRight;
     public int speed;
     public int gravityPower;
+    public float jumpForce;
 
     //
     protected GameObject enemy;
@@ -35,18 +37,23 @@ public class EnemyGround : Default_Entity
 
     private GameObject pointGroup;
 
-    // Saves the 
-    private Transform curPoint;
-
-    private bool setupOnce = true;
-
-    private bool isOnGround = false;
-
     private float startPosX;
     private float startPosY;
+    private float yOffset = -0.5f;
+    private float curJumpForce = 0;
 
+    private Transform curPoint;
+
+    // Others
+    private bool setupOnce = true;
+    private bool isOnGround = false;
+    private bool directionRoam = false;
+   
+    // Triggers
     private BoxCollider2D groundDectection;
-    private BoxCollider2D wallDectection;
+    private CapsuleCollider2D wallDectection;
+    private BoxCollider2D pitDectection;
+    private BoxCollider2D jumpDectection;
 
     protected override void Awake()
     {
@@ -62,8 +69,18 @@ public class EnemyGround : Default_Entity
         startPosY = enemy.transform.position.y;
 
         groundDectection = enemy.GetComponent<BoxCollider2D>();
-        wallDectection = transform.GetChild(0).gameObject.GetComponent<BoxCollider2D>();
+        wallDectection = transform.GetChild(0).gameObject.GetComponent<CapsuleCollider2D>();
+        pitDectection = transform.GetChild(1).gameObject.GetComponent<BoxCollider2D>();
+        jumpDectection = transform.GetChild(2).gameObject.GetComponent<BoxCollider2D>();
 
+        if(freeRoamMode == true)
+        {
+            Destroy(groundDectection);
+        }
+        else
+        {
+            Destroy(pitDectection);
+        }
 
         //Debug.Log(wallDectection);
     }
@@ -71,31 +88,43 @@ public class EnemyGround : Default_Entity
     // Start is called before the first frame update
     protected override void Start()
     {
-        // Create
-        PointerCreation();
-
-        //This will offset the pointer pos depends on the set position added to the starting enemy pos
-        set_point1.transform.position = new Vector3(enemy.transform.position.x + point1OffsetX, setPointY, 0);
-        set_point2.transform.position = new Vector3(enemy.transform.position.x + point2OffsetX, setPointY, 0);
-
         // stops rotation
         rb.freezeRotation = true;
 
         //Gravity
         rb.gravityScale = gravityPower;
 
-        // Decides what direction to start // 
-        DirectionStart();
+        if (freeRoamMode == false)
+        {
+            // Create
+            PointerCreation();
+
+            //This will offset the pointer pos depends on the set position added to the starting enemy pos
+            set_point1.transform.position = new Vector3(enemy.transform.position.x + point1OffsetX, this.gameObject.transform.position.y + yOffset, 0);
+            set_point2.transform.position = new Vector3(enemy.transform.position.x + point2OffsetX, this.gameObject.transform.position.y + yOffset, 0);
+
+            // Decides what direction to start // 
+            DirectionStart();
   
-        curPoint = set_point1.transform;
+            curPoint = set_point1.transform;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {        
-        FollowPoints();
+        if(freeRoamMode == false)
+        {
+            FollowPoints();    
+        }
+        else if (freeRoamMode == true)
+        {
+            FreeRoam();
+        }
+        
     }
 
+    // Pointer Mode Functions //
     private void PointerCreation()
     {
         // Create Pointers //
@@ -119,7 +148,7 @@ public class EnemyGround : Default_Entity
     }
 
     // Follows the Points //
-    protected void FollowPoints()
+    private void FollowPoints()
     {
         // Only Moves when is Touches Ground or There's no Gravity
 
@@ -160,18 +189,36 @@ public class EnemyGround : Default_Entity
 
     private void TurnFunc()
     {
+        // Flips GameObject not just Sprite
         enemy.transform.localScale = new Vector2((Mathf.Sign(rb.velocity.x)), enemy.transform.localScale.y);
 
-        if (curPoint == set_point1.transform)
+        if (freeRoamMode == true)
         {
-            curPoint = set_point2.transform;
+            // FreeRoam Mode //
+            directionRoam = !directionRoam;
         }
         else
         {
-            curPoint = set_point1.transform;
+            // Pointer Mode //
+            if (curPoint == set_point1.transform)
+            {
+                curPoint = set_point2.transform;
+            }
+            else
+            {
+                curPoint = set_point1.transform;
+            }
         }
     }
 
+    // FreeRoam Mode Functions //
+    private void FreeRoam()
+    {
+                                                // Right                                  //Left
+        rb.velocity = directionRoam == true ? new Vector2(speed, curJumpForce) : new Vector2(-speed, curJumpForce);
+    }
+
+    // Others //
     private void OnDrawGizmos()
     {
         Vector3 point1Giz;
@@ -179,13 +226,13 @@ public class EnemyGround : Default_Entity
 
         if (setupOnce == true) // This will follow the current pos
         {
-            point1Giz = new Vector3(this.gameObject.transform.position.x + point1OffsetX, setPointY, 0);
-            point2Giz = new Vector3(this.gameObject.transform.position.x + point2OffsetX, setPointY, 0);
+            point1Giz = new Vector3(this.gameObject.transform.position.x + point1OffsetX, this.gameObject.transform.position.y + yOffset, 0);
+            point2Giz = new Vector3(this.gameObject.transform.position.x + point2OffsetX, this.gameObject.transform.position.y + yOffset, 0);
         }
         else // this will only follow the starting position
         {
-            point1Giz = new Vector3(startPosX + point1OffsetX, setPointY, 0);
-            point2Giz = new Vector3(startPosX + point2OffsetX, setPointY, 0);
+            point1Giz = new Vector3(startPosX + point1OffsetX, startPosY + yOffset, 0);
+            point2Giz = new Vector3(startPosX + point2OffsetX, startPosY + yOffset, 0);
         }
 
         // Draw //
@@ -198,9 +245,35 @@ public class EnemyGround : Default_Entity
     {
         isOnGround = true;
 
-        if(groundDectection.IsTouching(collision))
+        // Wall Dectection
+        if (enemy.activeInHierarchy == true && collision.CompareTag("Level") && wallDectection.IsTouching(collision))
         {
+            if(freeRoamMode == false)
+            {
+                TurnFunc();
+            }
+            else
+            {
+                if (!jumpDectection.IsTouching(collision))
+                {
+                    // Jumping Force
+                    curJumpForce = jumpForce;
+                }
+                
+            }
+            
+        }
+        else if (enemy.activeInHierarchy == true && !wallDectection.IsTouching(collision))
+        {
+            curJumpForce = 0;
+        }
+    }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (enemy.activeInHierarchy == true && collision.CompareTag("Level") && wallDectection.IsTouching(collision) && jumpDectection.IsTouching(collision))
+        {
+            TurnFunc();
         }
     }
 
@@ -208,23 +281,24 @@ public class EnemyGround : Default_Entity
     {
         isOnGround = false;
 
+        // Ledge Decection
         if (enemy.activeInHierarchy == true)
-        {
-            TurnFunc();
-            Debug.Log(groundDectection);
-        }
-        
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if(collision.CompareTag("Level") && wallDectection.IsTouching(collision))
         { 
-            if(enemy.activeInHierarchy == true)
+            if (freeRoamMode == false)
             {
-                TurnFunc();
-                Debug.Log(wallDectection);
+                if (!groundDectection.IsTouching(collision))
+                {
+                    TurnFunc();
+                }
+            }
+            else if (freeRoamMode == true)
+            {
+                if (!pitDectection.IsTouching(collision))
+                {
+                    TurnFunc();
+                }
             }
         }
+
     }
 }

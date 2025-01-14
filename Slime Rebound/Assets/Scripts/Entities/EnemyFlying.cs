@@ -14,7 +14,6 @@ public class EnemyFlying : Default_Entity
     
     // set up
     [Header("Settings")]
-    public bool isStartRight;
     public int speed;
 
     //
@@ -23,20 +22,18 @@ public class EnemyFlying : Default_Entity
     protected SpriteRenderer enemySr;
 
     // Enemy Simple AI
-    private GameObject set_point1;
-    private GameObject set_point2;
+    private List<GameObject> setPointList;
 
     private GameObject pointGroup;
 
     // Saves the 
-    private Transform curPoint;
-
-    private bool setupOnce = true;
-
-    private float startPosX;
-    private float startPosY;
+    private Transform moveToPoint;
+    private Transform nextPos;
+    private int moveToIndex;
 
     private BoxCollider2D myBoxcoll;
+
+    private Coroutine flyToPoints;
 
     protected override void Awake()
     {
@@ -46,10 +43,10 @@ public class EnemyFlying : Default_Entity
         rb = this.gameObject.GetComponent<Rigidbody2D>();
         enemySr = enemy.GetComponent<SpriteRenderer>();
 
+        setPointList = new List<GameObject>();
+
         // Gizmo Setup //
-        setupOnce = false;
-        startPosX = enemy.transform.position.x;
-        startPosY = enemy.transform.position.y;
+
 
         myBoxcoll = enemy.GetComponent<BoxCollider2D>();
     }
@@ -70,60 +67,74 @@ public class EnemyFlying : Default_Entity
 
         rb.gravityScale = 0;
 
-        DirectionStart();
+        //nextPos = ;
     }
 
     // Update is called once per frame
     void Update()
     {
-        FollowPoints();
-    }
-
-    private void DirectionStart()
-    {
-        
+        //FollowPoints();
     }
 
     private void PointerCreation()
     {
-        // Create Pointers //
-        set_point1 = new GameObject(enemy.name.ToString() + " point1");
-        set_point2 = new GameObject(enemy.name.ToString() + " point2");
+        GameObject setPoint;
 
+        int pointCount = 0;
         pointGroup = new GameObject(enemy.name.ToString() + " Group");
 
         // Parenting //
         pointGroup.transform.SetParent(pointerGroupObj.transform);
 
-        set_point1.transform.SetParent(pointGroup.transform);
-        set_point2.transform.SetParent(pointGroup.transform);
+        // Create Pointers //
+        foreach (Vector2 point in pointers)
+        {
+            pointCount++;
+            setPoint = new GameObject(enemy.name.ToString() + " Point " + pointCount);
+            setPoint.transform.position = point;
+            setPointList.Add(setPoint);
+
+            setPointList[pointCount - 1].transform.SetParent(pointGroup.transform);
+        }
+
+        
+
+        
     }
 
-
-    public void FollowPoints()
+    // WIP //
+    void FollowPoints()
     {
-        
+        if (enemy.transform.position == moveToPoint.position)
+        {
+            moveToIndex++;
+            // A check to make sure it won't go higher than the length
+            if (moveToIndex >= pointers.Count)
+            {
+                moveToIndex = 0;
+            }
+
+        }
+        else
+        {
+            enemy.transform.position = Vector3.MoveTowards(enemy.transform.position, moveToPoint.position, speed * Time.deltaTime);
+        }
     }
 
 
     private void OnDrawGizmos()
     {
-        Vector3 point1Giz;
-        Vector3 point2Giz;
+        Vector3 oldPoint = this.gameObject.transform.position;
 
-        if (setupOnce == true) // This will follow the current pos
+        foreach (Vector3 point in pointers)
         {
-          
-        }
-        else // this will only follow the starting position
-        {
+             // Draw //
+            Gizmos.DrawWireSphere(point, 0.5f);
+
+            Gizmos.DrawLine(oldPoint,point);
             
+            oldPoint = point;
         }
-
-        // Draw //
-        //Gizmos.DrawWireSphere(point1Giz, 0.5f);
-        //Gizmos.DrawWireSphere(point2Giz, 0.5f);
-        //Gizmos.DrawLine(point1Giz, point2Giz);
     }
 
 }
