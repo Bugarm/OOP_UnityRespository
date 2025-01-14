@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.UI;
 using System.Drawing;
+using Unity.VisualScripting;
 
 public class EnemyGround : Default_Entity
 {
@@ -44,7 +45,8 @@ public class EnemyGround : Default_Entity
     private float startPosX;
     private float startPosY;
 
-    private BoxCollider2D myBoxcoll;
+    private BoxCollider2D groundDectection;
+    private BoxCollider2D wallDectection;
 
     protected override void Awake()
     {
@@ -59,7 +61,11 @@ public class EnemyGround : Default_Entity
         startPosX = enemy.transform.position.x;
         startPosY = enemy.transform.position.y;
 
-        myBoxcoll = enemy.GetComponent<BoxCollider2D>();
+        groundDectection = enemy.GetComponent<BoxCollider2D>();
+        wallDectection = transform.GetChild(0).gameObject.GetComponent<BoxCollider2D>();
+
+
+        //Debug.Log(wallDectection);
     }
 
     // Start is called before the first frame update
@@ -81,6 +87,7 @@ public class EnemyGround : Default_Entity
         // Decides what direction to start // 
         DirectionStart();
   
+        curPoint = set_point1.transform;
     }
 
     // Update is called once per frame
@@ -107,60 +114,62 @@ public class EnemyGround : Default_Entity
     // This Function will decide what direction will move at first //
     private void DirectionStart()
     {
-        curPoint = isStartRight ? set_point1.transform : set_point2.transform;
-
-        if(curPoint == set_point1.transform)
-        {
-            enemy.transform.localScale = new Vector2(-(Mathf.Sign(rb.velocity.x)), enemy.transform.localScale.y);
-
-        }
-        else
-        {
-            enemy.transform.localScale = new Vector2((Mathf.Sign(rb.velocity.x)), enemy.transform.localScale.y);
-
-        }
+        enemy.transform.localScale =
+            point1OffsetX < 0 ? new Vector2((Mathf.Sign(rb.velocity.x)), enemy.transform.localScale.y) : new Vector2(-(Mathf.Sign(rb.velocity.x)), enemy.transform.localScale.y);
     }
 
     // Follows the Points //
     protected void FollowPoints()
     {
         // Only Moves when is Touches Ground or There's no Gravity
-        
-        if (curPoint == set_point1.transform)
+
+        if (isOnGround == true)
         {
-            // This makes sure it moves to the right direction by checking the point neg or pos //
-            rb.velocity = point1OffsetX < 0 ? new Vector2(-speed, 0) : new Vector2(speed, 0);
+            if (curPoint == set_point1.transform)
+            {
+                // This makes sure it moves to the right direction by checking the point neg or pos //
+                rb.velocity = point1OffsetX < 0 ? new Vector2(-speed, 0) : new Vector2(speed, 0);
+            }
+            else
+            {
+                // This makes sure it moves to the right direction by checking the point neg or pos//
+                rb.velocity = point2OffsetX < 0 ? new Vector2(-speed, 0) : new Vector2(speed, 0);
+            }
         }
-        else
-        {
-            // This makes sure it moves to the right direction by checking the point neg or pos//
-            rb.velocity = point2OffsetX < 0 ? new Vector2(-speed, 0) : new Vector2(speed, 0);
-        }
-        
 
         // Switch Point
         if (Vector2.Distance(transform.position, curPoint.position) < 1.4f && curPoint == set_point1.transform)
         {
-            //PointSwitch(set_point2.transform);
-            enemy.transform.localScale = new Vector2((Mathf.Sign(rb.velocity.x)), enemy.transform.localScale.y);
-            curPoint = set_point2.transform;
+            PointSwitch(set_point2.transform);
         }
 
         if (Vector2.Distance(transform.position, curPoint.position) < 1.4 && curPoint == set_point2.transform)
         {
-            //PointSwitch(set_point1.transform);
-            enemy.transform.localScale = new Vector2((Mathf.Sign(rb.velocity.x)), enemy.transform.localScale.y);
-            curPoint = set_point1.transform;
+            PointSwitch(set_point1.transform);
         }
 
         //Debug.Log(enemy.name + " " + Vector2.Distance(transform.position, curPoint.position));
-        Debug.Log(isOnGround);
+        //Debug.Log(isOnGround);
     }
 
     private void PointSwitch(Transform point)
     {
-        
-        //isOnGround = true;
+        curPoint = point;
+        enemy.transform.localScale = new Vector2((Mathf.Sign(rb.velocity.x)), enemy.transform.localScale.y);
+    }
+
+    private void TurnFunc()
+    {
+        enemy.transform.localScale = new Vector2((Mathf.Sign(rb.velocity.x)), enemy.transform.localScale.y);
+
+        if (curPoint == set_point1.transform)
+        {
+            curPoint = set_point2.transform;
+        }
+        else
+        {
+            curPoint = set_point1.transform;
+        }
     }
 
     private void OnDrawGizmos()
@@ -187,10 +196,27 @@ public class EnemyGround : Default_Entity
 
     private void OnTriggerStay2D(Collider2D collision)
     {
+        isOnGround = true;
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        enemy.transform.localScale = new Vector2((Mathf.Sign(rb.velocity.x)), enemy.transform.localScale.y);
+        isOnGround = false;
+
+        if (enemy.activeInHierarchy == true && collision == groundDectection)
+        {
+            TurnFunc();
+            Debug.Log(groundDectection);
+        }
+        
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(enemy.activeInHierarchy == true && collision == wallDectection)
+        {
+            TurnFunc();
+            Debug.Log(wallDectection);
+        }
     }
 }

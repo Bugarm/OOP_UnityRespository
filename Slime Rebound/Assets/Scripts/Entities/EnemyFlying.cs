@@ -10,10 +10,8 @@ public class EnemyFlying : Default_Entity
 
     [Header("Pointers")]
     //Points
-    public float point1OffsetX;
-    public float point2OffsetX;
-    // Pointer Y val
-    public float setPointY;
+    public List<Vector2> pointers;
+    
     // set up
     [Header("Settings")]
     public bool isStartRight;
@@ -65,8 +63,7 @@ public class EnemyFlying : Default_Entity
         PointerCreation();
 
         //This will offset the pointer pos depends on the set position added to the starting enemy pos
-        set_point1.transform.position = new Vector3(enemy.transform.position.x + point1OffsetX, setPointY, 0);
-        set_point2.transform.position = new Vector3(enemy.transform.position.x + point2OffsetX, setPointY, 0);
+    
 
         // stops rotation
         rb.freezeRotation = true;
@@ -84,7 +81,7 @@ public class EnemyFlying : Default_Entity
 
     private void DirectionStart()
     {
-        curPoint = isStartRight ? set_point1.transform : set_point2.transform;
+        
     }
 
     private void PointerCreation()
@@ -105,52 +102,28 @@ public class EnemyFlying : Default_Entity
 
     public void FollowPoints()
     {
-        if (curPoint == set_point1.transform)
-        {
-            // This makes sure it moves to the right direction by checking the point neg or pos //
-            rb.velocity = point1OffsetX < 0 ? new Vector2(-speed, 0) : new Vector2(speed, 0);
-        }
-        else
-        {
-            // This makes sure it moves to the right direction by checking the point neg or pos//
-            rb.velocity = point2OffsetX < 0 ? new Vector2(-speed, 0) : new Vector2(speed, 0);
-        }
+        
     }
 
-    private void YCordToggle()
-    {
-        if (setupOnce == true)
-        {
-            setPointY = this.gameObject.transform.position.y;
-        }
-        else
-        {
-            setPointY = startPosY;
-        }
-    }
 
     private void OnDrawGizmos()
     {
-        YCordToggle();
-
         Vector3 point1Giz;
         Vector3 point2Giz;
 
         if (setupOnce == true) // This will follow the current pos
         {
-            point1Giz = new Vector3(this.gameObject.transform.position.x + point1OffsetX, setPointY, 0);
-            point2Giz = new Vector3(this.gameObject.transform.position.x + point2OffsetX, setPointY, 0);
+          
         }
         else // this will only follow the starting position
         {
-            point1Giz = new Vector3(startPosX + point1OffsetX, setPointY, 0);
-            point2Giz = new Vector3(startPosX + point2OffsetX, setPointY, 0);
+            
         }
 
         // Draw //
-        Gizmos.DrawWireSphere(point1Giz, 0.5f);
-        Gizmos.DrawWireSphere(point2Giz, 0.5f);
-        Gizmos.DrawLine(point1Giz, point2Giz);
+        //Gizmos.DrawWireSphere(point1Giz, 0.5f);
+        //Gizmos.DrawWireSphere(point2Giz, 0.5f);
+        //Gizmos.DrawLine(point1Giz, point2Giz);
     }
 
 }
