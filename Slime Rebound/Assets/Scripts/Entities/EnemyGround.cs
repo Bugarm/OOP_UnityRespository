@@ -197,13 +197,18 @@ public class EnemyGround : Default_Entity
     private void OnTriggerStay2D(Collider2D collision)
     {
         isOnGround = true;
+
+        if(groundDectection.IsTouching(collision))
+        {
+
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
         isOnGround = false;
 
-        if (enemy.activeInHierarchy == true && collision == groundDectection)
+        if (enemy.activeInHierarchy == true)
         {
             TurnFunc();
             Debug.Log(groundDectection);
@@ -213,10 +218,13 @@ public class EnemyGround : Default_Entity
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(enemy.activeInHierarchy == true && collision == wallDectection)
-        {
-            TurnFunc();
-            Debug.Log(wallDectection);
+        if(collision.CompareTag("Level") && wallDectection.IsTouching(collision))
+        { 
+            if(enemy.activeInHierarchy == true)
+            {
+                TurnFunc();
+                Debug.Log(wallDectection);
+            }
         }
     }
 }
