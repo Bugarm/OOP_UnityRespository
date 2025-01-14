@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
-using System.Runtime.Serialization.Formatters.Binary; //Saving with Binary
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization; //Saving with Binary
 
 public class SaveLoadManager : Singleton<SaveLoadManager>
 {
@@ -37,6 +38,7 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
 
         if (File.Exists(Application.persistentDataPath + "/SuperCannonData.save"))
         {
+
             BinaryFormatter binaryFormatter = new BinaryFormatter();
 
             FileStream myFile = File.Open(Application.persistentDataPath + "/SuperCannonData.save", FileMode.Open);
@@ -44,6 +46,8 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
             myFile.Close(); // IMPORTANT TO CLOSE
             GameData.Score = myData.ser_score;
             GameData.Hp = myData.ser_health;
+            
+
         }
 
         /* JSON LOAD METHOD
