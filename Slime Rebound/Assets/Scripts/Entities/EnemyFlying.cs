@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyFlying : Default_Entity
@@ -15,6 +16,8 @@ public class EnemyFlying : Default_Entity
     // set up
     [Header("Settings")]
     public int speed;
+    [SerializeField] GameObject bullet;
+    public int fireRate;
 
     //
     protected GameObject enemy;
@@ -27,13 +30,15 @@ public class EnemyFlying : Default_Entity
     private GameObject pointGroup;
 
     // Saves the 
-    private Transform moveToPoint;
+    private Vector3 moveToPoint;
     private Transform nextPos;
     private int moveToIndex;
 
     private BoxCollider2D myBoxcoll;
+    private CircleCollider2D playerRange;
+    private GameObject shootPointObj;
 
-    private Coroutine flyToPoints;
+    private Coroutine bulletRoutine;
 
     protected override void Awake()
     {
@@ -49,6 +54,7 @@ public class EnemyFlying : Default_Entity
 
 
         myBoxcoll = enemy.GetComponent<BoxCollider2D>();
+        shootPointObj = transform.GetChild(1).gameObject.GetComponent<GameObject>();
     }
 
 
@@ -67,13 +73,52 @@ public class EnemyFlying : Default_Entity
 
         rb.gravityScale = 0;
 
-        //nextPos = ;
+        moveToPoint = pointers[0];
+
+        // Flips Enemy
+        if (Mathf.Sign(enemy.transform.position.x - moveToPoint.x) == -1)
+        {
+            enemySr.flipX = false;
+        }
+        else
+        {
+            enemySr.flipX = true;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        //FollowPoints();
+        FollowPoints();
+        
+    }
+
+    void ShootPlayer()
+    { 
+        if(bulletRoutine == null)
+        {
+            if (bullet.name == "NormalBullet")
+            {
+                bulletRoutine = StartCoroutine(NormalBullet());
+            }
+            else if (bullet.name == "HomingBullet")
+            {
+                bulletRoutine = StartCoroutine(HomingBullet());
+            }
+        }
+        
+    }
+
+    IEnumerator HomingBullet()
+    {
+        // Spawn bullet from pool
+        yield return new WaitForSeconds(fireRate);
+    }
+
+    IEnumerator NormalBullet()
+    {
+        // Spawn bullet from pool
+        yield return new WaitForSeconds(fireRate);
     }
 
     private void PointerCreation()
@@ -96,16 +141,12 @@ public class EnemyFlying : Default_Entity
 
             setPointList[pointCount - 1].transform.SetParent(pointGroup.transform);
         }
-
-        
-
         
     }
 
-    // WIP //
     void FollowPoints()
     {
-        if (enemy.transform.position == moveToPoint.position)
+        if (enemy.transform.position == moveToPoint)
         {
             moveToIndex++;
             // A check to make sure it won't go higher than the length
@@ -113,11 +154,22 @@ public class EnemyFlying : Default_Entity
             {
                 moveToIndex = 0;
             }
+            moveToPoint = pointers[moveToIndex];
 
+            // Flips The enemy based on direction
+            if(Mathf.Sign(enemy.transform.position.x - moveToPoint.x) == -1)
+            {
+                enemySr.flipX = false;
+            }
+            else
+            {   
+                enemySr.flipX = true;
+            }
         }
         else
         {
-            enemy.transform.position = Vector3.MoveTowards(enemy.transform.position, moveToPoint.position, speed * Time.deltaTime);
+            enemy.transform.position = Vector3.MoveTowards(enemy.transform.position, moveToPoint, speed * Time.deltaTime);
+            //Debug.Log(Mathf.Sign(enemy.transform.position.x - moveToPoint.x));
         }
     }
 
@@ -135,6 +187,17 @@ public class EnemyFlying : Default_Entity
             
             oldPoint = point;
         }
+
+        Gizmos.DrawWireCube(transform.GetChild(0).gameObject.transform.position, new Vector3(1,0.3f,0));
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        //if (playerRange.IsTouching(collision))
+        //{
+        //    ShootPlayer();
+        //}
+        
     }
 
 }
