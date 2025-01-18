@@ -59,6 +59,9 @@ public class EnemyGround : Default_Entity
     {
         base.Awake();
         // Set up //
+
+        
+
         enemy = this.gameObject;
         rb = this.gameObject.GetComponent<Rigidbody2D>();
         enemySr = enemy.GetComponent<SpriteRenderer>();
@@ -282,7 +285,7 @@ public class EnemyGround : Default_Entity
         isOnGround = false;
 
         // Ledge Decection
-        if (enemy.activeInHierarchy == true)
+        if (enemy.activeInHierarchy == true && collision.CompareTag("Level"))
         { 
             if (freeRoamMode == false)
             {

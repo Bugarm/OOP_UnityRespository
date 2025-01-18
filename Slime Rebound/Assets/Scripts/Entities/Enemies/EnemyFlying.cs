@@ -16,29 +16,39 @@ public class EnemyFlying : Default_Entity
     // set up
     [Header("Settings")]
     public int speed;
-    [SerializeField] GameObject bullet;
+    public ObjectPooling bulletPool;
     public int fireRate;
 
-    //
+    // set up
     protected GameObject enemy;
     protected Rigidbody2D rb;
     protected SpriteRenderer enemySr;
+    private GameObject player;
 
     // Enemy Simple AI
     private List<GameObject> setPointList;
 
     private GameObject pointGroup;
 
-    // Saves the 
     private Vector3 moveToPoint;
     private Transform nextPos;
     private int moveToIndex;
 
-    private BoxCollider2D myBoxcoll;
-    private CircleCollider2D playerRange;
-    private GameObject shootPointObj;
+    private Quaternion clampRotationLow, clampRotationHigh;
 
     private Coroutine bulletRoutine;
+
+    private bool seesPlayer;
+
+    // Colliders
+    private BoxCollider2D myBoxcoll;
+
+    [Header("Colliders")]
+    public GameObject playerRangeObj;
+    private CircleCollider2D playerRangeTrigger;
+
+    public GameObject shootPointObj;
+    private BoxCollider2D shootPointTrigger;
 
     protected override void Awake()
     {
@@ -47,14 +57,14 @@ public class EnemyFlying : Default_Entity
         enemy = this.gameObject;
         rb = this.gameObject.GetComponent<Rigidbody2D>();
         enemySr = enemy.GetComponent<SpriteRenderer>();
+        player = GameObject.FindGameObjectWithTag("Player");
 
         setPointList = new List<GameObject>();
 
-        // Gizmo Setup //
-
-
         myBoxcoll = enemy.GetComponent<BoxCollider2D>();
-        shootPointObj = transform.GetChild(1).gameObject.GetComponent<GameObject>();
+        playerRangeTrigger = playerRangeObj.GetComponent<CircleCollider2D>();
+        shootPointTrigger = shootPointObj.GetComponent<BoxCollider2D>();   
+
     }
 
 
@@ -65,8 +75,8 @@ public class EnemyFlying : Default_Entity
 
         PointerCreation();
 
-        //This will offset the pointer pos depends on the set position added to the starting enemy pos
-    
+        clampRotationLow = Quaternion.Euler(0, 0, -70f);
+        clampRotationHigh = Quaternion.Euler(0, 0, +70f);
 
         // stops rotation
         rb.freezeRotation = true;
@@ -90,35 +100,45 @@ public class EnemyFlying : Default_Entity
     void Update()
     {
         FollowPoints();
-        
-    }
 
-    void ShootPlayer()
-    { 
-        if(bulletRoutine == null)
+        if(seesPlayer == true)
         {
-            if (bullet.name == "NormalBullet")
+            // Homing Function
+            if (bulletPool.name == "ObjectsToPool Homing Bullet")
             {
-                bulletRoutine = StartCoroutine(NormalBullet());
+                PointAtPlayer();
             }
-            else if (bullet.name == "HomingBullet")
+
+            if (bulletRoutine == null)
             {
-                bulletRoutine = StartCoroutine(HomingBullet());
+                bulletRoutine = StartCoroutine(ShootBullet(bulletPool));
             }
         }
+        else 
+        {
+            if (bulletRoutine != null)
+            {
+                StopCoroutine(bulletRoutine);
+                bulletRoutine = null;
+            }
+        }
+
         
     }
 
-    IEnumerator HomingBullet()
+    IEnumerator ShootBullet(ObjectPooling bulletPool)
     {
-        // Spawn bullet from pool
-        yield return new WaitForSeconds(fireRate);
-    }
+        while (true)
+        {
+            // Spawn bullet from pool
+            GameObject getBullet = bulletPool.GetPoolObject();
 
-    IEnumerator NormalBullet()
-    {
-        // Spawn bullet from pool
-        yield return new WaitForSeconds(fireRate);
+            getBullet.transform.position = shootPointObj.transform.position;
+            getBullet.transform.rotation = shootPointObj.transform.rotation;
+            
+            getBullet.SetActive(true);
+            yield return new WaitForSeconds(fireRate);
+        }
     }
 
     private void PointerCreation()
@@ -173,6 +193,40 @@ public class EnemyFlying : Default_Entity
         }
     }
 
+    private void PointAtPlayer()
+    {
+
+        Vector3 relativePos = shootPointObj.transform.position - player.transform.position;
+        Quaternion newrotation = Quaternion.LookRotation(relativePos, Vector3.back);
+        newrotation.x = 0;
+        newrotation.y = 0;
+        newrotation.z = Mathf.Clamp(newrotation.z, clampRotationLow.z, clampRotationHigh.z);
+        newrotation.w = Mathf.Clamp(newrotation.w, clampRotationLow.w, clampRotationHigh.w);
+        shootPointObj.transform.rotation = Quaternion.Slerp(shootPointObj.transform.rotation, newrotation, Time.deltaTime * 3);
+
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (enemy.activeInHierarchy == true && collision.CompareTag("Player"))
+        {
+            if (playerRangeTrigger.IsTouching(collision))
+            {
+                seesPlayer = true;
+            }
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (enemy.activeInHierarchy == true && collision.CompareTag("Player"))
+        {
+            if (!playerRangeTrigger.IsTouching(collision))
+            {
+                seesPlayer = false;
+            }
+        }
+    }
 
     private void OnDrawGizmos()
     {
@@ -191,13 +245,6 @@ public class EnemyFlying : Default_Entity
         Gizmos.DrawWireCube(transform.GetChild(0).gameObject.transform.position, new Vector3(1,0.3f,0));
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        //if (playerRange.IsTouching(collision))
-        //{
-        //    ShootPlayer();
-        //}
-        
-    }
+    
 
 }

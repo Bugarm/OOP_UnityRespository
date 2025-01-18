@@ -4,14 +4,21 @@ using UnityEngine;
 
 public class HomingBullet : DefaultBullet
 {
-    [SerializeField] Transform playerPos;
+    [SerializeField] GameObject playerPos;
+    private Rigidbody2D playerRB;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        playerRB = GetComponent<Rigidbody2D>();
+    }
 
     // Start is called before the first frame update
     protected override void OnEnable()
     {
         base.OnEnable();
 
-        bulletRB.velocity = new Vector2();
     }
 
     // Update is called once per frame

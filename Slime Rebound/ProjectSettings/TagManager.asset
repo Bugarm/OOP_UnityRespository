@@ -10,6 +10,7 @@ TagManager:
   - Collectables
   - PlayerDamageBox
   - Level
+  - Platforms
   layers:
   - Default
   - TransparentFX
@@ -17,10 +18,10 @@ TagManager:
   - Level
   - Water
   - UI
+  - 
   - Entities
+  - Platforms
   - Player
-  - 
-  - 
   - 
   - 
   - 
@@ -64,6 +65,9 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 3337123431
+    locked: 0
+  - name: Bullet
+    uniqueID: 1636711755
     locked: 0
   - name: Entities
     uniqueID: 2228594883
