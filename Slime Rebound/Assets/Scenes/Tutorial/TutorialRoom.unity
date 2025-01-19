@@ -389,6 +389,7 @@ Transform:
   - {fileID: 822642881}
   - {fileID: 467327080}
   - {fileID: 553575748}
+  - {fileID: 571285053}
   m_Father: {fileID: 1344836159285192845}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &115978415
@@ -1399,6 +1400,96 @@ Transform:
   - {fileID: 1298489434}
   m_Father: {fileID: 1418094587}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &571285052
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 571285053}
+  - component: {fileID: 571285054}
+  - component: {fileID: 571285055}
+  m_Layer: 9
+  m_Name: JumpAttackCollider
+  m_TagString: PlayerAttack
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &571285053
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 571285052}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 102581337}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &571285054
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 571285052}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.0093307495, y: 0.1928187}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.86937714, y: 1.3856374}
+  m_EdgeRadius: 0
+--- !u!114 &571285055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 571285052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 296771d2bbb258b43b2be7b7bb15da1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &581886073
 GameObject:
   m_ObjectHideFlags: 0
@@ -4573,6 +4664,7 @@ MonoBehaviour:
   runSpeed: 6
   bounceSpeed: 6
   dashPower: 9
+  attackJumpPower: 8
   slip: {fileID: 6200000, guid: 3dbb20fcef7c3e245a742a352b0868a0, type: 2}
   stick: {fileID: 6200000, guid: a8243dece83deca4c9f05be634571715, type: 2}
   bounce: {fileID: 6200000, guid: 9fd755eb09a4b434686e3df1013d6610, type: 2}
@@ -4582,6 +4674,7 @@ MonoBehaviour:
   attackTrigger: {fileID: 822642879}
   poundTrigger: {fileID: 467327079}
   bounceTrigger: {fileID: 553575749}
+  jumpAttackTrigger: {fileID: 571285054}
   playerSprite: {fileID: 852008851}
   idle: {fileID: 21300000, guid: 1ef66750fffd55a48903b2c8ad468084, type: 3}
   crouch: {fileID: 21300000, guid: dccfe47451f896f4d9ca630152d88dc4, type: 3}

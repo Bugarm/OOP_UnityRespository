@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public static Player Instance;
+
     [Header("Settings")]
     public int walkSpeed;
     public int runSpeed;
@@ -24,6 +26,7 @@ public class Player : MonoBehaviour
     public BoxCollider2D attackTrigger;
     public BoxCollider2D poundTrigger;
     public CircleCollider2D bounceTrigger;
+    public BoxCollider2D jumpAttackTrigger;
 
     [Header("Player Sprite")]
     public SpriteRenderer playerSprite;
@@ -37,30 +40,32 @@ public class Player : MonoBehaviour
 
     private float dirX;
     private float dirY;
-    private int jumpPower;
+    private float jumpPower;
+    private int attackJumpPower;
     private float speed;
 
-    private bool isTouchingWall, isTouchingGround, isTouchingTop;
-    private bool isJump, isDoubleJump, isDash, isMove, isCrouch, isPound, isAttack;
+    // Accessable for animation script
+    protected bool isTouchingWall, isTouchingGround, isTouchingTop;
+    protected bool isJump, isDoubleJump, isDash, isSlide, isMove, isRun, isCrouch, isPound, isAttack, isAttackJump;
 
     private bool bounceMode;
     private bool stickActive;
 
-    private Coroutine jumpRoutine, doubleJumpRoutine, dashRoutine, poundRoutine, attackRoutine;
+    private float oldSpeed;
+
+    private Coroutine jumpRoutine, doubleJumpRoutine, dashRoutine, poundRoutine, attackRoutine, attackJumpRoutine;
 
     void Awake()
     {
-
         player = this.gameObject;
         playerRB = GetComponent<Rigidbody2D>();
 
         dirX = 0;
         dirY = 0;
-        jumpPower = 7;
+        jumpPower = 6.5f;
+        attackJumpPower = 8;
 
         speed = walkSpeed;
-
-        
     }
 
     // Start is called before the first frame update
@@ -69,6 +74,7 @@ public class Player : MonoBehaviour
         poundTrigger.gameObject.SetActive(false);
         bounceTrigger.gameObject.SetActive(false);
         attackTrigger.gameObject.SetActive(false);
+        jumpAttackTrigger.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -132,13 +138,6 @@ public class Player : MonoBehaviour
             dirX = 0;
         }
 
-        // Allows Double Jump
-        if(isDoubleJump == true)
-        {
-            StopCoroutine(JumpFunction());
-            jumpRoutine = null;
-        }
-
         // Allows to stick while bounce
         if(Input.GetKeyDown(KeyCode.L) && (bounceMode == true && isTouchingWall == true))
         {
@@ -172,7 +171,7 @@ public class Player : MonoBehaviour
 
     void PlayerAcceleration()
     {
-        if((stickActive == false && bounceMode == false && isPound == false))
+        if((stickActive == false && bounceMode == false && isPound == false && isAttackJump == false && isDoubleJump == false))
         {
             if (isTouchingGround == false)
             {
@@ -262,6 +261,7 @@ public class Player : MonoBehaviour
         // Run
         if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) && isCrouch == false)
         {
+            isRun = true;
             speed = runSpeed;
         }
 
@@ -285,35 +285,77 @@ public class Player : MonoBehaviour
                 player.transform.localScale = new Vector2((Mathf.Sign(playerRB.velocity.x)), player.transform.localScale.y);
             }
         }
+
         // Stick velocity
         else if (isPound == false)
         {
             if (player.transform.localScale.x == -1)
             {
-                dirX = -10;
+                dirX = -6.5f;
             }
             else if (player.transform.localScale.x == 1)
             {
-                dirX = 10;
+                dirX = 6.5f;
             }
         }
 
-        // Crouch
+        // Saves old Speed for the crouch
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            oldSpeed = speed;
+        }
+
+        // Crouch & Slide & Jump Attack
         if (Input.GetKey(KeyCode.S))
         {
-            if (isTouchingGround == true && stickActive == false && bounceMode == false)
+            if (stickActive == false && bounceMode == false)
             {
-                isCrouch = true;
-                speed = walkSpeed - 2;
-                // Collider Changes
-                PlayerCollision("Crouch");
-            }
-        // Ground Pound
-            else if(isTouchingGround == false)
-            {
-                if (poundRoutine == null)
+                if (isTouchingGround == true)
                 {
-                    poundRoutine = StartCoroutine(GroundPoundFunc());
+
+                    // Collider Changes
+                    PlayerCollision("Crouch");
+
+                    // Slide
+                    if (isRun == true)
+                    {
+                        isSlide = true;
+                        speed -= 0.005f;
+                        if (speed < 0)
+                        {
+                            speed = 0;
+                        }
+                    }
+                    // Normal Crouch Speed
+                    else
+                    {
+                        isCrouch = true;
+                        speed = walkSpeed - 2;
+                    }
+
+                    // Attack Jump
+                    if (Input.GetKeyDown(KeyCode.Space))
+                    {
+                        if (attackJumpRoutine == null)
+                        {
+                            attackJumpRoutine = StartCoroutine(AttackJumpFunc());
+                        }
+                    }
+                }
+            }
+        }
+
+        // Ground Pound
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            if (stickActive == false)
+            {
+                if (isTouchingGround == false && isAttackJump == false)
+                {
+                    if (poundRoutine == null)
+                    {
+                        poundRoutine = StartCoroutine(GroundPoundFunc());
+                    }
                 }
             }
         }
@@ -338,7 +380,7 @@ public class Player : MonoBehaviour
         }
 
         // Jump
-        if (Input.GetKeyDown(KeyCode.Space) && isDoubleJump == false)
+        if (Input.GetKeyDown(KeyCode.Space) && isJump == false && isAttackJump == false)
         {
             if (stickActive == false && isTouchingGround == true)
             {
@@ -358,16 +400,18 @@ public class Player : MonoBehaviour
 
                     jumpRoutine = StartCoroutine(JumpFunction());
                 }
-
             }
         }
         
         // Double Jump
-        if (Input.GetKeyDown(KeyCode.Space) && isTouchingGround == false)
+        else if (Input.GetKeyDown(KeyCode.Space) && isJump == true && isAttackJump == false)
         {
+            StopCoroutine(JumpFunction());
+            jumpRoutine = null;
+
             if (doubleJumpRoutine == null)
             {
-                doubleJumpRoutine = StartCoroutine(DoubleJumpFunct());
+                doubleJumpRoutine = StartCoroutine(DoubleJumpFunc());
             }
         }
 
@@ -390,14 +434,27 @@ public class Player : MonoBehaviour
             }
 
             // Crouch
-            if (isCrouch = true && (isTouchingTop == false && !Input.GetKey(KeyCode.S) || (Input.GetKeyUp(KeyCode.S) && isTouchingTop == false)) )
+            if ((isSlide == true || isCrouch == true) && (isTouchingTop == false && !Input.GetKey(KeyCode.S) || (Input.GetKeyUp(KeyCode.S) && isTouchingTop == false)) )
             {
-                isCrouch = false;
-                speed = walkSpeed;
+                if (isSlide == true)
+                {
+                    isSlide = false;
+                }
+                else
+                {
+                    isCrouch = false;
+                }
+
+                speed = oldSpeed;
                 // Collider Changes
                 PlayerCollision("Idle");
             }
         }
+    }
+
+    void HeadAttack()
+    {
+
     }
 
     // Collision and Triggers Setup
@@ -441,6 +498,7 @@ public class Player : MonoBehaviour
                 poundTrigger.gameObject.SetActive(false);
                 bounceTrigger.gameObject.SetActive(false);
                 attackTrigger.gameObject.SetActive(true);
+                jumpAttackTrigger.gameObject.SetActive(false);
 
                 break;
 
@@ -449,10 +507,19 @@ public class Player : MonoBehaviour
 
                 break;
 
+            case "Jump-Attack":
+                poundTrigger.gameObject.SetActive(false);
+                bounceTrigger.gameObject.SetActive(false);
+                attackTrigger.gameObject.SetActive(false);
+                jumpAttackTrigger.gameObject.SetActive(true);
+
+                break;
+
             case "Bounce":
                 poundTrigger.gameObject.SetActive(false);
                 bounceTrigger.gameObject.SetActive(true);
                 attackTrigger.gameObject.SetActive(false);
+                jumpAttackTrigger.gameObject.SetActive(false);
 
                 break;
 
@@ -460,6 +527,7 @@ public class Player : MonoBehaviour
                 poundTrigger.gameObject.SetActive(true);
                 bounceTrigger.gameObject.SetActive(false);
                 attackTrigger.gameObject.SetActive(false);
+                jumpAttackTrigger.gameObject.SetActive(false);
 
                 break;
 
@@ -467,6 +535,7 @@ public class Player : MonoBehaviour
                 poundTrigger.gameObject.SetActive(false);
                 bounceTrigger.gameObject.SetActive(false);
                 attackTrigger.gameObject.SetActive(false);
+                jumpAttackTrigger.gameObject.SetActive(false);
 
                 break;
 
@@ -494,6 +563,7 @@ public class Player : MonoBehaviour
         isPound = true;
         playerRB.gravityScale = 0;
         AttackTrigger("Pound");
+        PlayerCollision("Idle");
 
         // Air Time
         dirX = 0;
@@ -510,7 +580,7 @@ public class Player : MonoBehaviour
         isPound = false;
 
         yield return new WaitForSeconds(0.3f);
-        poundTrigger.gameObject.SetActive(false);
+        AttackTrigger("Reset");
         poundRoutine = null;
     }
 
@@ -542,13 +612,17 @@ public class Player : MonoBehaviour
         isJump = true;
         yield return new WaitForSeconds(0.4f);
         isJump = false;
-        dirY = 0;
+
+        if (isDoubleJump == false)
+        { 
+            dirY = 0;
+        }
 
         jumpRoutine = null;
 
     }
 
-    IEnumerator DoubleJumpFunct()
+    IEnumerator DoubleJumpFunc()
     {
         dirY = jumpPower;
         isDoubleJump = true;
@@ -557,6 +631,19 @@ public class Player : MonoBehaviour
         dirY = 0;
 
         doubleJumpRoutine = null;
+    }
+
+    IEnumerator AttackJumpFunc()
+    {
+        isAttackJump = true;
+        dirY = attackJumpPower;
+        AttackTrigger("Jump-Attack");
+        yield return new WaitForSeconds(0.4f);
+        AttackTrigger("Reset");
+        dirY = 0;
+        isAttackJump = false;
+
+        attackJumpRoutine = null;
     }
 
 }
