@@ -8,64 +8,82 @@ public class Player : MonoBehaviour
     public int walkSpeed;
     public int runSpeed;
     public int bounceSpeed;
-    //public int jumpPower;
+    public int dashPower;
 
     [Header("Physics Material")]
     public PhysicsMaterial2D slip;
     public PhysicsMaterial2D stick;
     public PhysicsMaterial2D bounce;
 
-    private BoxCollider2D floorCollision;
+    [Header("Player Collider")]
+    public CapsuleCollider2D idleCollider;
+    public BoxCollider2D crouchCollider;
+    public CircleCollider2D bounceCollider;
+    
+    [Header("Player Attack Trigger")]
+    public BoxCollider2D attackTrigger;
+    public BoxCollider2D poundTrigger;
+    public CircleCollider2D bounceTrigger;
+
+    [Header("Player Sprite")]
+    public SpriteRenderer playerSprite;
+
+    [Header("Remove Later")]
+    public Sprite idle;
+    public Sprite crouch;
 
     private GameObject player;
     private Rigidbody2D playerRB;
-    private SpriteRenderer playerSprite;
 
     private float dirX;
     private float dirY;
     private int jumpPower;
     private float speed;
 
-    private bool isTouchingGround;
-    private bool isTouchingWall;
-    private bool isJump;
-    private bool bounceMode;
+    private bool isTouchingWall, isTouchingGround, isTouchingTop;
+    private bool isJump, isDoubleJump, isDash, isMove, isCrouch, isPound, isAttack;
 
+    private bool bounceMode;
     private bool stickActive;
 
-    private Coroutine jumpRoutine;
+    private Coroutine jumpRoutine, doubleJumpRoutine, dashRoutine, poundRoutine, attackRoutine;
 
-    private void Awake()
+    void Awake()
     {
 
         player = this.gameObject;
         playerRB = GetComponent<Rigidbody2D>();
-        playerSprite = GetComponent<SpriteRenderer>();
-
-        floorCollision = this.gameObject.GetComponent<BoxCollider2D>();
 
         dirX = 0;
         dirY = 0;
         jumpPower = 7;
 
         speed = walkSpeed;
+
+        
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        poundTrigger.gameObject.SetActive(false);
+        bounceTrigger.gameObject.SetActive(false);
+        attackTrigger.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
-        isTouchingWall = WallDetection.instance.ReturnWallDetection();
+        isTouchingWall = WallDetection.instance.ReturnDetection();
+        isTouchingTop = TopDectection.instance.ReturnDetection();
+        isTouchingGround = FloorCollider.instance.ReturnDetection();
+
+        ResetChecks();
 
         KeyPressed();
         AnimationController();
         KeyReleased();
-
+        
         BounceMode();
         PlayerAcceleration();
 
@@ -77,19 +95,56 @@ public class Player : MonoBehaviour
         {
             playerRB.velocity = new Vector3(dirX, dirY, 0);
         }
+
     }
 
-    // Do double jump or easy simple jump here
-    // Yea do research on this one
+    // Do easy simple long jump Attack here
 
-    // Do dash
-    // like jump but using y intead
+    // Do Head Attack
 
-    // Do a simple attack (Right attack)
-    // Do a child game object to be active and check it's trigger if on enemy
+    // Should be it hopefully
 
-    // Do slam
-    // Idea: Velocity X keeps doing down until it hits level by using ground detection
+    void ResetChecks()
+    {
+        // Disable when stick active Touches Ground
+        if (stickActive == true && isTouchingGround == true)
+        {
+            stickActive = false;
+            dirX = 0;
+            playerRB.sharedMaterial = slip;
+        }
+
+        // Disable Jump when groundpound
+        if (isJump == true && isPound == true)
+        {
+            StopCoroutine(JumpFunction());
+            jumpRoutine = null;
+        }
+
+        // Allows Ground pound when bounce mode
+        if(bounceMode == true && isPound == true)
+        {
+            bounceMode = false;
+
+            playerRB.sharedMaterial = slip;
+            playerRB.gravityScale = 10; // DO smn different asp
+            //Reset velocity
+            dirX = 0;
+        }
+
+        // Allows Double Jump
+        if(isDoubleJump == true)
+        {
+            StopCoroutine(JumpFunction());
+            jumpRoutine = null;
+        }
+
+        // Allows to stick while bounce
+        if(Input.GetKeyDown(KeyCode.L) && (bounceMode == true && isTouchingWall == true))
+        {
+            bounceMode = false;
+        }
+    }
 
     void BounceMode()
     {
@@ -117,31 +172,44 @@ public class Player : MonoBehaviour
 
     void PlayerAcceleration()
     {
-        if((stickActive == false && bounceMode == false) || isTouchingGround == false)
+        if((stickActive == false && bounceMode == false && isPound == false))
         {
             if (isTouchingGround == false)
             {
                 // Player falls down faster every frame
-                dirY -= 0.02f;
+                dirY -= 0.04f;
             }
             else if (isJump == false)
             {
                 dirY = 0;
             }
         }
-        
+
+        if (stickActive == true && isTouchingWall == false)
+        {
+            dirY -= 0.06f;
+        }
+
+
     }
 
-    void AnimationController()
+    void AnimationController() // Remove Later
     {
-        
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            playerSprite.sprite = crouch;
+        }
 
+        if (!Input.GetKey(KeyCode.S) && isTouchingTop == false)
+        {
+            playerSprite.sprite = idle;
+        }
     }
 
     void KeyPressed()
     {
         // Stick to wall switch
-        if (Input.GetKeyDown(KeyCode.J))
+        if (Input.GetKeyDown(KeyCode.L) && isCrouch == false)
         {
             if (bounceMode == false)
             {
@@ -156,108 +224,151 @@ public class Player : MonoBehaviour
                 }
 
             }
-            else
-            {
-                playerRB.sharedMaterial = slip;
-            }
         }
 
         // Bounce Setup 
-        if(Input.GetKeyDown(KeyCode.K) && isTouchingGround == true)
+        if (Input.GetKeyDown(KeyCode.K))
         {
-            if(stickActive == false)
-            { 
-                bounceMode = !bounceMode;
+            if (isTouchingGround == true && isCrouch == false)
+            {
+                PlayerCollision("Bounce");
+                AttackTrigger("Bounce");
 
-                if(bounceMode == true)
+                if (stickActive == false)
                 {
-                    playerRB.sharedMaterial = bounce;
-                    playerRB.gravityScale = 1.7f;
+                    bounceMode = !bounceMode;
+
+                    if (bounceMode == true)
+                    {
+                        playerRB.sharedMaterial = bounce;
+                        playerRB.gravityScale = 1.7f;
+                    }
                 }
             }
-        }
-        else if(bounceMode == true && Input.GetKeyDown(KeyCode.K))
-        {
-            bounceMode = !bounceMode;
+            else if (bounceMode == true)
+            {
+                PlayerCollision("Idle");
+                AttackTrigger("Reset");
 
-            playerRB.sharedMaterial = slip;
-            playerRB.gravityScale = 10; // DO smn different asp
-            //Reset velocity
-            dirX = 0;
+                bounceMode = !bounceMode;
+
+                playerRB.sharedMaterial = slip;
+                playerRB.gravityScale = 10;
+                //Reset velocity
+                dirX = 0;
+            }
         }
 
         // Run
-        if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
+        if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) && isCrouch == false)
         {
             speed = runSpeed;
         }
 
         //Normal movement
-        if (stickActive == false)
+        if (stickActive == false && isDash == false && isPound == false)
         {
             if (Input.GetKey(KeyCode.A))
             {
                 dirX = -speed;
-                
+
             }
             if (Input.GetKey(KeyCode.D))
             {
                 dirX = speed;
             }
 
-            if(Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.A))
+            // Do another version of this
+            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.A))
             {
+                isMove = true;
                 player.transform.localScale = new Vector2((Mathf.Sign(playerRB.velocity.x)), player.transform.localScale.y);
             }
         }
         // Stick velocity
-        else
+        else if (isPound == false)
         {
             if (player.transform.localScale.x == -1)
             {
-                dirX = -8;
+                dirX = -10;
             }
             else if (player.transform.localScale.x == 1)
             {
-                dirX = 8;
+                dirX = 10;
             }
         }
 
         // Crouch
         if (Input.GetKey(KeyCode.S))
         {
+            if (isTouchingGround == true && stickActive == false && bounceMode == false)
+            {
+                isCrouch = true;
+                speed = walkSpeed - 2;
+                // Collider Changes
+                PlayerCollision("Crouch");
+            }
+        // Ground Pound
+            else if(isTouchingGround == false)
+            {
+                if (poundRoutine == null)
+                {
+                    poundRoutine = StartCoroutine(GroundPoundFunc());
+                }
+            }
+        }
 
+        // Dash and Attack
+        if (Input.GetKey(KeyCode.J))
+        {
+            // Dash
+            if (isMove == true && isCrouch == false)
+            {
+                if (dashRoutine == null)
+                {
+                    dashRoutine = StartCoroutine(DashFunction());
+                }
+            }
+
+            //Attack
+            if (attackRoutine == null)
+            {
+                attackRoutine = StartCoroutine(AttackFunction());
+            }
         }
 
         // Jump
-        if (stickActive == false && Input.GetKeyDown(KeyCode.Space) && isTouchingGround == true)
+        if (Input.GetKeyDown(KeyCode.Space) && isDoubleJump == false)
         {
-            if (jumpRoutine == null)
+            if (stickActive == false && isTouchingGround == true)
             {
-                jumpRoutine = StartCoroutine(JumpFunction());
+                if (jumpRoutine == null)
+                {
+                    jumpRoutine = StartCoroutine(JumpFunction());
+                }
             }
-        }     
-
-        // Sticky Wall Jump
-        else if (stickActive == true && Input.GetKeyDown(KeyCode.Space) && isTouchingWall == true)
-        {
-            
-            if (jumpRoutine == null)
+            // Sticky Wall Jump
+            else if (stickActive == true && isTouchingWall == true && isCrouch == false)
             {
-                // Flip
-                player.transform.localScale = new Vector2(-(Mathf.Sign(playerRB.velocity.x)), player.transform.localScale.y);
 
-                jumpRoutine = StartCoroutine(JumpFunction());  
+                if (jumpRoutine == null)
+                {
+                    // Flip
+                    player.transform.localScale = new Vector2(-(Mathf.Sign(playerRB.velocity.x)), player.transform.localScale.y);
+
+                    jumpRoutine = StartCoroutine(JumpFunction());
+                }
+
             }
-            
         }
-
-        // Disable when stick active Touches Ground
-        if(stickActive == true && isTouchingGround == true)
+        
+        // Double Jump
+        if (Input.GetKeyDown(KeyCode.Space) && isTouchingGround == false)
         {
-            stickActive = false;
-            dirX = 0;
-            playerRB.sharedMaterial = slip;
+            if (doubleJumpRoutine == null)
+            {
+                doubleJumpRoutine = StartCoroutine(DoubleJumpFunct());
+            }
         }
 
     }
@@ -274,15 +385,155 @@ public class Player : MonoBehaviour
             // Movement
             if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))
             {
+                isMove = false;
                 dirX = 0;
             }
 
             // Crouch
-            if (Input.GetKeyUp(KeyCode.S))
+            if (isCrouch = true && (isTouchingTop == false && !Input.GetKey(KeyCode.S) || (Input.GetKeyUp(KeyCode.S) && isTouchingTop == false)) )
             {
-
+                isCrouch = false;
+                speed = walkSpeed;
+                // Collider Changes
+                PlayerCollision("Idle");
             }
         }
+    }
+
+    // Collision and Triggers Setup
+    void PlayerCollision(string mode)
+    {
+        switch (mode)
+        {
+            case "Idle":
+                idleCollider.gameObject.SetActive(true);
+                crouchCollider.gameObject.SetActive(false);
+                bounceCollider.gameObject.SetActive(false);
+
+                break;
+
+            case "Crouch":
+                idleCollider.gameObject.SetActive(false);
+                crouchCollider.gameObject.SetActive(true);
+                bounceCollider.gameObject.SetActive(false);
+
+                break;
+
+            case "Bounce":
+                idleCollider.gameObject.SetActive(false);
+                crouchCollider.gameObject.SetActive(false);
+                bounceCollider.gameObject.SetActive(true);
+
+                break;
+
+            default:
+                Debug.Log("ERROR");
+                break;
+
+        }
+    }
+
+    void AttackTrigger(string mode)
+    {
+        switch (mode)
+        {
+            case "Normal-Attack":
+                poundTrigger.gameObject.SetActive(false);
+                bounceTrigger.gameObject.SetActive(false);
+                attackTrigger.gameObject.SetActive(true);
+
+                break;
+
+            case "Head-Attack":
+                // WIP
+
+                break;
+
+            case "Bounce":
+                poundTrigger.gameObject.SetActive(false);
+                bounceTrigger.gameObject.SetActive(true);
+                attackTrigger.gameObject.SetActive(false);
+
+                break;
+
+            case "Pound":
+                poundTrigger.gameObject.SetActive(true);
+                bounceTrigger.gameObject.SetActive(false);
+                attackTrigger.gameObject.SetActive(false);
+
+                break;
+
+            case "Reset":
+                poundTrigger.gameObject.SetActive(false);
+                bounceTrigger.gameObject.SetActive(false);
+                attackTrigger.gameObject.SetActive(false);
+
+                break;
+
+            default:
+                Debug.Log("ERROR");
+                break;
+
+        }
+    }
+
+    // Routines
+    IEnumerator AttackFunction()
+    {
+        isAttack = true;
+        AttackTrigger("Normal-Attack");
+        yield return new WaitForSeconds(0.5f);
+        AttackTrigger("Reset");
+
+        isAttack = false;
+        attackRoutine = null;
+    }
+    
+    IEnumerator GroundPoundFunc()
+    {
+        isPound = true;
+        playerRB.gravityScale = 0;
+        AttackTrigger("Pound");
+
+        // Air Time
+        dirX = 0;
+        dirY = 0;
+        yield return new WaitForSeconds(0.5f);
+
+        while (isTouchingGround == false)
+        {
+            dirY = -10f;
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        playerRB.gravityScale = 10;
+        isPound = false;
+
+        yield return new WaitForSeconds(0.3f);
+        poundTrigger.gameObject.SetActive(false);
+        poundRoutine = null;
+    }
+
+    IEnumerator DashFunction()
+    {
+        if (player.transform.localScale.x == -1)
+        {
+            dirX = -dashPower;
+        }
+        else
+        {
+            dirX = dashPower;
+        }
+        
+        isDash = true;
+        AttackTrigger("Normal-Attack");
+        yield return new WaitForSeconds(0.4f);
+        AttackTrigger("Reset");
+        isDash = false;
+        dirX = 0;
+
+        dashRoutine = null;
+
     }
 
     IEnumerator JumpFunction()
@@ -297,29 +548,15 @@ public class Player : MonoBehaviour
 
     }
 
-
-    // Floor Collision
-    private void OnTriggerStay2D(Collider2D collision)
+    IEnumerator DoubleJumpFunct()
     {
-        if (collision.CompareTag("Level"))
-        {
-            if (floorCollision.IsTouching(collision))
-            {
-                isTouchingGround = true;
-            }
-        }  
+        dirY = jumpPower;
+        isDoubleJump = true;
+        yield return new WaitForSeconds(0.4f);
+        isDoubleJump = false;
+        dirY = 0;
+
+        doubleJumpRoutine = null;
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Level"))
-        {
-            isTouchingGround = false;
-        }
-    }
-
-    private void OnBecameInvisible()
-    {
-        player.transform.position = new Vector2(-12,-2.50f);
-    }
 }

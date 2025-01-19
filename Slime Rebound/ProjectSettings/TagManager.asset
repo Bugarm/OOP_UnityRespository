@@ -11,6 +11,7 @@ TagManager:
   - PlayerDamageBox
   - Level
   - Platforms
+  - PlayerAttack
   layers:
   - Default
   - TransparentFX

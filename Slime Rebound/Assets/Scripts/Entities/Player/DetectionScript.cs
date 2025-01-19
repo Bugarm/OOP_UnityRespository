@@ -2,23 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WallDetection : MonoBehaviour
+public class DetectionScript : MonoBehaviour 
 {
-    public static WallDetection instance;
 
-    private BoxCollider2D wallCollision;
-    private bool isTouchingWall;
-
-    private void Awake()
-    {
-        instance = this;
-    }
+    private bool isTouching;
 
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
-        isTouchingWall = false;
-        wallCollision = GetComponent<BoxCollider2D>();
+        isTouching = false;
     }
 
     // Update is called once per frame
@@ -27,9 +19,9 @@ public class WallDetection : MonoBehaviour
         
     }
 
-    public bool ReturnWallDetection()
+    public bool ReturnDetection()
     {
-        return isTouchingWall;
+        return isTouching;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -37,8 +29,8 @@ public class WallDetection : MonoBehaviour
         if (collision.CompareTag("Platforms") || collision.CompareTag("Level"))
         {
 
-            isTouchingWall = true;
-            
+            isTouching = true;
+
         }
     }
 
@@ -46,8 +38,7 @@ public class WallDetection : MonoBehaviour
     {
         if (collision.CompareTag("Platforms") || collision.CompareTag("Level"))
         {
-            isTouchingWall = false;
-            
+            isTouching = false;
         }
     }
 }
