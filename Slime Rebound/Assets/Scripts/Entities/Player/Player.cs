@@ -71,10 +71,9 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        poundTrigger.gameObject.SetActive(false);
-        bounceTrigger.gameObject.SetActive(false);
-        attackTrigger.gameObject.SetActive(false);
-        jumpAttackTrigger.gameObject.SetActive(false);
+        AttackTrigger("Reset");
+
+        PlayerCollision("Idle");
     }
 
     // Update is called once per frame
@@ -145,6 +144,7 @@ public class Player : MonoBehaviour
         }
     }
 
+    // Maybe make it a powerup instead
     void BounceMode()
     {
         if (bounceMode == true)
@@ -171,24 +171,20 @@ public class Player : MonoBehaviour
 
     void PlayerAcceleration()
     {
-        if((stickActive == false && bounceMode == false && isPound == false && isAttackJump == false && isDoubleJump == false))
+        if((stickActive == false && bounceMode == false && isPound == false && isAttackJump == false && isDoubleJump == false && isJump == false))
         {
             if (isTouchingGround == false)
             {
                 // Player falls down faster every frame
-                dirY -= 0.04f;
+                dirY -= 0.15f;
             }
-            else if (isJump == false)
+            else
             {
+                // Reset Velocity when it hits ground
                 dirY = 0;
             }
-        }
 
-        if (stickActive == true && isTouchingWall == false)
-        {
-            dirY -= 0.06f;
         }
-
 
     }
 
@@ -287,22 +283,29 @@ public class Player : MonoBehaviour
         }
 
         // Stick velocity
-        else if (isPound == false)
+        if (stickActive == true && isPound == false)
         {
             if (player.transform.localScale.x == -1)
             {
-                dirX = -6.5f;
+                dirX = -7.5f;
             }
             else if (player.transform.localScale.x == 1)
             {
-                dirX = 6.5f;
+                dirX = 7.5f;
             }
         }
 
         // Saves old Speed for the crouch
         if (Input.GetKeyDown(KeyCode.S))
         {
-            oldSpeed = speed;
+            if (oldSpeed <= 0)
+            {
+                oldSpeed = walkSpeed;
+            }
+            else
+            {
+                oldSpeed = speed;
+            }
         }
 
         // Crouch & Slide & Jump Attack
@@ -320,7 +323,7 @@ public class Player : MonoBehaviour
                     if (isRun == true)
                     {
                         isSlide = true;
-                        speed -= 0.005f;
+                        speed -= 0.05f;
                         if (speed < 0)
                         {
                             speed = 0;
@@ -348,7 +351,7 @@ public class Player : MonoBehaviour
         // Ground Pound
         if (Input.GetKeyDown(KeyCode.S))
         {
-            if (stickActive == false)
+            if (stickActive == false || (stickActive == true && isTouchingWall == false))
             {
                 if (isTouchingGround == false && isAttackJump == false)
                 {
@@ -382,7 +385,7 @@ public class Player : MonoBehaviour
         // Jump
         if (Input.GetKeyDown(KeyCode.Space) && isJump == false && isAttackJump == false)
         {
-            if (stickActive == false && isTouchingGround == true)
+            if (stickActive == false && isTouchingGround == true && isJump == false)
             {
                 if (jumpRoutine == null)
                 {
@@ -396,15 +399,23 @@ public class Player : MonoBehaviour
                 if (jumpRoutine == null)
                 {
                     // Flip
-                    player.transform.localScale = new Vector2(-(Mathf.Sign(playerRB.velocity.x)), player.transform.localScale.y);
+                    if (player.transform.localScale.x == -1)
+                    {
+                        player.transform.localScale = new Vector2(1, 1);
+                    }
+                    else
+                    {
+                        player.transform.localScale = new Vector2(-1, 1);
+                    }
 
                     jumpRoutine = StartCoroutine(JumpFunction());
+
                 }
             }
         }
         
         // Double Jump
-        else if (Input.GetKeyDown(KeyCode.Space) && isJump == true && isAttackJump == false)
+        else if (Input.GetKeyDown(KeyCode.Space) && isAttackJump == false && stickActive == false)
         {
             StopCoroutine(JumpFunction());
             jumpRoutine = null;

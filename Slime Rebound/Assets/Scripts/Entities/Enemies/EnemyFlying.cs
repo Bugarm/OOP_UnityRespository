@@ -75,8 +75,8 @@ public class EnemyFlying : Default_Entity
 
         PointerCreation();
 
-        clampRotationLow = Quaternion.Euler(0, 0, -70f);
-        clampRotationHigh = Quaternion.Euler(0, 0, +70f);
+        clampRotationLow = Quaternion.Euler(0, 0, 0f);
+        clampRotationHigh = Quaternion.Euler(0, 0, +360f);
 
         // stops rotation
         rb.freezeRotation = true;
@@ -200,8 +200,7 @@ public class EnemyFlying : Default_Entity
         Quaternion newrotation = Quaternion.LookRotation(relativePos, Vector3.back);
         newrotation.x = 0;
         newrotation.y = 0;
-        newrotation.z = Mathf.Clamp(newrotation.z, clampRotationLow.z, clampRotationHigh.z);
-        newrotation.w = Mathf.Clamp(newrotation.w, clampRotationLow.w, clampRotationHigh.w);
+
         shootPointObj.transform.rotation = Quaternion.Slerp(shootPointObj.transform.rotation, newrotation, Time.deltaTime * 3);
 
     }
@@ -210,10 +209,9 @@ public class EnemyFlying : Default_Entity
     {
         if (enemy.activeInHierarchy == true && collision.CompareTag("Player"))
         {
-            if (playerRangeTrigger.IsTouching(collision))
-            {
-                seesPlayer = true;
-            }
+
+            seesPlayer = true;
+           
         }
     }
 
@@ -221,10 +219,9 @@ public class EnemyFlying : Default_Entity
     {
         if (enemy.activeInHierarchy == true && collision.CompareTag("Player"))
         {
-            if (!playerRangeTrigger.IsTouching(collision))
-            {
-                seesPlayer = false;
-            }
+
+            seesPlayer = false;
+            
         }
     }
 
