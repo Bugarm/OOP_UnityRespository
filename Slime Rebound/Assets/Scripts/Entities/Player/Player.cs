@@ -6,7 +6,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public Player Instance;
+    
+    public static Player Instance;
 
     [Header("Settings")]
     public int walkSpeed;
@@ -34,6 +35,7 @@ public class Player : MonoBehaviour
     public GameObject headAttack;
     public int headGravityPower;
     public GameObject throwArrow;
+    public GameObject playerHeadStorage;
 
     [Header("Player Sprite")]
     public SpriteRenderer playerSprite;
@@ -113,11 +115,10 @@ public class Player : MonoBehaviour
 
     }
 
-    // Do easy simple long jump Attack here
-
-    // Do Head Attack
-
-    // Should be it hopefully
+    public Player ReturnInstance()
+    {
+        return Instance;
+    }
 
     void ResetChecks()
     {
@@ -156,19 +157,36 @@ public class Player : MonoBehaviour
 
     void PlayerAcceleration()
     {
-        if((stickActive == false && bounceMode == false && PlayerState.IsPound == false && PlayerState.IsAttackJump == false && PlayerState.IsDoubleJump == false && PlayerState.IsJump == false))
+        if((stickActive == false && PlayerState.IsPound == false && PlayerState.IsAttackJump == false && PlayerState.IsDoubleJump == false && PlayerState.IsJump == false))
         {
-            if (isTouchingGround == false)
+            if(bounceMode == false)
             {
-                // Player falls down faster every frame
-                dirY -= 0.15f;
+                if ((isTouchingGround == false))
+                {
+                    // Player falls down faster every frame
+                    dirY -= 0.15f;
+                }
+                else
+                {
+                    // Reset Velocity when it hits ground
+                    dirY = 0;
+                }
             }
-            else
+            else if (bounceMode == true && isTouchingWall == false)
             {
-                // Reset Velocity when it hits ground
-                dirY = 0;
+                if(playerRB.velocity.y < -3.7f)
+                { 
+                    
+                    if((isTouchingGround == true))
+                    {
+                        playerRB.velocity = new Vector2(playerRB.velocity.x, 0f);
+                    }
+                    else
+                    {
+                        playerRB.velocity = new Vector2(playerRB.velocity.x, playerRB.velocity.y - 0.15f);
+                    }
+                }
             }
-
         }
 
     }
@@ -206,8 +224,8 @@ public class Player : MonoBehaviour
             }
         }
 
-        // Bounce Setup 
-        if (Input.GetKeyDown(KeyCode.K) && PlayerState.IsHeadAttack == false && PlayerState.IsCrouch == false && stickActive == false && (isTouchingGround == true || bounceMode == true))
+        // Bounce Setup // Do a check where it only goes faster when it checks Y velocity when bounce mode
+        if (Input.GetKeyDown(KeyCode.K) && PlayerState.IsHeadAttack == false && PlayerState.IsCrouch == false && stickActive == false && (isTouchingGround == true ))
         {
             bounceMode = !bounceMode;
 
@@ -218,14 +236,14 @@ public class Player : MonoBehaviour
         }
 
         // Run
-        if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) && PlayerState.IsCrouch == false)
+        if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) && PlayerState.IsCrouch == false && PlayerState.IsSlide == false)
         {
             PlayerState.IsRun = true;
             speed = runSpeed;
         }
 
         //Normal movement
-        if (stickActive == false && PlayerState.IsDash == false && PlayerState.IsPound == false && PlayerState.IsSlide == false)
+        if (stickActive == false && PlayerState.IsDash == false && PlayerState.IsPound == false && bounceMode == false)
         {
             if (Input.GetKey(KeyCode.A))
             {
@@ -260,9 +278,9 @@ public class Player : MonoBehaviour
         }
 
         // Saves old Speed for the crouch
-        if (Input.GetKeyDown(KeyCode.S) && PlayerState.IsHeadAttack == false)
+        if (Input.GetKey(KeyCode.S) && (PlayerState.IsCrouch == true || PlayerState.IsSlide == true))
         {
-            if (oldSpeed <= 0)
+            if (speed<= 0)
             {
                 oldSpeed = walkSpeed;
             }
@@ -279,7 +297,7 @@ public class Player : MonoBehaviour
         // Crouch & Slide & Jump Attack
         if (Input.GetKey(KeyCode.S) && PlayerState.IsHeadAttack == false && bounceMode == false)
         {
-            if (stickActive == false && bounceMode == false && isTouchingGround == true)
+            if (stickActive == false && isTouchingGround == true)
             {
 
                 // Collider Changes
@@ -288,15 +306,17 @@ public class Player : MonoBehaviour
                 // Slide
                 if (PlayerState.IsRun == true)
                 {
-                    if(slideRoutine == null)
-                    {
-                        PlayerState.IsSlide = true;
+                    PlayerState.IsSlide = true;
 
-                        slideRoutine = StartCoroutine(SlideFunction());
+                    speed -= 0.045f;
+                    if (speed < 0)
+                    {
+                        speed = walkSpeed - 2;
+
                     }
                 }
                 // Normal Crouch Speed
-                else
+                else if(PlayerState.IsSlide == false)
                 {
                     PlayerState.IsCrouch = true;
                     speed = walkSpeed - 2;
@@ -332,7 +352,7 @@ public class Player : MonoBehaviour
         // Dash & Attack & Head Attack
         if(Input.GetKey(KeyCode.W) && Input.GetKeyDown(KeyCode.J))
         {
-            if(isTouchingGround == true && PlayerState.IsCrouch == false && PlayerState.IsPound == false && PlayerState.IsDash == false && PlayerState.IsDoubleJump == false)
+            if(isTouchingGround == true && bounceMode == false && PlayerState.IsCrouch == false && PlayerState.IsPound == false && PlayerState.IsDash == false && PlayerState.IsDoubleJump == false)
             { 
                 if (headAttackRoutine == null)
                 {
@@ -359,7 +379,7 @@ public class Player : MonoBehaviour
         }
 
         // Jump
-        if (Input.GetKeyDown(KeyCode.Space) && PlayerState.IsJump == false && PlayerState.IsAttackJump == false)
+        if (Input.GetKeyDown(KeyCode.Space) && PlayerState.IsJump == false && PlayerState.IsAttackJump == false && isTouchingTop == false)
         {
             if (stickActive == false && isTouchingGround == true && PlayerState.IsJump == false)
             {
@@ -405,9 +425,19 @@ public class Player : MonoBehaviour
 
     void KeyReleased()
     {
-        if (Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.RightShift))
+        if ((Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.RightShift)) )
         {
-            speed = walkSpeed;
+            PlayerState.IsRun = false;
+            if (PlayerState.IsCrouch == false && PlayerState.IsSlide == false)
+            {
+                speed = walkSpeed;
+            }
+            else
+            {
+                speed = walkSpeed - 2;
+            }
+            
+            
         }
 
         if (stickActive == false && bounceMode == false)
@@ -420,9 +450,9 @@ public class Player : MonoBehaviour
             }
 
             // Crouch (do this better)
-            if (PlayerState.IsCrouch == true && isTouchingTop == false && (!Input.GetKey(KeyCode.S) || (Input.GetKeyUp(KeyCode.S)) ))
+            if ((PlayerState.IsCrouch == true || PlayerState.IsSlide == true) && isTouchingTop == false && (!Input.GetKey(KeyCode.S) || (Input.GetKeyUp(KeyCode.S)) ))
             {
-
+                PlayerState.IsSlide = false;
                 PlayerState.IsCrouch = false;
 
                 speed = oldSpeed;
@@ -524,8 +554,6 @@ public class Player : MonoBehaviour
     // Routines
     IEnumerator BounceFunction()
     {
-        bool doOnce = true;
-
         // 
         if (bounceMode == true)
         {
@@ -539,7 +567,6 @@ public class Player : MonoBehaviour
 
         while (bounceMode == true)
         {
-            doOnce = true;
             yield return new WaitForSeconds(0.001f);
 
             if (player.transform.localScale.x == -1)
@@ -551,14 +578,16 @@ public class Player : MonoBehaviour
                 dirX = bounceSpeed;
             }
 
-            if (isTouchingWall == true && doOnce == true)
+
+            if (isTouchingWall == true)
             {
                 player.transform.localScale = new Vector2(-(Mathf.Sign(playerRB.velocity.x)), player.transform.localScale.y);
 
                 playerRB.velocity = new Vector3(playerRB.velocity.x, 12.3f, 0);
-                doOnce = false;
+                yield return new WaitForSeconds(0.005f);
+
             }
-            
+
         }
 
         // Cooldown
@@ -635,6 +664,7 @@ public class Player : MonoBehaviour
             if (obj == null && PlayerState.IsHeadThrown == false)
             {
                 obj = Instantiate(headAttack, player.transform.position, Quaternion.identity);
+                obj.transform.SetParent(playerHeadStorage.transform);
                 obj.transform.position = new Vector2(player.transform.position.x, player.transform.position.y + 0.5f);
 
                 headPhysics = obj.transform.GetChild(0).gameObject;
@@ -655,7 +685,7 @@ public class Player : MonoBehaviour
             }  
 
             // Cancel Attack
-            if (PlayerState.IsHeadThrown == false && (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.K)))
+            if (PlayerState.IsHeadThrown == false && (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.K) || Input.GetKey(KeyCode.L)))
             {
                 PlayerState.IsHeadAttack = false;
                 PlayerState.IsHeadThrown = false;
@@ -677,6 +707,7 @@ public class Player : MonoBehaviour
             // Do attack
             if (Input.GetKeyDown(KeyCode.J) && PlayerState.IsHeadThrown == false)
             {
+                throwArrow.SetActive(false);
 
                 headPhysics.SetActive(true);
                 headRender.SetActive(false);
@@ -689,6 +720,8 @@ public class Player : MonoBehaviour
 
                 // Cooldown
                 yield return new WaitForSeconds(1.8f);
+
+                throwArrow.SetActive(true);
             }
         }
             
@@ -719,7 +752,7 @@ public class Player : MonoBehaviour
 
         while (isTouchingGround == false)
         {
-            dirY = -10f;
+            dirY = -13.5f;
             yield return new WaitForSeconds(0.1f);
         }
 
@@ -795,27 +828,4 @@ public class Player : MonoBehaviour
         attackJumpRoutine = null;
     }
 
-    IEnumerator SlideFunction()
-    {
-        // THERE'S A BUG
-        while (PlayerState.IsSlide == true || PlayerState.IsCrouch == true)
-        {
-            
-            speed -= 0.045f;
-            if (speed < 0)
-            {
-                speed = walkSpeed - 2;
-                PlayerState.IsSlide = false;
-
-            }
-            yield return new WaitForSeconds(0.001f);
-        }
-
-        PlayerState.IsSlide = false;
-        speed = oldSpeed;
-        // Collider Changes
-        PlayerCollision("Idle");
-
-        slideRoutine = null;
-    }
 }
