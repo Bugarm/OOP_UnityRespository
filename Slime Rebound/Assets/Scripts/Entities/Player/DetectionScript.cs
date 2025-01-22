@@ -28,9 +28,7 @@ public class DetectionScript : MonoBehaviour
     {
         if (collision.CompareTag("Platforms") || collision.CompareTag("Level"))
         {
-
             isTouching = true;
-
         }
     }
 

@@ -19,11 +19,11 @@ TagManager:
   - Level
   - Water
   - UI
-  - 
+  - Bullet
+  - PlayerBullet
   - Entities
   - Platforms
   - Player
-  - 
   - 
   - 
   - 
