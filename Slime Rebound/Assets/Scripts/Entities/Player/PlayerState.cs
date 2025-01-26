@@ -5,7 +5,34 @@ using UnityEngine;
 public abstract class PlayerState : MonoBehaviour
 {
     private static bool _isJump, _isDoubleJump, _isDash, _isSlide, _isMove, _isRun, _isCrouch, _isPound, _isAttack, _isAttackJump, _isHeadAttack, _isHeadThrown;
+    private static bool _isTouchingWall, _isTouchingGround, _isTouchingPlatform, _isTouchingTop;
+    
+    // Collision
+    public static bool IsTouchingWall
+    {
+        get { return _isTouchingWall; }
+        set { _isTouchingWall = value; }
+    }
 
+    public static bool IsTouchingGround
+    {
+        get { return _isTouchingGround; }
+        set { _isTouchingGround = value; }
+    }
+
+    public static bool IsTouchingPlatform
+    {
+        get { return _isTouchingPlatform; }
+        set { _isTouchingPlatform = value; }
+    }
+
+    public static bool IsTouchingTop
+    {
+        get { return _isTouchingTop; }
+        set { _isTouchingTop = value; }
+    }
+
+    // Bools
     public static bool IsJump
     {
         get { return _isJump; }

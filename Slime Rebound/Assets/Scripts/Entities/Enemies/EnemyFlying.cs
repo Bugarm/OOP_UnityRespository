@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -20,10 +21,9 @@ public class EnemyFlying : Default_Entity
     public int fireRate;
 
     // set up
-    protected GameObject enemy;
     protected Rigidbody2D rb;
     protected SpriteRenderer enemySr;
-    private GameObject player;
+    private bool setupOnce = true;
 
     // Enemy Simple AI
     private List<GameObject> setPointList;
@@ -73,8 +73,6 @@ public class EnemyFlying : Default_Entity
     {
         base.Start();
 
-        PointerCreation();
-
         clampRotationLow = Quaternion.Euler(0, 0, 0f);
         clampRotationHigh = Quaternion.Euler(0, 0, +360f);
 
@@ -83,7 +81,7 @@ public class EnemyFlying : Default_Entity
 
         rb.gravityScale = 0;
 
-        moveToPoint = pointers[0];
+        moveToPoint = new Vector3(startPosX + pointers[0].x, startPosY + pointers[0].y, 0);
 
         // Flips Enemy
         if (Mathf.Sign(enemy.transform.position.x - moveToPoint.x) == -1)
@@ -94,36 +92,40 @@ public class EnemyFlying : Default_Entity
         {
             enemySr.flipX = true;
         }
+
+        setupOnce = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        FollowPoints();
-
-        if(seesPlayer == true)
+        if (disableAI == false)
         {
-            // Homing Function
-            if (bulletPool.name == "ObjectsToPool Homing Bullet")
+            FollowPoints();
+
+            if (seesPlayer == true)
             {
-                PointAtPlayer();
+                // Homing Function
+                if (bulletPool.name == "ObjectsToPool Homing Bullet")
+                {
+                    PointAtPlayer();
+                }
+
+                if (bulletRoutine == null)
+                {
+                    bulletRoutine = StartCoroutine(ShootBullet(bulletPool));
+                }
+            }
+            else
+            {
+                if (bulletRoutine != null)
+                {
+                    StopCoroutine(bulletRoutine);
+                    bulletRoutine = null;
+                }
             }
 
-            if (bulletRoutine == null)
-            {
-                bulletRoutine = StartCoroutine(ShootBullet(bulletPool));
-            }
         }
-        else 
-        {
-            if (bulletRoutine != null)
-            {
-                StopCoroutine(bulletRoutine);
-                bulletRoutine = null;
-            }
-        }
-
-        
     }
 
     IEnumerator ShootBullet(ObjectPooling bulletPool)
@@ -141,29 +143,6 @@ public class EnemyFlying : Default_Entity
         }
     }
 
-    private void PointerCreation()
-    {
-        GameObject setPoint;
-
-        int pointCount = 0;
-        pointGroup = new GameObject(enemy.name.ToString() + " Group");
-
-        // Parenting //
-        pointGroup.transform.SetParent(pointerGroupObj.transform);
-
-        // Create Pointers //
-        foreach (Vector2 point in pointers)
-        {
-            pointCount++;
-            setPoint = new GameObject(enemy.name.ToString() + " Point " + pointCount);
-            setPoint.transform.position = point;
-            setPointList.Add(setPoint);
-
-            setPointList[pointCount - 1].transform.SetParent(pointGroup.transform);
-        }
-        
-    }
-
     void FollowPoints()
     {
         if (enemy.transform.position == moveToPoint)
@@ -174,7 +153,7 @@ public class EnemyFlying : Default_Entity
             {
                 moveToIndex = 0;
             }
-            moveToPoint = pointers[moveToIndex];
+            moveToPoint = new Vector3(startPosX + pointers[moveToIndex].x, startPosY + pointers[moveToIndex].y, 0);
 
             // Flips The enemy based on direction
             if(Mathf.Sign(enemy.transform.position.x - moveToPoint.x) == -1)
@@ -205,38 +184,66 @@ public class EnemyFlying : Default_Entity
 
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("PlayerAttack"))
+        {
+            if(collision.IsTouching(deathCollider))
+            { 
+             StartCoroutine(EnemyDead());
+            }
+        }
+    }
+
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (enemy.activeInHierarchy == true && collision.CompareTag("Player"))
+        if (disableAI == false)
         {
+            if (enemy.activeInHierarchy == true && collision.CompareTag("Player"))
+            {
 
-            seesPlayer = true;
-           
+                seesPlayer = true;
+
+            }
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (enemy.activeInHierarchy == true && collision.CompareTag("Player"))
+        if (disableAI == false)
         {
+            if (enemy.activeInHierarchy == true && collision.CompareTag("Player"))
+            {
 
-            seesPlayer = false;
-            
+                seesPlayer = false;
+
+            }
         }
     }
 
     private void OnDrawGizmos()
     {
+        GameObject enemy = this.gameObject;
         Vector3 oldPoint = this.gameObject.transform.position;
+        Vector3 newPoint;
 
         foreach (Vector3 point in pointers)
         {
-             // Draw //
-            Gizmos.DrawWireSphere(point, 0.5f);
+            if (setupOnce == true) // This will follow the current pos
+            {
+                newPoint = new Vector3(enemy.transform.position.x + point.x, enemy.transform.position.y + point.y, 0);
+            }
+            else // this will only follow the starting position
+            {
+                newPoint = new Vector3(startPosX + point.x, startPosY + point.y, 0);
+            }
 
-            Gizmos.DrawLine(oldPoint,point);
+            // Draw //
+            Gizmos.DrawWireSphere(newPoint, 0.5f);
+
+            Gizmos.DrawLine(oldPoint, newPoint);
             
-            oldPoint = point;
+            oldPoint = newPoint;
         }
 
         Gizmos.DrawWireCube(transform.GetChild(0).gameObject.transform.position, new Vector3(1,0.3f,0));

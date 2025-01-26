@@ -8,7 +8,6 @@ TagManager:
   - Obsticales
   - Doors
   - Collectables
-  - PlayerDamageBox
   - Level
   - Platforms
   - PlayerAttack
@@ -24,6 +23,7 @@ TagManager:
   - Entities
   - Platforms
   - Player
+  - PlayerDetect
   - 
   - 
   - 
@@ -43,8 +43,7 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
+  - Cam
   m_SortingLayers:
   - name: Default
     uniqueID: 0

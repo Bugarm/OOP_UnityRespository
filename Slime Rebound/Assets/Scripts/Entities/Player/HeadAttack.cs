@@ -23,7 +23,7 @@ public class HeadAttack : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("Level") && PlayerState.IsHeadThrown == true)
+        if((collision.CompareTag("Level") || collision.CompareTag("Enemies")) && PlayerState.IsHeadThrown == true)
         {
 
             PlayerState.IsHeadThrown = false;

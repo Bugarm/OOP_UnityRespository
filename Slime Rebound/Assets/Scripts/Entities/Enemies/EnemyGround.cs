@@ -27,7 +27,6 @@ public class EnemyGround : Default_Entity
     public float jumpForce;
 
     //
-    protected GameObject enemy;
     protected Rigidbody2D rb;
     protected SpriteRenderer enemySr;
 
@@ -37,8 +36,6 @@ public class EnemyGround : Default_Entity
 
     private GameObject pointGroup;
 
-    private float startPosX;
-    private float startPosY;
     private float yOffset = -0.5f;
     private float curJumpForce = 0;
 
@@ -60,16 +57,12 @@ public class EnemyGround : Default_Entity
         base.Awake();
         // Set up //
 
-        
-
-        enemy = this.gameObject;
         rb = this.gameObject.GetComponent<Rigidbody2D>();
         enemySr = enemy.GetComponent<SpriteRenderer>();
 
         // Gizmo Setup //
         setupOnce = false;
-        startPosX = enemy.transform.position.x;
-        startPosY = enemy.transform.position.y;
+        
 
         groundDectection = enemy.GetComponent<BoxCollider2D>();
         wallDectection = transform.GetChild(0).gameObject.GetComponent<CapsuleCollider2D>();
@@ -91,6 +84,7 @@ public class EnemyGround : Default_Entity
     // Start is called before the first frame update
     protected override void Start()
     {
+        base.Start();
         // stops rotation
         rb.freezeRotation = true;
 
@@ -115,16 +109,18 @@ public class EnemyGround : Default_Entity
 
     // Update is called once per frame
     void Update()
-    {        
-        if(freeRoamMode == false)
+    {
+        if (disableAI == false)
         {
-            FollowPoints();    
+            if (freeRoamMode == false)
+            {
+                FollowPoints();
+            }
+            else if (freeRoamMode == true)
+            {
+                FreeRoam();
+            }
         }
-        else if (freeRoamMode == true)
-        {
-            FreeRoam();
-        }
-        
     }
 
     // Pointer Mode Functions //
@@ -224,84 +220,103 @@ public class EnemyGround : Default_Entity
     // Others //
     private void OnDrawGizmos()
     {
-        Vector3 point1Giz;
-        Vector3 point2Giz;
-
-        if (setupOnce == true) // This will follow the current pos
+        if (freeRoamMode == false)
         {
-            point1Giz = new Vector3(this.gameObject.transform.position.x + point1OffsetX, this.gameObject.transform.position.y + yOffset, 0);
-            point2Giz = new Vector3(this.gameObject.transform.position.x + point2OffsetX, this.gameObject.transform.position.y + yOffset, 0);
-        }
-        else // this will only follow the starting position
-        {
-            point1Giz = new Vector3(startPosX + point1OffsetX, startPosY + yOffset, 0);
-            point2Giz = new Vector3(startPosX + point2OffsetX, startPosY + yOffset, 0);
-        }
+            Vector3 point1Giz;
+            Vector3 point2Giz;
 
-        // Draw //
-        Gizmos.DrawWireSphere(point1Giz, 0.5f);
-        Gizmos.DrawWireSphere(point2Giz, 0.5f);
-        Gizmos.DrawLine(point1Giz, point2Giz);
+            if (setupOnce == true) // This will follow the current pos
+            {
+                point1Giz = new Vector3(this.gameObject.transform.position.x + point1OffsetX, this.gameObject.transform.position.y + yOffset, 0);
+                point2Giz = new Vector3(this.gameObject.transform.position.x + point2OffsetX, this.gameObject.transform.position.y + yOffset, 0);
+            }
+            else // this will only follow the starting position
+            {
+                point1Giz = new Vector3(startPosX + point1OffsetX, startPosY + yOffset, 0);
+                point2Giz = new Vector3(startPosX + point2OffsetX, startPosY + yOffset, 0);
+            }
+
+            // Draw //
+            Gizmos.DrawWireSphere(point1Giz, 0.5f);
+            Gizmos.DrawWireSphere(point2Giz, 0.5f);
+            Gizmos.DrawLine(point1Giz, point2Giz);
+        }
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        isOnGround = true;
+        if(disableAI == false)
+        { 
+            isOnGround = true;
 
-        // Wall Dectection
-        if (enemy.activeInHierarchy == true && collision.CompareTag("Level") && wallDectection.IsTouching(collision))
-        {
-            if(freeRoamMode == false)
+            // Wall Dectection
+            if (enemy.activeInHierarchy == true && collision.CompareTag("Level") && wallDectection.IsTouching(collision))
             {
-                TurnFunc();
-            }
-            else
-            {
-                if (!jumpDectection.IsTouching(collision))
+                if(freeRoamMode == false)
                 {
-                    // Jumping Force
-                    curJumpForce = jumpForce;
+                    TurnFunc();
                 }
+                else
+                {
+                    if (!jumpDectection.IsTouching(collision))
+                    {
+                        // Jumping Force
+                        curJumpForce = jumpForce;
+                    }
                 
-            }
+                }
             
-        }
-        else if (enemy.activeInHierarchy == true && !wallDectection.IsTouching(collision))
-        {
-            curJumpForce = 0;
+            }
+            else if (enemy.activeInHierarchy == true && !wallDectection.IsTouching(collision))
+            {
+                curJumpForce = 0;
+            }
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (enemy.activeInHierarchy == true && collision.CompareTag("Level") && wallDectection.IsTouching(collision) && jumpDectection.IsTouching(collision))
+        if (disableAI == false)
         {
-            TurnFunc();
+            if (enemy.activeInHierarchy == true && collision.CompareTag("Level") && wallDectection.IsTouching(collision) && jumpDectection.IsTouching(collision))
+            {
+                TurnFunc();
+            }
+
+            if (collision.CompareTag("PlayerAttack"))
+            {
+                if (collision.IsTouching(deathCollider))
+                {
+                    StartCoroutine(EnemyDead());
+                }
+            }
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        isOnGround = false;
+        if (disableAI == false)
+        {
+            isOnGround = false;
 
-        // Ledge Decection
-        if (enemy.activeInHierarchy == true && collision.CompareTag("Level"))
-        { 
-            if (freeRoamMode == false)
+            // Ledge Decection
+            if (enemy.activeInHierarchy == true && collision.CompareTag("Level"))
             {
-                if (!groundDectection.IsTouching(collision))
+                if (freeRoamMode == false)
                 {
-                    TurnFunc();
+                    if (!groundDectection.IsTouching(collision))
+                    {
+                        TurnFunc();
+                    }
                 }
-            }
-            else if (freeRoamMode == true)
-            {
-                if (!pitDectection.IsTouching(collision))
+                else if (freeRoamMode == true)
                 {
-                    TurnFunc();
+                    if (!pitDectection.IsTouching(collision))
+                    {
+                        TurnFunc();
+                    }
                 }
             }
         }
-
     }
 }

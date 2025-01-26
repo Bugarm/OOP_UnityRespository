@@ -1,9 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerHUDManager : MonoBehaviour
 {
+    public TMP_Text Hp;
+    public TMP_Text Score;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -13,6 +17,7 @@ public class PlayerHUDManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        Hp.text = GameData.Hp.ToString() + "/10";
+        Score.text = GameData.Score.ToString();
     }
 }

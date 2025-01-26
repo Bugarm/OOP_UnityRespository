@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 843383769183998694}
   - component: {fileID: 8110463478181714332}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Render
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -70,8 +70,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -957843865
+  m_SortingLayer: 6
   m_SortingOrder: 0
   m_Sprite: {fileID: -2413806693520163455, guid: 1a3d2a541c3325e42a2230d38873d86e, type: 3}
   m_Color: {r: 0.27772337, g: 0.745283, b: 0.28769648, a: 1}
@@ -93,9 +93,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7485380781236964808}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player-Head
-  m_TagString: Untagged
+  m_TagString: PlayerAttack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 1717160667446091881}
   - component: {fileID: 1778861535888218431}
   - component: {fileID: 9111937047940396715}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RigidBody
   m_TagString: PlayerAttack
   m_Icon: {fileID: 0}
@@ -217,8 +217,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -957843865
+  m_SortingLayer: 6
   m_SortingOrder: 0
   m_Sprite: {fileID: -2413806693520163455, guid: 1a3d2a541c3325e42a2230d38873d86e, type: 3}
   m_Color: {r: 0.27772337, g: 0.745283, b: 0.28769648, a: 1}

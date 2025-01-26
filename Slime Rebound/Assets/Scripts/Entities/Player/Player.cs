@@ -4,11 +4,9 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : Singleton<Player>
 {
     
-    public static Player Instance;
-
     [Header("Settings")]
     public int walkSpeed;
     public int runSpeed;
@@ -19,6 +17,7 @@ public class Player : MonoBehaviour
     public PhysicsMaterial2D slip;
     public PhysicsMaterial2D stick;
     public PhysicsMaterial2D bounce;
+    public PhysicsMaterial2D platform;
 
     [Header("Player Collider")]
     public CapsuleCollider2D idleCollider;
@@ -49,12 +48,13 @@ public class Player : MonoBehaviour
 
     private float dirX;
     private float dirY;
+    private float newxPos;
     private float jumpPower;
-    private int attackJumpPower;
+    private float attackJumpPower;
     private float speed;
 
     // Collision Check
-    private bool isTouchingWall, isTouchingGround, isTouchingTop;
+    private PhysicsMaterial2D curMaterial;
 
     public static bool bounceMode, headAttackMode;
     private bool stickActive;
@@ -63,9 +63,9 @@ public class Player : MonoBehaviour
 
     private Coroutine jumpRoutine, doubleJumpRoutine, dashRoutine, poundRoutine, attackRoutine, attackJumpRoutine, headAttackRoutine, bounceRoutine, slideRoutine;
 
-    void Awake()
+    protected override void Awake()
     {
-        Instance = this;
+        base.Awake();
 
         player = this.gameObject;
         playerRB = GetComponent<Rigidbody2D>();
@@ -74,8 +74,8 @@ public class Player : MonoBehaviour
 
         dirX = 0;
         dirY = 0;
-        jumpPower = 6.5f;
-        attackJumpPower = 8;
+        jumpPower = 6.35f;
+        attackJumpPower = 10.4f;
 
         speed = walkSpeed;
     }
@@ -91,17 +91,26 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // CHANGE THESE
-        isTouchingWall = WallDetection.instance.ReturnDetection();
-        isTouchingTop = TopDectection.instance.ReturnDetection();
-        isTouchingGround = FloorCollider.instance.ReturnDetection();
-
-        ResetChecks();
+        // Check on this later
+        curMaterial = PlayerState.IsTouchingPlatform == true ? platform : slip;
+        
+        if(bounceMode == false && stickActive == false)
+        { 
+            if(PlayerState.IsTouchingPlatform == true)
+            {
+                playerRB.sharedMaterial = platform;
+            }
+            else
+            {
+                playerRB.sharedMaterial = slip;
+            }
+        }
 
         KeyPressed();
         AnimationController();
         KeyReleased();
-        
+        ResetChecks();
+
         PlayerAcceleration();
 
         if(bounceMode == true)
@@ -112,7 +121,6 @@ public class Player : MonoBehaviour
         {
             playerRB.velocity = new Vector3(dirX, dirY, 0);
         }
-
     }
 
     public Player ReturnInstance()
@@ -123,11 +131,11 @@ public class Player : MonoBehaviour
     void ResetChecks()
     {
         // Disable when stick active Touches Ground
-        if (stickActive == true && isTouchingGround == true)
+        if (stickActive == true && PlayerState.IsTouchingGround == true)
         {
             stickActive = false;
             dirX = 0;
-            playerRB.sharedMaterial = slip;
+            playerRB.sharedMaterial = curMaterial;
         }
 
         // Disable Jump when groundpound
@@ -142,14 +150,14 @@ public class Player : MonoBehaviour
         {
             bounceMode = false;
 
-            playerRB.sharedMaterial = slip;
+            playerRB.sharedMaterial = curMaterial;
             playerRB.gravityScale = 10; // DO smn different asp
             //Reset velocity
             dirX = 0;
         }
 
         // Allows to stick while bounce
-        if(Input.GetKeyDown(KeyCode.L) && (bounceMode == true && isTouchingWall == true))
+        if(Input.GetKeyDown(KeyCode.L) && (bounceMode == true && PlayerState.IsTouchingWall == true))
         {
             bounceMode = false;
         }
@@ -157,27 +165,29 @@ public class Player : MonoBehaviour
 
     void PlayerAcceleration()
     {
-        if((stickActive == false && PlayerState.IsPound == false && PlayerState.IsAttackJump == false && PlayerState.IsDoubleJump == false && PlayerState.IsJump == false))
+        if((PlayerState.IsPound == false && PlayerState.IsAttackJump == false && PlayerState.IsDoubleJump == false && PlayerState.IsJump == false))
         {
-            if(bounceMode == false)
+            // Always Apply Gravity
+            if(bounceMode == false || stickActive == true)
             {
-                if ((isTouchingGround == false))
+                if ((playerRB.velocity.y < 0f) && PlayerState.IsTouchingWall == false)
                 {
                     // Player falls down faster every frame
                     dirY -= 0.15f;
                 }
-                else
+                
+                if(PlayerState.IsTouchingGround == true || PlayerState.IsTouchingPlatform == true)
                 {
                     // Reset Velocity when it hits ground
                     dirY = 0;
                 }
             }
-            else if (bounceMode == true && isTouchingWall == false)
+            // Gravity Delay
+            else if (bounceMode == true && PlayerState.IsTouchingWall == false)
             {
                 if(playerRB.velocity.y < -3.7f)
-                { 
-                    
-                    if((isTouchingGround == true))
+                {  
+                    if((PlayerState.IsTouchingGround == true))
                     {
                         playerRB.velocity = new Vector2(playerRB.velocity.x, 0f);
                     }
@@ -198,7 +208,7 @@ public class Player : MonoBehaviour
             playerSprite.sprite = crouch;
         }
 
-        if (!Input.GetKey(KeyCode.S) && isTouchingTop == false)
+        if (!Input.GetKey(KeyCode.S) && PlayerState.IsTouchingTop == false)
         {
             playerSprite.sprite = idle;
         }
@@ -218,14 +228,14 @@ public class Player : MonoBehaviour
                 }
                 else
                 {
-                    playerRB.sharedMaterial = slip;
+                    playerRB.sharedMaterial = curMaterial;
                 }
 
             }
         }
 
         // Bounce Setup // Do a check where it only goes faster when it checks Y velocity when bounce mode
-        if (Input.GetKeyDown(KeyCode.K) && PlayerState.IsHeadAttack == false && PlayerState.IsCrouch == false && stickActive == false && (isTouchingGround == true ))
+        if (Input.GetKeyDown(KeyCode.K) && PlayerState.IsHeadAttack == false && PlayerState.IsCrouch == false && stickActive == false)
         {
             bounceMode = !bounceMode;
 
@@ -247,21 +257,18 @@ public class Player : MonoBehaviour
         {
             if (Input.GetKey(KeyCode.A))
             {
+                PlayerState.IsMove = true;
                 dirX = -speed;
+                player.transform.localScale = new Vector2(-1, player.transform.localScale.y);
 
             }
             if (Input.GetKey(KeyCode.D))
             {
-                dirX = speed;
-            }
-
-            // Do another version of this
-            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.A))
-            {
                 PlayerState.IsMove = true;
-
-                player.transform.localScale = new Vector2((Mathf.Sign(playerRB.velocity.x)), player.transform.localScale.y);
+                dirX = speed;
+                player.transform.localScale = new Vector2(1, player.transform.localScale.y);
             }
+
         }
 
         // Stick velocity
@@ -297,7 +304,7 @@ public class Player : MonoBehaviour
         // Crouch & Slide & Jump Attack
         if (Input.GetKey(KeyCode.S) && PlayerState.IsHeadAttack == false && bounceMode == false)
         {
-            if (stickActive == false && isTouchingGround == true)
+            if (stickActive == false && PlayerState.IsTouchingGround == true)
             {
 
                 // Collider Changes
@@ -308,7 +315,7 @@ public class Player : MonoBehaviour
                 {
                     PlayerState.IsSlide = true;
 
-                    speed -= 0.045f;
+                    speed -= 0.025f;
                     if (speed < 0)
                     {
                         speed = walkSpeed - 2;
@@ -337,9 +344,9 @@ public class Player : MonoBehaviour
         // Ground Pound
         if (Input.GetKeyDown(KeyCode.S) && PlayerState.IsHeadAttack == false)
         {
-            if (stickActive == false || (stickActive == true && isTouchingWall == false))
+            if (stickActive == false || (stickActive == true && PlayerState.IsTouchingWall == false))
             {
-                if (isTouchingGround == false && PlayerState.IsAttackJump == false)
+                if ((PlayerState.IsTouchingGround == false && PlayerState.IsTouchingPlatform == false) && PlayerState.IsAttackJump == false)
                 {
                     if (poundRoutine == null)
                     {
@@ -352,7 +359,7 @@ public class Player : MonoBehaviour
         // Dash & Attack & Head Attack
         if(Input.GetKey(KeyCode.W) && Input.GetKeyDown(KeyCode.J))
         {
-            if(isTouchingGround == true && bounceMode == false && PlayerState.IsCrouch == false && PlayerState.IsPound == false && PlayerState.IsDash == false && PlayerState.IsDoubleJump == false)
+            if(PlayerState.IsTouchingGround == true && bounceMode == false && PlayerState.IsCrouch == false && PlayerState.IsPound == false && PlayerState.IsDash == false && PlayerState.IsDoubleJump == false)
             { 
                 if (headAttackRoutine == null)
                 {
@@ -379,9 +386,9 @@ public class Player : MonoBehaviour
         }
 
         // Jump
-        if (Input.GetKeyDown(KeyCode.Space) && PlayerState.IsJump == false && PlayerState.IsAttackJump == false && isTouchingTop == false)
+        if (Input.GetKeyDown(KeyCode.Space) && PlayerState.IsJump == false && PlayerState.IsAttackJump == false && PlayerState.IsTouchingTop == false)
         {
-            if (stickActive == false && isTouchingGround == true && PlayerState.IsJump == false)
+            if (stickActive == false && (PlayerState.IsTouchingGround == true || PlayerState.IsTouchingPlatform == true) && PlayerState.IsJump == false)
             {
                 if (jumpRoutine == null)
                 {
@@ -389,7 +396,7 @@ public class Player : MonoBehaviour
                 }
             }
             // Sticky Wall Jump
-            else if (stickActive == true && isTouchingWall == true && PlayerState.IsCrouch == false)
+            else if (stickActive == true && PlayerState.IsTouchingWall == true && PlayerState.IsCrouch == false)
             {
                 if (jumpRoutine == null)
                 {
@@ -410,7 +417,7 @@ public class Player : MonoBehaviour
         }
         
         // Double Jump
-        else if (Input.GetKeyDown(KeyCode.Space) && PlayerState.IsAttackJump == false && stickActive == false && PlayerState.IsHeadAttack == false)
+        else if (Input.GetKeyDown(KeyCode.Space) && PlayerState.IsAttackJump == false && stickActive == false && PlayerState.IsHeadAttack == false && PlayerState.IsTouchingTop == false)
         {
             StopCoroutine(JumpFunction());
             jumpRoutine = null;
@@ -450,7 +457,7 @@ public class Player : MonoBehaviour
             }
 
             // Crouch (do this better)
-            if ((PlayerState.IsCrouch == true || PlayerState.IsSlide == true) && isTouchingTop == false && (!Input.GetKey(KeyCode.S) || (Input.GetKeyUp(KeyCode.S)) ))
+            if ((PlayerState.IsCrouch == true || PlayerState.IsSlide == true) && PlayerState.IsTouchingTop == false && (!Input.GetKey(KeyCode.S) || (Input.GetKeyUp(KeyCode.S)) ))
             {
                 PlayerState.IsSlide = false;
                 PlayerState.IsCrouch = false;
@@ -579,7 +586,7 @@ public class Player : MonoBehaviour
             }
 
 
-            if (isTouchingWall == true)
+            if (PlayerState.IsTouchingWall == true)
             {
                 player.transform.localScale = new Vector2(-(Mathf.Sign(playerRB.velocity.x)), player.transform.localScale.y);
 
@@ -596,7 +603,7 @@ public class Player : MonoBehaviour
             PlayerCollision("Idle");
             AttackTrigger("Reset");
 
-            playerRB.sharedMaterial = slip;
+            playerRB.sharedMaterial = curMaterial;
             playerRB.gravityScale = 10;
             //Reset velocity
             dirX = 0;
@@ -649,17 +656,19 @@ public class Player : MonoBehaviour
             }
 
             // Direction
-            if (player.transform.localScale.x == -1)
-            {
-                powerX = -xSpeed;
-                arrowRotate = -34.68f;
+            if(PlayerState.IsHeadThrown == false)
+            { 
+                if (player.transform.localScale.x == -1)
+                {
+                    powerX = -xSpeed;
+                    arrowRotate = -34.68f;
+                }
+                else
+                {
+                    powerX = xSpeed;
+                    arrowRotate = 36.08f;
+                }
             }
-            else
-            {
-                powerX = xSpeed;
-                arrowRotate = 36.08f;
-            }
-
             // Create Head Obj
             if (obj == null && PlayerState.IsHeadThrown == false)
             {
@@ -750,7 +759,7 @@ public class Player : MonoBehaviour
         dirY = 0;
         yield return new WaitForSeconds(0.5f);
 
-        while (isTouchingGround == false)
+        while (PlayerState.IsTouchingGround == false)
         {
             dirY = -13.5f;
             yield return new WaitForSeconds(0.1f);
