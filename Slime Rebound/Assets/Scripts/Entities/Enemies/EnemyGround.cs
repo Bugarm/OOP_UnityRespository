@@ -22,7 +22,6 @@ public class EnemyGround : Default_Entity
 
     // set up
     [Header("Settings")]
-    public int speed;
     public int gravityPower;
     public float jumpForce;
 
@@ -156,12 +155,12 @@ public class EnemyGround : Default_Entity
             if (curPoint == set_point1.transform)
             {
                 // This makes sure it moves to the right direction by checking the point neg or pos //
-                rb.velocity = point1OffsetX < 0 ? new Vector2(-speed, 0) : new Vector2(speed, 0);
+                rb.velocity = point1OffsetX < 0 ? new Vector2(-enemiesData.speed, 0) : new Vector2(enemiesData.speed, 0);
             }
             else
             {
                 // This makes sure it moves to the right direction by checking the point neg or pos//
-                rb.velocity = point2OffsetX < 0 ? new Vector2(-speed, 0) : new Vector2(speed, 0);
+                rb.velocity = point2OffsetX < 0 ? new Vector2(-enemiesData.speed, 0) : new Vector2(enemiesData.speed, 0);
             }
         }
 
@@ -214,7 +213,7 @@ public class EnemyGround : Default_Entity
     private void FreeRoam()
     {
                                                 // Right                                  //Left
-        rb.velocity = directionRoam == true ? new Vector2(speed, curJumpForce) : new Vector2(-speed, curJumpForce);
+        rb.velocity = directionRoam == true ? new Vector2(enemiesData.speed, curJumpForce) : new Vector2(-enemiesData.speed, curJumpForce);
     }
 
     // Others //

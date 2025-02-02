@@ -6,6 +6,11 @@ using UnityEditor;
 
 public class Default_Entity : MonoBehaviour
 {
+
+    public EnemiesSO enemiesData;
+
+    public CircleCollider2D deathCollider;
+
     private CircleCollider2D enemyBody;
     private Rigidbody2D enemyVel;
     private int powerX;
@@ -14,12 +19,14 @@ public class Default_Entity : MonoBehaviour
     private Rigidbody2D playerRB;
 
     protected bool disableAI;
-    public CircleCollider2D deathCollider;
+    
 
     protected GameObject enemy;
 
     protected float startPosX;
     protected float startPosY;
+
+    protected Coroutine colorFlashRoutine;
 
     //
     protected virtual void Awake()
@@ -48,19 +55,32 @@ public class Default_Entity : MonoBehaviour
         
     }
 
-    protected IEnumerator EnemyDead()
+    public IEnumerator EnemyDead()
     {
         disableAI = true;
-        this.gameObject.GetComponent<Rigidbody2D>().gravityScale = 0.5f;
+
+        StartCoroutine(GameManager.Instance.ColorFlash(enemy));
+
+        enemy.GetComponent<Rigidbody2D>().gravityScale = 0.5f;
 
         powerX = Mathf.Sign(playerRB.velocity.x) < 0 ? -powerXval : powerXval;
-        this.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector3(powerX, 3,1);
+        enemy.GetComponent<Rigidbody2D>().velocity = new Vector3(powerX, 3,1);
+
+        Destroy(deathCollider);
 
         yield return new WaitForSeconds(1);
 
-        // Explode Here
+        // Explode Here Effect Here
+
+
         yield return new WaitForSeconds(0.3f);
-        Destroy(this.gameObject);
+
+        GameData.Score += enemiesData.score;
+        GameManager.Instance.DisplayScore();
+        StopCoroutine(GameManager.Instance.ColorFlash(enemy));
+        Destroy(enemy);
     }
+
     
+
 }

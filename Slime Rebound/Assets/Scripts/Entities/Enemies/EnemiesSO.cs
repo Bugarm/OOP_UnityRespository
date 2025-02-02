@@ -2,17 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemiesSO : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+[CreateAssetMenu(fileName = "EnemyData", menuName = "ScriptableObjects/EnemyData", order = 1)]
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+public class EnemiesSO : ScriptableObject
+{
+
+    public GameObject enemyPrefab;
+
+    public float speed;
+    public int score;
+    
 }

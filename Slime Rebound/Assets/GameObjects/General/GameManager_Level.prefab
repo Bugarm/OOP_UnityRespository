@@ -10,11 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 234023522515019288}
   - component: {fileID: 317381565666975327}
-  - component: {fileID: 2911953854264820078}
   - component: {fileID: 6111968868941069064}
-  - component: {fileID: -800834841355047179}
   - component: {fileID: -321061468402429375}
   - component: {fileID: 1592399009523712291}
+  - component: {fileID: 9055407155491440187}
+  - component: {fileID: 2465203562587741407}
   m_Layer: 0
   m_Name: GameManager_Level
   m_TagString: Untagged
@@ -49,18 +49,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da2d62fde4ebcca45a5f92c3d047ae3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &2911953854264820078
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5504839371982922821}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 745660a003bb0c7429d300a3998b1e6e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  hpUI: {fileID: 0}
+  scoreUI: {fileID: 0}
+  player: {fileID: 0}
+  saveableObjects: []
+  placeableObjects:
+  - id: Food
+    prefab: {fileID: 6058577865697632578, guid: d2e7a475096256843b47a57ac5df3172, type: 3}
+  - id: ScoreIncrease
+    prefab: {fileID: 5392201174721124192, guid: 1db92bcbe06bd6b489c908f3f297bb80, type: 3}
+  ObjectsKeep:
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &6111968868941069064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73,18 +73,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d7320bd1d07ec14ca5dabc475e97067, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-800834841355047179
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5504839371982922821}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5af59dd661150b24992109fef25a4384, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  saveableObjects: []
+  placeableObjects: []
+  hasSavedOnce: 0
 --- !u!114 &-321061468402429375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,3 +100,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fcb43c620010154fa7ac8c886bdbc6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
+--- !u!114 &9055407155491440187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5504839371982922821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1927134bb8a30146bae79ed6d30406f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pauseMenu: {fileID: 4195377346652100306, guid: 372963890eba5784d962e0c200e40f01, type: 3}
+  playerHUD: {fileID: 0}
+--- !u!114 &2465203562587741407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5504839371982922821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fe7eb06311becc458a5a7a3d8cf7877, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  placeableObjects:
+  - id: FoodObj
+    prefab: {fileID: 6058577865697632578, guid: d2e7a475096256843b47a57ac5df3172, type: 3}
+  - id: ScoreObj
+    prefab: {fileID: 5392201174721124192, guid: 1db92bcbe06bd6b489c908f3f297bb80, type: 3}

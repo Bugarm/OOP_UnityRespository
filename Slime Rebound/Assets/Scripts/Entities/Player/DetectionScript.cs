@@ -5,9 +5,8 @@ using Unity.VisualScripting;
 using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
 
-public class DetectionScript : MonoBehaviour 
+public class DetectionScript : Singleton<DetectionScript>
 {
-    public static DetectionScript Instance;
 
     private Rigidbody2D playerRB;
     private Vector3 playerPos;
@@ -21,11 +20,11 @@ public class DetectionScript : MonoBehaviour
     private BoxCollider2D floorTrigCol;
     private BoxCollider2D topTriggerCol;
 
-    private void Awake()
+    protected override void Awake()
     {
         playerRB = this.gameObject.GetComponent<Rigidbody2D>();
         playerPos = this.gameObject.transform.position;
-        Instance = this;
+
     }
 
     // Start is called before the first frame update
@@ -44,7 +43,7 @@ public class DetectionScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Level"))
+        if (collision.CompareTag("Level") || collision.CompareTag("SwitchDoor"))
         {
             if(collision.IsTouching(wallTrigCol) )
             { 
@@ -75,11 +74,37 @@ public class DetectionScript : MonoBehaviour
             }
         }
 
+        
+
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Enemies"))
+        {
+            if (collision.IsTouching(Player.Instance.idleTrigger) || collision.IsTouching(Player.Instance.crouchTrigger) || collision.IsTouching(Player.Instance.bounceTrigger))
+            {
+                if (GameManager.Instance.damageRoutine == null)
+                {
+                    GameManager.Instance.damageRoutine = StartCoroutine(GameManager.Instance.DamagePlayer());
+                }
+            }
+        }
+
+        if (collision.CompareTag("Obsticales") || collision.CompareTag("EnemyBullet"))
+        {
+            if (GameManager.Instance.damageRoutine == null)
+            {
+                GameManager.Instance.damageRoutine = StartCoroutine(GameManager.Instance.DamagePlayer());
+            }
+        }
+
+
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Level"))
+        if (collision.CompareTag("Level") || collision.CompareTag("SwitchDoor"))
         {
             if (!collision.IsTouching(wallTrigCol))
             {

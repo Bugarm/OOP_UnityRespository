@@ -8,6 +8,54 @@ public abstract class GameData : MonoBehaviour
     private static int _hp = 0;
     private static int _score = 0;
     private static string _levelState = "";
+    private static int _chainsInLevel;
+    private static bool _isPaused;
+    private static int _totalBounces = 0;
+    private static Vector3 _playerPos;
+
+
+    // High Score Varibles
+
+    private static int _tutorial_HighScore;
+    private static int _level1_HighScore;
+
+    // High Scores
+    public static int Tutorial_HighScore
+    {
+        get { return _tutorial_HighScore; }
+        set { _tutorial_HighScore = value; }
+    }
+
+    public static int Level1_HighScore
+    {
+        get { return _level1_HighScore; }
+        set { _level1_HighScore = value; }
+    }
+
+    //
+    public static int TotalBounces
+    {
+        get { return _totalBounces; }
+        set { _totalBounces = value; }
+    }
+
+    public static Vector3 PlayerPos
+    {
+        get { return _playerPos; }
+        set { _playerPos = value; }
+    }
+
+    public static bool IsPaused
+    {
+        get { return _isPaused; }
+        set { _isPaused = value; }
+    }
+
+    public static int ChainsInLevel
+    {
+        get { return _chainsInLevel; }
+        set { _chainsInLevel = value; }
+    }
 
     public static int Hp
     {

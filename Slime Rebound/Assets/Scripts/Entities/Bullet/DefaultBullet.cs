@@ -9,6 +9,8 @@ public class DefaultBullet : MonoBehaviour
     protected GameObject bullet;
     protected Rigidbody2D bulletRB;
 
+    private Coroutine deleteCourtine;
+
     protected virtual void Awake()
     {
         bullet = this.gameObject;
@@ -28,31 +30,43 @@ public class DefaultBullet : MonoBehaviour
         
     }
 
-    void ResetBullet()
+    IEnumerator ResetBullet()
     {
+        yield return new WaitForSeconds(0.05f);
         this.gameObject.SetActive(false);
         // It keeps the data so it needs to reset
         bulletRB.velocity = new Vector3(0, 0, 0);
         this.gameObject.transform.position = new Vector3(0, 0, 0);
         this.gameObject.transform.rotation = Quaternion.identity;
+        deleteCourtine = null;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Level"))
         {
-            ResetBullet();
+            if (deleteCourtine == null)
+            {
+                deleteCourtine = StartCoroutine(ResetBullet());
+            }
         }
-        else if (collision.CompareTag("Player"))
+        
+        if (collision.CompareTag("Player"))
         {
-            //Damage Player Here
-            ResetBullet();
+            if (deleteCourtine == null)
+            {
+                deleteCourtine = StartCoroutine(ResetBullet());
+            }
         }
     }
 
     private void OnBecameInvisible()
     {
-        ResetBullet();
+        
+        if (this.gameObject.activeInHierarchy == true && deleteCourtine == null)
+        {
+            deleteCourtine = StartCoroutine(ResetBullet());
+        }
 
     }
 }

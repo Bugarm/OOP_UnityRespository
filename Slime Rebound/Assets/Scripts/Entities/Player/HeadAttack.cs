@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HeadAttack : MonoBehaviour
+public class HeadAttack : Singleton<HeadAttack>
 {
     private GameObject head;
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         head = this.gameObject;
     }
 
@@ -21,7 +22,7 @@ public class HeadAttack : MonoBehaviour
     }  
     
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
         if((collision.CompareTag("Level") || collision.CompareTag("Enemies")) && PlayerState.IsHeadThrown == true)
         {
@@ -30,6 +31,13 @@ public class HeadAttack : MonoBehaviour
             Destroy(head.transform.parent.gameObject);
             
         }
+        
+        if(!(collision.CompareTag("Level") || collision.CompareTag("Enemies")) && PlayerState.IsHeadThrown == true)
+        {
+            head.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
+            head.GetComponent<Rigidbody2D>().gravityScale = 14;
+        }
+
     }
 
     private void OnBecameInvisible()

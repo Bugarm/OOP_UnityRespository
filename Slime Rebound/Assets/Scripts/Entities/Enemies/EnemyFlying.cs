@@ -16,9 +16,8 @@ public class EnemyFlying : Default_Entity
     
     // set up
     [Header("Settings")]
-    public int speed;
     public ObjectPooling bulletPool;
-    public int fireRate;
+    public int fireRateDelay;
 
     // set up
     protected Rigidbody2D rb;
@@ -111,18 +110,20 @@ public class EnemyFlying : Default_Entity
                     PointAtPlayer();
                 }
 
-                if (bulletRoutine == null)
-                {
-                    bulletRoutine = StartCoroutine(ShootBullet(bulletPool));
-                }
+                
             }
-            else
+            /*else
             {
                 if (bulletRoutine != null)
                 {
                     StopCoroutine(bulletRoutine);
                     bulletRoutine = null;
                 }
+            } */
+
+            if (bulletRoutine == null)
+            {
+                bulletRoutine = StartCoroutine(ShootBullet(bulletPool));
             }
 
         }
@@ -132,14 +133,18 @@ public class EnemyFlying : Default_Entity
     {
         while (true)
         {
-            // Spawn bullet from pool
-            GameObject getBullet = bulletPool.GetPoolObject();
+            if (seesPlayer == true)
+            { 
+                // Spawn bullet from pool
+                GameObject getBullet = bulletPool.GetPoolObject();
 
-            getBullet.transform.position = shootPointObj.transform.position;
-            getBullet.transform.rotation = shootPointObj.transform.rotation;
+                getBullet.transform.position = shootPointObj.transform.position;
+                getBullet.transform.rotation = shootPointObj.transform.rotation;
             
-            getBullet.SetActive(true);
-            yield return new WaitForSeconds(fireRate);
+                getBullet.SetActive(true);
+            }
+            yield return new WaitForSeconds(fireRateDelay);
+            
         }
     }
 
@@ -167,7 +172,7 @@ public class EnemyFlying : Default_Entity
         }
         else
         {
-            enemy.transform.position = Vector3.MoveTowards(enemy.transform.position, moveToPoint, speed * Time.deltaTime);
+            enemy.transform.position = Vector3.MoveTowards(enemy.transform.position, moveToPoint, enemiesData.speed * Time.deltaTime);
             //Debug.Log(Mathf.Sign(enemy.transform.position.x - moveToPoint.x));
         }
     }
@@ -190,7 +195,7 @@ public class EnemyFlying : Default_Entity
         {
             if(collision.IsTouching(deathCollider))
             { 
-             StartCoroutine(EnemyDead());
+                StartCoroutine(EnemyDead());
             }
         }
     }

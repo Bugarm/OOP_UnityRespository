@@ -6,7 +6,37 @@ public abstract class PlayerState : MonoBehaviour
 {
     private static bool _isJump, _isDoubleJump, _isDash, _isSlide, _isMove, _isRun, _isCrouch, _isPound, _isAttack, _isAttackJump, _isHeadAttack, _isHeadThrown;
     private static bool _isTouchingWall, _isTouchingGround, _isTouchingPlatform, _isTouchingTop;
-    
+    private static bool _isDamaged;
+    private static bool _isBounceMode, _isHeadAttackMode, _isStickActive;
+
+    // Modes
+
+    public static bool IsBounceMode
+    {
+        get { return _isBounceMode; }
+        set { _isBounceMode = value; }
+    }
+
+    public static bool IsHeadAttackMode
+    {
+        get { return _isHeadAttackMode; }
+        set { _isHeadAttackMode = value; }
+    }
+
+    public static bool IsStickActive
+    {
+        get { return _isStickActive; }
+        set { _isStickActive = value; }
+    }
+
+
+    // Damaged
+    public static bool IsDamaged
+    {
+        get { return _isDamaged; }
+        set { _isDamaged = value; }
+    }
+
     // Collision
     public static bool IsTouchingWall
     {

@@ -35,7 +35,7 @@ public class CameraFollow : MonoBehaviour
         
         player = FindObjectOfType<Player>();
 
-        savePlayerPos = player.ReturnInstance().transform.position;
+        savePlayerPos = player.transform.position;
         this.transform.position = new Vector3(savePlayerPos.x, savePlayerPos.y + 1, -10);
         isActiveOnce = true;
 
@@ -46,7 +46,7 @@ public class CameraFollow : MonoBehaviour
     void Update()
     {
         
-        savePlayerPos = player.ReturnInstance().transform.position;
+        savePlayerPos = player.transform.position;
 
         //X
         if (cam.transform.position.x > point1X && cam.transform.position.x < point2X)
