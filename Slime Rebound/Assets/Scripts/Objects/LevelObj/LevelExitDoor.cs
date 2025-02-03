@@ -4,7 +4,16 @@ using UnityEngine;
 
 public class LevelExitDoor : Singleton<LevelExitDoor>
 {
-    public GameObject exitTrigger;
+    GameObject exitDoor;
+    GameObject exitTrigger;
+    protected override void Awake()
+    {
+        base.Awake();
+
+        exitDoor = GameObject.FindGameObjectWithTag("ExitDoor");
+        exitTrigger = GameObject.FindGameObjectWithTag("ExitTrigger");
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,15 +28,39 @@ public class LevelExitDoor : Singleton<LevelExitDoor>
 
     public void DestroyDoorCheck()
     {
-        if(GameData.ChainsInLevel <= 0)
-        { 
-            this.gameObject.SetActive(false);
-            exitTrigger.SetActive(true);
+
+        Debug.Log(exitTrigger);
+
+        bool isExitDoor = CheckForDoor();
+
+        if (isExitDoor == true)
+        {
+            
+            if (GameData.ChainsInLevel <= 0)
+            {
+                exitDoor.SetActive(false);
+                exitTrigger.SetActive(true);
+            }
+            else
+            {
+                exitDoor.SetActive(true);
+                exitTrigger.SetActive(false);
+            }
+        }
+    }
+
+    public bool CheckForDoor()
+    {
+        GameObject exitDoor = GameObject.FindGameObjectWithTag("ExitDoor");
+        GameObject exitTrigger = GameObject.FindGameObjectWithTag("ExitTrigger");
+
+        if (exitDoor == null && exitTrigger == null)
+        {
+            return false;
         }
         else
-        {
-            this.gameObject.SetActive(true);
-            exitTrigger.SetActive(false);
+        { 
+            return true;
         }
     }
 }

@@ -15,8 +15,7 @@ public class SkeleChain : MonoBehaviour
 
     private void Awake()
     {
-
-        GameData.ChainsInLevel++;
+        
     }
 
     // Start is called before the first frame update
@@ -47,6 +46,8 @@ public class SkeleChain : MonoBehaviour
 
     private IEnumerator DestroyingObject()
     {
+        GameData.ChainsInLevel--;
+        
         this.gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
         this.gameObject.GetComponent<Rigidbody2D>().gravityScale = 0.5f;
 
@@ -54,9 +55,9 @@ public class SkeleChain : MonoBehaviour
         this.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector3(powerX, 3, 1);
 
         yield return new WaitForSeconds(0.5f);
-        GameData.ChainsInLevel--;
 
         LevelExitDoor.Instance.DestroyDoorCheck();
+                
         Destroy(this.gameObject);
     }
 }

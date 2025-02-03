@@ -38,6 +38,12 @@ public class FindAllSaveableObj : Singleton<FindAllSaveableObj>
             saveableObjects.Add(new SaveableObjects(placeableObjects[returnId].id, scoreItems[i].transform.position));
         }
 
+        GameObject[] chainsInLevel = GameObject.FindGameObjectsWithTag("SkeleChain");
+        for (int i = 0; i < chainsInLevel.Length; i++)
+        {
+            saveableObjects.Add(new SaveableObjects(placeableObjects[2].id, chainsInLevel[i].transform.position));
+        }
+
         return saveableObjects;
     }
 }

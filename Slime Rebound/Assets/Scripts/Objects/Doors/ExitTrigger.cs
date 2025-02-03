@@ -4,10 +4,15 @@ using UnityEngine;
 
 public class ExitTrigger : Singleton<ExitTrigger>
 {
+    protected override void Awake()
+    {
+        base.Awake();   
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        this.gameObject.SetActive(false);
     }
 
     // Update is called once per frame

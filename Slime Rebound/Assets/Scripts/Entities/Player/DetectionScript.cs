@@ -7,32 +7,27 @@ using UnityEngine.UIElements;
 
 public class DetectionScript : Singleton<DetectionScript>
 {
-
     private Rigidbody2D playerRB;
     private Vector3 playerPos;
 
     [Header("Triggers")]
-    public GameObject wallTrigger;
-    public GameObject floorTrigger;
-    public GameObject topTrigger;
-
-    private BoxCollider2D wallTrigCol;
-    private BoxCollider2D floorTrigCol;
-    private BoxCollider2D topTriggerCol;
+    public BoxCollider2D wallTrigCol;
+    public BoxCollider2D floorTrigCol;
+    public BoxCollider2D topTriggerCol;
 
     protected override void Awake()
     {
+        base.Awake();
+
         playerRB = this.gameObject.GetComponent<Rigidbody2D>();
         playerPos = this.gameObject.transform.position;
 
     }
 
     // Start is called before the first frame update
-    protected virtual void Start()
+    void Start()
     {
-        wallTrigCol = wallTrigger.GetComponent<BoxCollider2D>();
-        floorTrigCol = floorTrigger.GetComponent<BoxCollider2D>();
-        topTriggerCol = topTrigger.GetComponent<BoxCollider2D>();
+        
     }
 
     // Update is called once per frame
@@ -74,8 +69,6 @@ public class DetectionScript : Singleton<DetectionScript>
             }
         }
 
-        
-
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -104,7 +97,7 @@ public class DetectionScript : Singleton<DetectionScript>
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Level") || collision.CompareTag("SwitchDoor"))
+        if ((collision.CompareTag("Level") || collision.CompareTag("SwitchDoor")) && DetectionScript.Instance.IsDestroyed() == false)
         {
             if (!collision.IsTouching(wallTrigCol))
             {

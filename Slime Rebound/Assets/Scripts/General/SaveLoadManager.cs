@@ -24,7 +24,7 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
         string jsonToSave = JsonUtility.ToJson(mydata);
         //Debug.Log(jsonToSave);
         //Debug.Log(Application.persistentDataPath);
-        System.IO.File.WriteAllText(Application.persistentDataPath + "/CheckPointData.json", jsonToSave);
+        System.IO.File.WriteAllText(Application.persistentDataPath + "/ImportantData.json", jsonToSave);
 
         //BinaryFormatter binaryFormatter = new BinaryFormatter();
 
@@ -41,7 +41,6 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
         mydata.chainsLeft = GameData.ChainsInLevel;
         mydata.totalBounces = GameData.TotalBounces;
         mydata.playerPos = playerPos;
-
 
         hasSavedOnce = true;
 
@@ -78,9 +77,9 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
     public void LoadImportantData()
     {
 
-        if (File.Exists(Application.persistentDataPath + "/SuperCannonData.json"))
+        if (File.Exists(Application.persistentDataPath + "/ImportantData.json"))
         {
-            string loadedJson = System.IO.File.ReadAllText(Application.persistentDataPath + "/SuperCannonData.json");
+            string loadedJson = System.IO.File.ReadAllText(Application.persistentDataPath + "/ImportantData.json");
             //Debug.Log(loadedJson);
             //Debug.Log(Application.persistentDataPath);
             mydata = JsonUtility.FromJson<SerializedData>(loadedJson);
@@ -112,7 +111,6 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
 
     public void Reinstantiate(List<SaveableObjects> levelObj)
     {
-
         for(int i = 0; i < levelObj.Count; i++)
         {
             for (int j = 0; j < FindAllSaveableObj.Instance.placeableObjects.Length; j++) 
@@ -159,12 +157,10 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
         switch (sceneName)
         {
             case "TutorialRoom":
-
                 myLevelData.saveableObj_Tutorial = GetLevelData(sceneName);
                 break;
 
             case "TutorialRoom1":
-
                 myLevelData.saveableObj_Tutorial1 = GetLevelData(sceneName);
                 break;
 

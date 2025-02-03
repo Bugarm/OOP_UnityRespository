@@ -8,7 +8,6 @@ using UnityEngine.UI;
 
 public class GameManager : Singleton<GameManager>
 {
-    private Scene sceneStart;
 
     public TMP_Text hpUI;
     public TMP_Text scoreUI;
@@ -18,44 +17,23 @@ public class GameManager : Singleton<GameManager>
     private Rigidbody2D playerRB;
 
     private float powerX;
-    private float powerXval;
 
     private int maxHP;
-
-    private bool ignoreFirstSceneLoad = true;
 
     public List<SaveableObjects> saveableObjects;
     SerializedLevelData myLevelData = new SerializedLevelData();
 
-    public List<GameObject> ObjectsKeep;
 
-    private SaveLoadManager saveManager;
+    public Coroutine damageRoutine, flashRoutine, dataSwitchRoutine, InbounceUIRoutine, OutbounceUIRoutine, highBounceRoutine;
 
-    private PrefabSpawner[] spawner;
-
-    public Coroutine damageRoutine, flashRoutine, dataSwitchRoutine;
-
-    private List<string> sceneLoaded = new List<string>();
 
     protected override void Awake()
     {
         base.Awake();
 
-        SceneManager.sceneLoaded += OnSceneLoaded;
-
-        sceneStart = SceneManager.GetActiveScene();
-
         maxHP = 10;
-        saveManager = SaveLoadManager.Instance;
-
-        // Don't Destroy
-        DontDestroyOnLoad(this.gameObject);
-
-        foreach (GameObject obj in ObjectsKeep)
-        {
-            DontDestroyOnLoad(obj);
-        }
-
+        bounceUI.alpha = 0;
+        bounceUI.gameObject.SetActive(false);
     }
 
     // Start is called before the first frame update
@@ -63,19 +41,13 @@ public class GameManager : Singleton<GameManager>
     {
         playerRB = player.GetComponentInParent<Rigidbody2D>();
 
-        GameData.LevelState = sceneStart.name;
-
         GameData.Hp = 3;
         GameData.Score = 0;
+        GameData.TotalBounces = 0;
 
         DisplayScore();
         DisplayHp();
 
-        LevelExitDoor.Instance.DestroyDoorCheck();
-        SaveLoadManager.Instance.SaveDataCheckPoint(player.transform.position);
-
-        
-        ignoreFirstSceneLoad = false;
     }
 
     // Update is called once per frame
@@ -88,139 +60,19 @@ public class GameManager : Singleton<GameManager>
                 SceneManager.LoadScene(GameData.LevelState);
                 SaveLoadManager.Instance.LoadCheckpointData();
                 SaveLoadManager.Instance.LoadLevelData(SceneManager.GetActiveScene().name);
-                CheckpointLoadData();
+                DontDestroyGroup.Instance.CheckpointLoadData();
             }
             else
             {
                 SaveLoadManager.Instance.LoadCheckpointData();
                 SaveLoadManager.Instance.LoadLevelData(SceneManager.GetActiveScene().name);
-                CheckpointLoadData();
+                DontDestroyGroup.Instance.CheckpointLoadData();
 
             }
         }
     }
-
-    void FindAllChainsInLevel()
-    {
-        GameObject.Find("Assets/Scenes/");
-    }
-
-    // Load Scene
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (scene.name != "HUB" && scene.name != "MainMenu" && scene.name != "OptionScreen")
-        {
-            
-            // Spawns in the starting Door
-            GameObject doorStart = GameObject.FindGameObjectWithTag("DoorStart");
-
-            if (doorStart == null)
-            {
-                if (player != null)
-                {
-                    player.transform.position = new Vector3(0, 0, 0);
-                    GameData.PlayerPos = new Vector3(0, 0, 0);
-                }
-            }
-            else
-            {
-                if(player != null)
-                { 
-                  player.transform.position = new Vector3(doorStart.transform.position.x, doorStart.transform.position.y - 0.4f,0);
-                  GameData.PlayerPos = new Vector3(doorStart.transform.position.x, doorStart.transform.position.y - 0.4f, 0);
-                }
-            }
-
-            // Reset Player Velocity on Scene Loaded
-            Player.Instance.ResetPlayerVel();
-
-            if(ignoreFirstSceneLoad == false && dataSwitchRoutine == null)
-            { 
-                dataSwitchRoutine = StartCoroutine(SwitchSceneData(scene.name));
-            }
-            // So it won't load objects twice since the switchSceneData also Loads the data
-            else if(ignoreFirstSceneLoad == true)
-            {
-                StartCoroutine(SceneDataStart(scene.name));
-            }
-        }
-
-    }
-
-    // Data Related
-
-    bool checkedScene = false;
-    public void HasObjectsSpawnedOnce(string sceneName)
-    {
-        spawner = GameObject.FindObjectsOfType<PrefabSpawner>();
-
-        if (sceneLoaded.Count > 0)
-        {
-            foreach (string curScene in sceneLoaded)
-            {
-                if (curScene == SceneManager.GetActiveScene().name)
-                {
-                    checkedScene = true;
-                }
-            }
-
-            LoadObjects(sceneName);
-
-            checkedScene = false;
-        }
-        else
-        {
-            LoadObjects(sceneName);
-            checkedScene = false;
-        }
-
-        //Debug.Log(sceneLoaded.Count);
-    }
-
-    void CheckpointLoadData()
-    {
-        player.transform.position = GameData.PlayerPos;
-        GameData.Hp = maxHP;
-        DisplayHp();
-        DisplayScore();
-    }
-
-    private void LoadObjects(string sceneName)
-    {
-        if (checkedScene == false)
-        {
-            foreach (PrefabSpawner spawn in spawner)
-            {
-                if (spawn != null)
-                {
-                    spawn.SpawnItemOnce();
-                }
-            }
-
-            sceneLoaded.Add(sceneName);
-            SaveLoadManager.Instance.SaveLevelData(sceneName);
-
-        }
-    }
-
+ 
     // Routines
-
-    private IEnumerator SwitchSceneData(string sceneName)
-    {
-        yield return new WaitForSeconds(0.01f);
-        HasObjectsSpawnedOnce(sceneName);
-        yield return new WaitForSeconds(0.01f);
-        SaveLoadManager.Instance.LoadLevelData(sceneName);
-        yield return new WaitForSeconds(0.01f);
-        dataSwitchRoutine = null;
-    }
-
-    private IEnumerator SceneDataStart(string sceneName)
-    {
-        yield return new WaitForSeconds(0.01f);
-        HasObjectsSpawnedOnce(sceneName);
-        yield return new WaitForSeconds(0.01f);
-    }
 
     public IEnumerator DamagePlayer()
     {
@@ -292,7 +144,6 @@ public class GameManager : Singleton<GameManager>
     }
 
     // Displays
-
     public void DisplayHp()
     {
         if(GameData.Hp > maxHP)
@@ -325,16 +176,78 @@ public class GameManager : Singleton<GameManager>
         // save data here?
     }
 
-    public void DisplayBounces(int bounces)
+    // Bounce UI Functions
+    private IEnumerator HighestBounceEffect()
+    {
+        int repeat = 0;
+
+        while (repeat < 2)
+        {
+            yield return new WaitForSeconds(0.3f);
+            bounceUI.color = Color.yellow;
+            yield return new WaitForSeconds(0.3f);
+            bounceUI.color = Color.white;
+            yield return new WaitForSeconds(0.3f);
+            bounceUI.color = Color.yellow;
+            repeat++;
+        }
+
+        bounceUI.color = Color.white;
+        highBounceRoutine = null;
+    }
+
+    public IEnumerator FadeInBounceUI()
+    {
+        bounceUI.gameObject.SetActive(true);
+        //bounceUI.alpha = 0;
+
+        while (bounceUI.alpha <= 1)
+        {
+            // Fade In
+            bounceUI.alpha += Time.deltaTime;
+            yield return new WaitForSeconds(0.001f);
+
+        }
+
+        bounceUI.alpha = 1;
+        InbounceUIRoutine = null;
+
+    }
+
+    public IEnumerator FadeOutBounceUI()
+    {
+        bounceUI.gameObject.SetActive(true);
+        //bounceUI.alpha = 1;
+
+        while (bounceUI.alpha >= 0)
+        {
+            // Fade Out
+            bounceUI.alpha -= Time.deltaTime;
+            yield return new WaitForSeconds(0.001f);
+        }
+
+        bounceUI.alpha = 0;
+        bounceUI.gameObject.SetActive(false);
+        OutbounceUIRoutine = null;
+
+    }
+
+    public void UpdateBounces(int bounces)
     {
         bounceUI.text = "Bounces: " + bounces;
     }
 
     public void BouncesTotalCounted(int bounces)
     {
-        if(GameData.TotalBounces <= bounces)
+        if (GameData.TotalBounces <= bounces)
         {
             GameData.TotalBounces = bounces;
+
+            // High Bounce Count Effect
+            if(highBounceRoutine == null)
+            {
+                highBounceRoutine = StartCoroutine(HighestBounceEffect());
+            }
         }
     }
 
