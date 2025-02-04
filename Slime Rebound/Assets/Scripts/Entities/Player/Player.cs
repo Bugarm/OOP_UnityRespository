@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Playables;
 using static UnityEngine.EventSystems.EventTrigger;
 
 public class Player : Singleton<Player>
@@ -204,7 +205,7 @@ public class Player : Singleton<Player>
                 }
             }
             // Gravity Delay
-            else if (PlayerState.IsBounceMode == true && PlayerState.IsTouchingWall == false)
+            else if (PlayerState.IsBounceMode == true)
             {
                 if(playerRB.velocity.y < -3.7f)
                 {  
@@ -426,6 +427,7 @@ public class Player : Singleton<Player>
                     jumpRoutine = StartCoroutine(JumpFunction());
                 }
             }
+
             // Sticky Wall Jump
             else if (PlayerState.IsBounceMode == false && PlayerState.IsStickActive == true && PlayerState.IsTouchingWall == true && PlayerState.IsCrouch == false)
             {
@@ -446,7 +448,7 @@ public class Player : Singleton<Player>
                 }
             }
             // Bounce Jump
-            else if(PlayerState.IsBounceMode == true) 
+            else if(PlayerState.IsBounceMode == true && PlayerState.IsStickActive == false)
             {
                 if (jumpRoutine == null)
                 {
@@ -456,7 +458,7 @@ public class Player : Singleton<Player>
         }
         
         // Double Jump
-        else if (Input.GetKeyDown(KeyCode.Space) && PlayerState.IsAttackJump == false && PlayerState.IsStickActive == false && PlayerState.IsHeadAttack == false && PlayerState.IsTouchingTop == false)
+        else if (Input.GetKeyDown(KeyCode.Space) && PlayerState.IsBounceMode == false && PlayerState.IsAttackJump == false && PlayerState.IsStickActive == false && PlayerState.IsHeadAttack == false && PlayerState.IsTouchingTop == false)
         {
             StopCoroutine(JumpFunction());
             jumpRoutine = null;
@@ -688,6 +690,7 @@ public class Player : Singleton<Player>
         // 
         if (PlayerState.IsBounceMode == true)
         {
+            wallCollision.offset = new Vector2(0.72f, -0.2430587f);
             bounces = 0;
             GameManager.Instance.UpdateBounces(bounces);
 
@@ -738,15 +741,17 @@ public class Player : Singleton<Player>
                 bounces++;
 
                 GameManager.Instance.UpdateBounces(bounces);
-                
 
                 player.transform.localScale = new Vector2(-(Mathf.Sign(playerRB.velocity.x)), player.transform.localScale.y);
 
                 if (PlayerState.IsJump == true)
-                { 
+                {
                     playerRB.velocity = new Vector3(playerRB.velocity.x, 12.3f, 0);
                 }
+
                 yield return new WaitForSeconds(0.020f);
+
+                
 
             }
 
@@ -761,7 +766,9 @@ public class Player : Singleton<Player>
         // Cooldown
         if (PlayerState.IsBounceMode == false)
         {
-            if(GameManager.Instance.InbounceUIRoutine != null)
+            wallCollision.offset = new Vector2(0.4836431f, -0.2430587f);
+
+            if (GameManager.Instance.InbounceUIRoutine != null)
             { 
                 StopCoroutine(GameManager.Instance.InbounceUIRoutine);
                 GameManager.Instance.InbounceUIRoutine = null;
@@ -782,7 +789,7 @@ public class Player : Singleton<Player>
             //Reset velocity
             dirX = 0;
 
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.8f);
 
             bounceRoutine = null;
         }
@@ -992,7 +999,7 @@ public class Player : Singleton<Player>
         {
             // Doesn't take double jump and jump power
             PlayerState.IsJump = true;
-            yield return new WaitForSeconds(0.3f);
+            yield return new WaitForSeconds(1f);
             PlayerState.IsJump = false;
 
             jumpRoutine = null;

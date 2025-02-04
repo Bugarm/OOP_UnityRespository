@@ -12,12 +12,20 @@ public abstract class GameData : MonoBehaviour
     private static bool _isPaused;
     private static int _totalBounces = 0;
     private static Vector3 _playerPos;
-
+    private static int _sceneTransID;
 
     // High Score Varibles
 
     private static int _tutorial_HighScore;
     private static int _level1_HighScore;
+
+    // Scene ID
+
+    public static int SceneTransID
+    {
+        get { return _sceneTransID; }
+        set { _sceneTransID = value; }
+    }
 
     // High Scores
     public static int Tutorial_HighScore

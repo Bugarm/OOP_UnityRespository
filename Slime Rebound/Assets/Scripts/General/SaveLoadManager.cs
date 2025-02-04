@@ -12,6 +12,8 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
 {
     SerializedData mydata = new SerializedData();
     SerializedLevelData myLevelData = new SerializedLevelData();
+    SerializedTransData myTransData = new SerializedTransData();
+
     public bool hasSavedOnce = false;
 
     public void SaveImportantData()
@@ -50,6 +52,16 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
         System.IO.File.WriteAllText(Application.persistentDataPath + "/CheckPointData.json", jsonToSave);
     }
 
+    public void SavePlayerTransData()
+    {
+        myTransData.nextSceneID = GameData.SceneTransID;
+
+        string jsonToSave = JsonUtility.ToJson(myTransData);
+        //Debug.Log(jsonToSave);
+        //Debug.Log(Application.persistentDataPath);
+        System.IO.File.WriteAllText(Application.persistentDataPath + "/TransData.json", jsonToSave);
+    }
+
     public void SaveLevelData(string scene)
     {
         //Debug.Log(scene.name);
@@ -86,6 +98,23 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
 
             GameData.Tutorial_HighScore = mydata.tutorial_highScore;
             GameData.Level1_HighScore = mydata.level1_highScore;
+
+        }
+
+
+    }
+
+    public void LoadTransData()
+    {
+
+        if (File.Exists(Application.persistentDataPath + "/TransData.json"))
+        {
+            string loadedJson = System.IO.File.ReadAllText(Application.persistentDataPath + "/TransData.json");
+            //Debug.Log(loadedJson);
+            //Debug.Log(Application.persistentDataPath);
+            mydata = JsonUtility.FromJson<SerializedData>(loadedJson);
+
+            GameData.SceneTransID = myTransData.nextSceneID;
 
         }
 

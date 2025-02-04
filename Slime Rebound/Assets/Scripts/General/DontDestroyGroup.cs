@@ -13,6 +13,9 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
     private List<string> sceneLoaded = new List<string>();
     private PrefabSpawner[] spawner;
 
+    public GameObject exitDoor;
+    public GameObject exitTrigger;
+
 
     protected override void Awake()
     {
@@ -34,7 +37,7 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
 
         GameData.LevelState = sceneStart.name;
 
-        DoorSpawnIn();
+        DontDestroyManager.Instance.DoorSpawnIn();
         StartCoroutine(DelayLevelDataLoad(SceneManager.GetActiveScene().name));
     }
 
@@ -48,35 +51,25 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
 
-        if (scene.name != "HUB" && scene.name != "MainMenu" && scene.name != "OptionScreen")
+        if (scene.name.StartsWith("TutorialRoom") || scene.name.StartsWith("ForestLevel"))
         {
-            DoorSpawnIn();
+            exitDoor = GameObject.FindGameObjectWithTag("ExitDoor");
+            exitTrigger = GameObject.FindGameObjectWithTag("ExitTrigger");
+
+            DontDestroyManager.Instance.DoorSpawnIn();
 
             StartCoroutine(DelayLevelDataLoad(scene.name));
+
+            LevelExitDoor.Instance.DestroyDoorCheck(exitDoor,exitTrigger);
+        }
+        else
+        {
+            Destroy(this.gameObject);
         }
     }
 
     // So the data can load in time
-    void DoorSpawnIn()
-    {
-        
-        // Spawns in the starting Door
-        GameObject doorStart = GameObject.FindGameObjectWithTag("DoorStart");
-
-        if (doorStart == null)
-        {
-            player.transform.position = new Vector3(0, 0, 0);
-            GameData.PlayerPos = new Vector3(0, 0, 0); 
-        }
-        else
-        {
-            player.transform.position = new Vector3(doorStart.transform.position.x, doorStart.transform.position.y - 0.4f, 0);
-            GameData.PlayerPos = new Vector3(doorStart.transform.position.x, doorStart.transform.position.y - 0.4f, 0);
-        }
-
-        // Reset Player Velocity on Scene Loaded
-        Player.Instance.ResetPlayerVel();
-    }
+    
 
     IEnumerator DelayLevelDataLoad(string sceneName)
     {
@@ -90,9 +83,7 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
         {
             SaveLoadManager.Instance.LoadLevelData(sceneName);
         }
-
-        yield return new WaitForSeconds(0.01f);
-        LevelExitDoor.Instance.DestroyDoorCheck();
+        
     }
 
 

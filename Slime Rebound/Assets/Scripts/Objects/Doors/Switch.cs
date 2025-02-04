@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Switch : MonoBehaviour
 {
@@ -40,7 +41,7 @@ public class Switch : MonoBehaviour
 
                     if(doorSwitch.id == id)
                     {
-                        Instantiate(particlePlay);
+                        Instantiate(particlePlay,this.gameObject.transform.position, Quaternion.LookRotation(Vector3.up));
                         StartCoroutine(doorSwitch.SlideDoorOpen());     
                         
                     }

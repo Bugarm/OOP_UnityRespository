@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 public class DoorRoomSwitch : Door
 {
     public int switchRoomNum;
+    public int id;
+
     // Start is called before the first frame update
     protected override void Start()
     {
@@ -20,6 +22,7 @@ public class DoorRoomSwitch : Door
             if (Input.GetKeyDown(KeyCode.W))
             {
                 SceneSwitchManager.Instance.SwitchRoom(switchRoomNum);
+                
             }
         }
     }

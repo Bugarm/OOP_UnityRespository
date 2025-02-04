@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1358716649268947711
+--- !u!1 &8070142563377632134
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,52 +8,41 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7020168234344578390}
-  - component: {fileID: 1431546066873478384}
-  - component: {fileID: 994915399786313069}
+  - component: {fileID: 9120492875460334077}
+  - component: {fileID: 4184507661709361451}
   m_Layer: 0
-  m_Name: GameManager_Menu
+  m_Name: DontDestroyManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7020168234344578390
+--- !u!4 &9120492875460334077
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1358716649268947711}
+  m_GameObject: {fileID: 8070142563377632134}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.1048973, y: 1.773176, z: -2.9780724}
+  m_LocalPosition: {x: 68.60883, y: 0.5395986, z: 0.023970693}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1431546066873478384
+--- !u!114 &4184507661709361451
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1358716649268947711}
+  m_GameObject: {fileID: 8070142563377632134}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a9d8fc4fc546a643bb8c875e24a1ce2, type: 3}
+  m_Script: {fileID: 11500000, guid: 2614f524adac5e94e8db098e370376fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &994915399786313069
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1358716649268947711}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 584085dde30cbf14f95409f70a0cc1d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  levelDontDest: {fileID: 4843362288353106990, guid: 7ec3bbbe440e9aa4bbc771fc45f66e07, type: 3}
+  hubDontDest: {fileID: 5331029488764551588, guid: 92aee8135e689e84897d96752fb0646c, type: 3}

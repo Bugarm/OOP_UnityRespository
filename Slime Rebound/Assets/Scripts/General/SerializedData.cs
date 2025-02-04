@@ -24,4 +24,11 @@ public class SerializedLevelData
     public List<SaveableObjects> saveableObj_Tutorial2;
 }
 
+[System.Serializable]
+
+public class SerializedTransData
+{
+    public int nextSceneID;
+}
+
 

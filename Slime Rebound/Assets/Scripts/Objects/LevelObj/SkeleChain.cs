@@ -56,7 +56,7 @@ public class SkeleChain : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
-        LevelExitDoor.Instance.DestroyDoorCheck();
+        LevelExitDoor.Instance.DestroyDoorCheck(DontDestroyGroup.Instance.exitDoor, DontDestroyGroup.Instance.exitTrigger);
                 
         Destroy(this.gameObject);
     }

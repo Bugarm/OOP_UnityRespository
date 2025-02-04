@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1889918769773191012}
   - component: {fileID: 7150769429957168046}
+  - component: {fileID: 7212233165098968616}
   m_Layer: 0
   m_Name: DontDestroyGroup
   m_TagString: Untagged
@@ -49,6 +50,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 2946525147099557722}
+--- !u!114 &7212233165098968616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4843362288353106990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8decf5a8cee747a4888786e85e38dc03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1064476546492117263
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -321,33 +334,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5504839371982922821, guid: 9936b7b5776bb1542b6730aec25b3cb6, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3573391041513616185}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9936b7b5776bb1542b6730aec25b3cb6, type: 3}
 --- !u!4 &2095552553541820884 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 234023522515019288, guid: 9936b7b5776bb1542b6730aec25b3cb6, type: 3}
   m_PrefabInstance: {fileID: 2173988298040674252}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &5930837087718892425 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5504839371982922821, guid: 9936b7b5776bb1542b6730aec25b3cb6, type: 3}
-  m_PrefabInstance: {fileID: 2173988298040674252}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &3573391041513616185
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5930837087718892425}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8decf5a8cee747a4888786e85e38dc03, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &7024108120977842352
 PrefabInstance:
   m_ObjectHideFlags: 0
