@@ -14,10 +14,27 @@ public abstract class GameData : MonoBehaviour
     private static Vector3 _playerPos;
     private static int _sceneTransID;
 
+    private static bool _hasEnteredDoor = true;
+    private static bool _hasEnteredScreneTrig = false;
+
     // High Score Varibles
 
     private static int _tutorial_HighScore;
     private static int _level1_HighScore;
+
+    // 
+
+    public static bool HasEnteredDoor
+    {
+        get { return _hasEnteredDoor; } 
+        set { _hasEnteredDoor = value; }
+    }
+    
+    public static bool HasEnteredScreneTrig
+    {
+        get { return _hasEnteredScreneTrig; }
+        set { _hasEnteredScreneTrig = value; }
+    }
 
     // Scene ID
 

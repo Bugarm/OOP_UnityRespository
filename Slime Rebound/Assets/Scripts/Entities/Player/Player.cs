@@ -137,16 +137,23 @@ public class Player : Singleton<Player>
         }
     }
 
-    public void ResetPlayerVel()
+    public void ResetPlayerVel(string mode)
     {
-        dirX = 0;
-        dirY = 0;
+        switch(mode)
+        {
+            case "stop":
+                dirX = 0;
+                dirY = 0;
+                break;
+            case "isMove":
+                if(!Input.GetKey(KeyCode.A) || !Input.GetKey(KeyCode.D))
+                {
+                    dirX = 0;
+                    dirY = 0;
+                }
+                break;
+        }
         
-
-        PlayerState.IsRun = false;
-        PlayerState.IsBounceMode = false;
-        PlayerState.IsStickActive = false;
-        PlayerState.IsHeadAttack = false;
     }
 
     void ResetChecks()

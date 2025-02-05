@@ -6,10 +6,10 @@ using UnityEngine;
 
 public class EnemyFlying : Default_Entity
 {
-    [Header("Group Obj")]
-    // Settings
-    [SerializeField] private GameObject pointerGroupObj;
-
+    //[Header("Group Obj")]
+    //// Settings
+    //[SerializeField]
+    private GameObject pointerGroupObj;
     [Header("Pointers")]
     //Points
     public List<Vector2> pointers;
@@ -59,7 +59,6 @@ public class EnemyFlying : Default_Entity
         enemy = this.gameObject;
         rb = this.gameObject.GetComponent<Rigidbody2D>();
         enemySr = enemy.GetComponent<SpriteRenderer>();
-        player = GameObject.FindGameObjectWithTag("Player");
 
         setPointList = new List<GameObject>();
 
@@ -69,11 +68,18 @@ public class EnemyFlying : Default_Entity
         outOfRange = true;
     }
 
+    private void OnEnable()
+    {
+        
+    }
 
     // Start is called before the first frame update
     protected override void Start()
     {
         base.Start();
+
+        player = GameObject.FindGameObjectWithTag("Player");
+        playerRB = player.GetComponentInParent<Rigidbody2D>();
 
         clampRotationLow = Quaternion.Euler(0, 0, 0f);
         clampRotationHigh = Quaternion.Euler(0, 0, +360f);
@@ -95,14 +101,9 @@ public class EnemyFlying : Default_Entity
             enemySr.flipX = true;
         }
 
-        if(isHoming == true)
-        {
-            bulletPool = GameObject.Find("ObjectsToPool Homing Bullet").GetComponent<ObjectPooling>();
-        }
-        else
-        {
-            bulletPool = GameObject.Find("ObjectsToPool Normal Bullet").GetComponent<ObjectPooling>();
-        }
+        
+
+        pointerGroupObj = GameObject.Find("EnemyPointsGroup");
 
         setupOnce = false;
 
@@ -114,6 +115,18 @@ public class EnemyFlying : Default_Entity
     {
         if (disableAI == false && outOfRange == false)
         {
+            if(bulletPool == null)
+            { 
+                if (isHoming == true)
+                {
+                    bulletPool = GameObject.Find("ObjectsToPool Homing Bullet").GetComponent<ObjectPooling>();
+                }
+                else
+                {
+                    bulletPool = GameObject.Find("ObjectsToPool Normal Bullet").GetComponent<ObjectPooling>();
+                }
+            }
+
             FollowPoints();
 
             if (seesPlayer == true)

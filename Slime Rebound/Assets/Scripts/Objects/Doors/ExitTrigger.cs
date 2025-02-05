@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ExitTrigger : Singleton<ExitTrigger>
 {
+
     protected override void Awake()
     {
         base.Awake();   

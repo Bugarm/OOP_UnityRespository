@@ -23,8 +23,7 @@ public class SkeleChain : MonoBehaviour
     {
         powerXval = 4;
 
-        player = GameObject.FindGameObjectWithTag("Player");
-        playerRB = player.GetComponentInParent<Rigidbody2D>();
+       
     }
 
     // Update is called once per frame
@@ -46,6 +45,11 @@ public class SkeleChain : MonoBehaviour
 
     private IEnumerator DestroyingObject()
     {
+        yield return new WaitForSeconds(0.1f);
+        player = GameObject.FindGameObjectWithTag("Player");
+        //Debug.Log(player);
+        playerRB = player.GetComponentInParent<Rigidbody2D>();
+
         GameData.ChainsInLevel--;
         
         this.gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;

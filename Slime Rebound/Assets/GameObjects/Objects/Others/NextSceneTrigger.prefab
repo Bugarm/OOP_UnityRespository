@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 3478077907949068520}
   m_Layer: 14
   m_Name: NextSceneTrigger
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_TagString: SceneTrigger
+  m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -91,3 +91,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   switchRoomNum: 1
+  id: 0

@@ -11,20 +11,26 @@ public class DontDestroyManager : Singleton<DontDestroyManager>
 
     private GameObject[] sceneTrigger;
     private GameObject player;
+
+    Coroutine delaySpawnRoutine;
+
     protected override void Awake()
     {
         base.Awake();
-
+        
         DontDestroyOnLoad(this.gameObject);
+    }
 
+    // IMP
+    private void OnEnable()
+    {
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
+
     // Start is called before the first frame update
     void Start()
     {
-        
 
-        
     }
 
     // Update is called once per frame
@@ -35,11 +41,12 @@ public class DontDestroyManager : Singleton<DontDestroyManager>
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+         
         if (scene.name.StartsWith("HUB"))
         {
             if(GameObject.Find("DontDestroyHUB") == false)
             { 
-                StartCoroutine(DelaySpawn(hubDontDest));
+                Instantiate(hubDontDest);
             }
         }
 
@@ -47,16 +54,10 @@ public class DontDestroyManager : Singleton<DontDestroyManager>
         {
             if (GameObject.Find("DontDestroyGroup") == false)
             {
-                StartCoroutine(DelaySpawn(levelDontDest));
+                Instantiate(levelDontDest);
             }
         }
-    }
-
-    // This is done so the singleton won't destroy the child objects for a frame when switching
-    private IEnumerator DelaySpawn(GameObject manager)
-    {
-        yield return new WaitForSeconds(0.05f);
-        Instantiate(manager);
+        
     }
 
     public void DoorSpawnIn()
@@ -68,7 +69,9 @@ public class DontDestroyManager : Singleton<DontDestroyManager>
 
         player = FindAnyObjectByType<Player>().gameObject;
 
-        if (sceneTrigger.Length <= 0)
+        //Debug.Log(GameData.HasEnteredDoor + " " + GameData.HasEnteredScreneTrig);
+
+        if (GameData.HasEnteredDoor == true && GameData.HasEnteredScreneTrig == false)
         {
             if (doorStart == null)
             {
@@ -80,22 +83,45 @@ public class DontDestroyManager : Singleton<DontDestroyManager>
                 player.transform.position = new Vector3(doorStart.transform.position.x, doorStart.transform.position.y - 0.4f, 0);
                 GameData.PlayerPos = new Vector3(doorStart.transform.position.x, doorStart.transform.position.y - 0.4f, 0);
             }
+
+            // Reset Player Velocity on Scene Loaded
+            Player.Instance.ResetPlayerVel("stop");
+
+            PlayerState.IsRun = false;
+            PlayerState.IsBounceMode = false;
+            PlayerState.IsStickActive = false;
+            PlayerState.IsHeadAttack = false;
         }
-        else
+        
+        else if(GameData.HasEnteredDoor == false && GameData.HasEnteredScreneTrig == true)
         {
+            //Debug.Log(GameData.SceneTransID);
+            
             foreach (GameObject sceneTrig in sceneTrigger)
             {
                 NextSceneTrigger trig = sceneTrig.GetComponent<NextSceneTrigger>();
-
+                
                 if (GameData.SceneTransID == trig.id)
                 {
-                    player.transform.position = new Vector3(sceneTrig.transform.position.x, sceneTrig.transform.position.y - 0.4f, 0);
-                    GameData.PlayerPos = new Vector3(sceneTrig.transform.position.x, sceneTrig.transform.position.y - 0.4f, 0);
+                    float offset;
+                    if (player.GetComponent<Rigidbody2D>().velocity.x >= 0)
+                    {
+                        offset = 3;
+                    }
+                    else
+                    {
+                        offset = -3;
+                    }
+
+                    player.transform.position = new Vector3(sceneTrig.transform.position.x + offset, sceneTrig.transform.position.y - 0.4f, 0);
+                    GameData.PlayerPos = new Vector3(sceneTrig.transform.position.x + offset, sceneTrig.transform.position.y - 0.4f, 0);
                 }
             }
 
+            Player.Instance.ResetPlayerVel("isMove");
         }
-        // Reset Player Velocity on Scene Loaded
-        Player.Instance.ResetPlayerVel();
+
+
+        
     }
 }

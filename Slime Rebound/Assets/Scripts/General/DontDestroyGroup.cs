@@ -25,12 +25,17 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
 
         DontDestroyOnLoad(this.gameObject);
     }
+
+    // IMP
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         maxHP = 10;
-
-        SceneManager.sceneLoaded += OnSceneLoaded;
 
         SaveLoadManager.Instance.SaveDataCheckPoint(player.transform.position);
         SaveLoadManager.Instance.SaveLevelData(SceneManager.GetActiveScene().name);
@@ -67,11 +72,9 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
         {
             exitDoor = GameObject.FindGameObjectWithTag("ExitDoor");
             exitTrigger = GameObject.FindGameObjectWithTag("ExitTrigger");
-
-            DontDestroyManager.Instance.DoorSpawnIn();
-
+            
             StartCoroutine(DelayLevelDataLoad(scene.name));
-
+            
             LevelExitDoor.Instance.DestroyDoorCheck(exitDoor,exitTrigger);
         }
         else
@@ -86,7 +89,8 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
     IEnumerator DelayLevelDataLoad(string sceneName)
     {
         yield return new WaitForSeconds(0.02f);
-        
+        DontDestroyManager.Instance.DoorSpawnIn();
+
         bool hasObjSpawned = HasObjectsSpawnedOnce(sceneName);
 
         yield return new WaitForSeconds(0.01f);

@@ -16,7 +16,7 @@ public class Default_Entity : MonoBehaviour
     private int powerX;
     private int powerXval;
     protected GameObject player;
-    private Rigidbody2D playerRB;
+    protected Rigidbody2D playerRB;
 
     protected bool disableAI;
 
@@ -39,13 +39,14 @@ public class Default_Entity : MonoBehaviour
         disableAI = false;
         enemyVel = GetComponent<Rigidbody2D>();
         enemyBody = this.gameObject.GetComponent<CircleCollider2D>();
+
+        
     }
 
     // Start is called before the first frame update
     protected virtual void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player");
-        playerRB = player.GetComponentInParent<Rigidbody2D>();
+        
     }
 
     // Update is called once per frame

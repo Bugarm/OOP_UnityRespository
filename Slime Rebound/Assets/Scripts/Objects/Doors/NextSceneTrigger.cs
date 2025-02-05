@@ -7,6 +7,10 @@ public class NextSceneTrigger : MonoBehaviour
     public int switchRoomNum;
     public int id;
 
+    private bool delay;
+
+    Coroutine delayDoorRoutine;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,12 +25,29 @@ public class NextSceneTrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (collision.CompareTag("PlayerBody") && delay == false)
         {
             GameData.SceneTransID = id;
+
+            GameData.HasEnteredDoor = false;
+            GameData.HasEnteredScreneTrig = true;
+
             SaveLoadManager.Instance.SavePlayerTransData();
 
             SceneSwitchManager.Instance.SwitchRoom(switchRoomNum);
+
+            if (delayDoorRoutine == null)
+            {
+                delayDoorRoutine = StartCoroutine(DelayDoorEnter());
+            }
         }
+    }
+
+    IEnumerator DelayDoorEnter()
+    {
+        delay = true;
+        yield return new WaitForSeconds(1);
+        delay = false;
+        delayDoorRoutine = null;
     }
 }

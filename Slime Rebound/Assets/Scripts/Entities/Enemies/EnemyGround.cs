@@ -115,6 +115,12 @@ public class EnemyGround : Default_Entity
         if (disableAI == false && outOfRange == false)
         {
 
+            if (player == null || playerRB == null)
+            {
+                player = GameObject.FindGameObjectWithTag("Player");
+                playerRB = player.GetComponentInParent<Rigidbody2D>();
+            }
+
             if (freeRoamMode == false)
             {
                 FollowPoints();

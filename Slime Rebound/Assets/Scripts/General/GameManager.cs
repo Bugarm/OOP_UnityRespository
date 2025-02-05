@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -12,6 +13,7 @@ public class GameManager : Singleton<GameManager>
     public TMP_Text hpUI;
     public TMP_Text scoreUI;
     public TMP_Text bounceUI;
+    public Image blackTrans;
 
     public GameObject player;
     private Rigidbody2D playerRB;
@@ -24,7 +26,7 @@ public class GameManager : Singleton<GameManager>
     SerializedLevelData myLevelData = new SerializedLevelData();
 
 
-    public Coroutine damageRoutine, flashRoutine, dataSwitchRoutine, InbounceUIRoutine, OutbounceUIRoutine, highBounceRoutine;
+    public Coroutine screenTransRoutine, damageRoutine, flashRoutine, dataSwitchRoutine, InbounceUIRoutine, OutbounceUIRoutine, highBounceRoutine;
 
 
     protected override void Awake()
@@ -70,6 +72,7 @@ public class GameManager : Singleton<GameManager>
 
             }
         }
+
     }
  
     // Routines
@@ -176,6 +179,33 @@ public class GameManager : Singleton<GameManager>
         // save data here?
     }
 
+    public IEnumerator ScreenTrans(int? nextRoomNum)
+    {
+        blackTrans.gameObject.SetActive(true);
+        blackTrans.color = new Color(0,0,0,0);
+
+        while (blackTrans.color.a <= 1)
+        {
+            // Fade In
+            blackTrans.color = new Color(0, 0, 0, blackTrans.color.a + Time.deltaTime + 0.01f); 
+            yield return new WaitForSeconds(0.001f);
+
+        }
+        SceneTransFunct(nextRoomNum);
+        yield return new WaitForSeconds(0.3f);
+        while (blackTrans.color.a >= 0)
+        {
+            // Fade Out
+            blackTrans.color = new Color(0, 0, 0, blackTrans.color.a - Time.deltaTime - 0.01f);
+            yield return new WaitForSeconds(0.001f);
+        }
+
+
+        blackTrans.color = new Color(0, 0, 0, 0);
+        blackTrans.gameObject.SetActive(false);
+        screenTransRoutine = null;
+    }
+
     // Bounce UI Functions
     private IEnumerator HighestBounceEffect()
     {
@@ -251,4 +281,17 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+    private void SceneTransFunct(int? nextRoomNum)
+    {
+        if (nextRoomNum <= 0)
+        {
+            SaveLoadManager.Instance.SaveLevelData(SceneManager.GetActiveScene().name);
+            SceneManager.LoadScene(GameData.LevelState);
+        }
+        else
+        {
+            SaveLoadManager.Instance.SaveLevelData(SceneManager.GetActiveScene().name);
+            SceneManager.LoadScene(GameData.LevelState + nextRoomNum);
+        }
+    }
 }

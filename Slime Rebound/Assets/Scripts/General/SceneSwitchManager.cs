@@ -34,19 +34,7 @@ public class SceneSwitchManager : Singleton<SceneSwitchManager>
 
     public void SwitchRoom(int? nextRoomNum)
     {
-
-        if (nextRoomNum <= 0)
-        {
-
-            SaveLoadManager.Instance.SaveLevelData(SceneManager.GetActiveScene().name);
-            SceneManager.LoadScene(GameData.LevelState);
-        }
-        else
-        {
-            SaveLoadManager.Instance.SaveLevelData(SceneManager.GetActiveScene().name);
-            SceneManager.LoadScene(GameData.LevelState + nextRoomNum);
-        }
-
+        StartCoroutine(GameManager.Instance.ScreenTrans(nextRoomNum));
     }
 
     public void SwitchToLevel(string Level)

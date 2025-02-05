@@ -15,8 +15,6 @@ public class DetectionScript : Singleton<DetectionScript>
     public BoxCollider2D floorTrigCol;
     public BoxCollider2D topTriggerCol;
 
-    [SerializeField] private LayerMask layermask;
-
     protected override void Awake()
     {
         base.Awake();
@@ -75,11 +73,10 @@ public class DetectionScript : Singleton<DetectionScript>
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.IsTouchingLayers(LayerMask.GetMask("PlayerDetect")))
+        if (collision.IsTouching(Player.Instance.idleTrigger) || collision.IsTouching(Player.Instance.crouchTrigger) || collision.IsTouching(Player.Instance.bounceTrigger))
         {
             if (collision.CompareTag("Enemies") || collision.CompareTag("Obsticales") || collision.CompareTag("EnemyBullet"))
             {
-                Debug.Log("A");
                 if (GameManager.Instance.damageRoutine == null)
                 {
                     GameManager.Instance.damageRoutine = StartCoroutine(GameManager.Instance.DamagePlayer());
