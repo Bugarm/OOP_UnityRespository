@@ -126,7 +126,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6322585503858361997}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 5.25, y: -0.76, z: 0.5703963}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -226,7 +226,7 @@ CircleCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 2048
+    m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -263,11 +263,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemiesData: {fileID: 11400000, guid: 801bfbbe2fc98a8479808f55edf6153b, type: 2}
   deathCollider: {fileID: 783490310566019046}
+  layermask:
+    serializedVersion: 2
+    m_Bits: 36489
   pointerGroupObj: {fileID: 0}
   pointers:
   - {x: 0, y: 3.06}
   - {x: -5.92, y: 3.06}
-  bulletPool: {fileID: 0}
+  isHoming: 1
   fireRateDelay: 3
   playerRangeObj: {fileID: 1914103485628938774}
   shootPointObj: {fileID: 4505044785281677860}

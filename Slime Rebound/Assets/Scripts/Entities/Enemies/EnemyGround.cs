@@ -40,6 +40,7 @@ public class EnemyGround : Default_Entity
 
     private Transform curPoint;
 
+    private bool outOfRange = false;
     // Others
     private bool setupOnce = true;
     private bool isOnGround = false;
@@ -109,8 +110,9 @@ public class EnemyGround : Default_Entity
     // Update is called once per frame
     void Update()
     {
-        if (disableAI == false)
+        if (disableAI == false && outOfRange == false)
         {
+
             if (freeRoamMode == false)
             {
                 FollowPoints();
@@ -120,6 +122,12 @@ public class EnemyGround : Default_Entity
                 FreeRoam();
             }
         }
+        else
+        {
+            rb.velocity = Vector3.zero;
+        }
+
+        
     }
 
     // Pointer Mode Functions //
@@ -244,7 +252,7 @@ public class EnemyGround : Default_Entity
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if(disableAI == false)
+        if(disableAI == false && outOfRange == false)
         { 
             isOnGround = true;
 
@@ -271,11 +279,16 @@ public class EnemyGround : Default_Entity
                 curJumpForce = 0;
             }
         }
+
+        if (collision.CompareTag("PlayerRange"))
+        {
+            outOfRange = false;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (disableAI == false)
+        if (disableAI == false && outOfRange == false)
         {
             if (enemy.activeInHierarchy == true && collision.CompareTag("Level") && wallDectection.IsTouching(collision) && jumpDectection.IsTouching(collision))
             {
@@ -287,14 +300,18 @@ public class EnemyGround : Default_Entity
                 if (collision.IsTouching(deathCollider))
                 {
                     StartCoroutine(EnemyDead());
+                    outOfRange = true;
                 }
             }
         }
+
+        
+        
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (disableAI == false)
+        if (disableAI == false && outOfRange == false)
         {
             isOnGround = false;
 
@@ -317,5 +334,11 @@ public class EnemyGround : Default_Entity
                 }
             }
         }
+
+        if (!collision.IsTouchingLayers(LayerMask.GetMask("PlayerRange")))
+        {   
+            outOfRange = true;       
+        }
+        
     }
 }

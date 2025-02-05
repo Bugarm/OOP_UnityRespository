@@ -738,14 +738,14 @@ public class Player : Singleton<Player>
 
             if (PlayerState.IsTouchingWall == true)
             {
-                bounces++;
-
-                GameManager.Instance.UpdateBounces(bounces);
 
                 player.transform.localScale = new Vector2(-(Mathf.Sign(playerRB.velocity.x)), player.transform.localScale.y);
 
                 if (PlayerState.IsJump == true)
                 {
+                    bounces++;
+                    GameManager.Instance.UpdateBounces(bounces);
+
                     playerRB.velocity = new Vector3(playerRB.velocity.x, 12.3f, 0);
                 }
 
@@ -999,7 +999,7 @@ public class Player : Singleton<Player>
         {
             // Doesn't take double jump and jump power
             PlayerState.IsJump = true;
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.8f);
             PlayerState.IsJump = false;
 
             jumpRoutine = null;

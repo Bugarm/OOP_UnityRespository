@@ -33,9 +33,6 @@ public class CameraFollow : MonoBehaviour
         point2Pos = new Vector3(cam.transform.position.x + point2X, cam.transform.position.y, -10);
 
         
-        player = FindObjectOfType<Player>();
-
-        savePlayerPos = player.transform.position;
         this.transform.position = new Vector3(savePlayerPos.x, savePlayerPos.y + 1, -10);
         isActiveOnce = true;
 
@@ -45,29 +42,32 @@ public class CameraFollow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-        savePlayerPos = player.transform.position;
+        player = FindObjectOfType<Player>();
 
-        //X
-        if (cam.transform.position.x > point1X && cam.transform.position.x < point2X)
-        {
-            this.transform.position = new Vector3(savePlayerPos.x, savePlayerPos.y + 1, -10);
-        }
-        else if (player.transform.position.x > point1X && player.transform.position.x < point2X)
-        {
-            this.transform.position = new Vector3(cam.transform.position.x + -(Mathf.Sign(cam.transform.position.x)), savePlayerPos.y + 1, -10);
-        }
+        if (player != null)
+        { 
+            savePlayerPos = player.transform.position;
 
-        //Y
-        if (cam.transform.position.y > point1Y && cam.transform.position.y < point2Y)
-        {
-            this.transform.position = new Vector3(savePlayerPos.x, savePlayerPos.y + 1, -10);
-        }
-        else if (player.transform.position.y > point1Y && player.transform.position.y < point2Y)
-        {
-            this.transform.position = new Vector3(cam.transform.position.x, savePlayerPos.y + -(Mathf.Sign(cam.transform.position.x)), -10);
-        }
+            //X
+            if (cam.transform.position.x > point1X && cam.transform.position.x < point2X)
+            {
+                this.transform.position = new Vector3(savePlayerPos.x, savePlayerPos.y + 1, -10);
+            }
+            else if (player.transform.position.x > point1X && player.transform.position.x < point2X)
+            {
+                this.transform.position = new Vector3(cam.transform.position.x + -(Mathf.Sign(cam.transform.position.x)), savePlayerPos.y + 1, -10);
+            }
 
+            //Y
+            if (cam.transform.position.y > point1Y && cam.transform.position.y < point2Y)
+            {
+                this.transform.position = new Vector3(savePlayerPos.x, savePlayerPos.y + 1, -10);
+            }
+            else if (player.transform.position.y > point1Y && player.transform.position.y < point2Y)
+            {
+                this.transform.position = new Vector3(cam.transform.position.x, savePlayerPos.y + -(Mathf.Sign(cam.transform.position.x)), -10);
+            }
+        }
 
     }
 

@@ -19,7 +19,6 @@ public class Default_Entity : MonoBehaviour
     private Rigidbody2D playerRB;
 
     protected bool disableAI;
-    
 
     protected GameObject enemy;
 
@@ -28,6 +27,7 @@ public class Default_Entity : MonoBehaviour
 
     protected Coroutine colorFlashRoutine;
 
+    [SerializeField] private LayerMask layermask;
     //
     protected virtual void Awake()
     {
@@ -57,6 +57,8 @@ public class Default_Entity : MonoBehaviour
 
     public IEnumerator EnemyDead()
     {
+        Destroy(deathCollider);
+
         disableAI = true;
 
         StartCoroutine(GameManager.Instance.ColorFlash(enemy));
@@ -65,9 +67,7 @@ public class Default_Entity : MonoBehaviour
 
         powerX = Mathf.Sign(playerRB.velocity.x) < 0 ? -powerXval : powerXval;
         enemy.GetComponent<Rigidbody2D>().velocity = new Vector3(powerX, 3,1);
-
-        Destroy(deathCollider);
-
+        
         yield return new WaitForSeconds(1);
 
         // Explode Here Effect Here
@@ -81,6 +81,5 @@ public class Default_Entity : MonoBehaviour
         Destroy(enemy);
     }
 
-    
 
 }

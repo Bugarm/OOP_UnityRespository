@@ -34,7 +34,17 @@ public class HeadAttack : Singleton<HeadAttack>
         
         if(!(collision.CompareTag("Level") || collision.CompareTag("Enemies")) && PlayerState.IsHeadThrown == true)
         {
-            head.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
+            float moveSlight;
+            if (head.transform.localScale.x == -1)
+            {
+                moveSlight = -1.5f;
+            }
+            else
+            {
+                moveSlight = 1.5f;
+            }
+
+            head.GetComponent<Rigidbody2D>().velocity = new Vector2(moveSlight, -1.5f);
             head.GetComponent<Rigidbody2D>().gravityScale = 14;
         }
 

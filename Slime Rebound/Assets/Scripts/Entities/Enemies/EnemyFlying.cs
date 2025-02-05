@@ -16,9 +16,10 @@ public class EnemyFlying : Default_Entity
     
     // set up
     [Header("Settings")]
-    public ObjectPooling bulletPool;
+    public bool isHoming = false;
     public int fireRateDelay;
 
+    private ObjectPooling bulletPool;
     // set up
     protected Rigidbody2D rb;
     protected SpriteRenderer enemySr;
@@ -38,6 +39,8 @@ public class EnemyFlying : Default_Entity
     private Coroutine bulletRoutine;
 
     private bool seesPlayer;
+
+    private bool outOfRange = false;
 
     // Colliders
     private BoxCollider2D myBoxcoll;
@@ -62,8 +65,8 @@ public class EnemyFlying : Default_Entity
 
         myBoxcoll = enemy.GetComponent<BoxCollider2D>();
         playerRangeTrigger = playerRangeObj.GetComponent<CircleCollider2D>();
-        shootPointTrigger = shootPointObj.GetComponent<BoxCollider2D>();   
-
+        shootPointTrigger = shootPointObj.GetComponent<BoxCollider2D>();
+        outOfRange = true;
     }
 
 
@@ -92,13 +95,22 @@ public class EnemyFlying : Default_Entity
             enemySr.flipX = true;
         }
 
+        if(isHoming == true)
+        {
+            bulletPool = GameObject.Find("ObjectsToPool Homing Bullet").GetComponent<ObjectPooling>();
+        }
+        else
+        {
+            bulletPool = GameObject.Find("ObjectsToPool Normal Bullet").GetComponent<ObjectPooling>();
+        }
+
         setupOnce = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (disableAI == false)
+        if (disableAI == false && outOfRange == false)
         {
             FollowPoints();
 
@@ -109,17 +121,7 @@ public class EnemyFlying : Default_Entity
                 {
                     PointAtPlayer();
                 }
-
-                
             }
-            /*else
-            {
-                if (bulletRoutine != null)
-                {
-                    StopCoroutine(bulletRoutine);
-                    bulletRoutine = null;
-                }
-            } */
 
             if (bulletRoutine == null)
             {
@@ -127,6 +129,16 @@ public class EnemyFlying : Default_Entity
             }
 
         }
+        else
+        {
+            if (bulletRoutine != null)
+            {
+                StopCoroutine(bulletRoutine);
+                bulletRoutine = null;
+            }
+        }
+
+        Debug.Log(outOfRange);
     }
 
     IEnumerator ShootBullet(ObjectPooling bulletPool)
@@ -191,31 +203,40 @@ public class EnemyFlying : Default_Entity
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("PlayerAttack"))
+        if (disableAI == false && outOfRange == false)
         {
-            if(collision.IsTouching(deathCollider))
-            { 
-                StartCoroutine(EnemyDead());
+            if (collision.CompareTag("PlayerAttack"))
+            {
+                if (collision.IsTouching(deathCollider))
+                {
+                    StartCoroutine(EnemyDead());
+                    outOfRange = true;
+                }
             }
         }
+
+        
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (disableAI == false)
+        if (disableAI == false && outOfRange == false)
         {
             if (enemy.activeInHierarchy == true && collision.CompareTag("Player"))
             {
-
                 seesPlayer = true;
-
             }
+        }
+
+        if (collision.CompareTag("PlayerRange"))
+        {
+            outOfRange = false;
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (disableAI == false)
+        if (disableAI == false && outOfRange == false)
         {
             if (enemy.activeInHierarchy == true && collision.CompareTag("Player"))
             {
@@ -224,6 +245,12 @@ public class EnemyFlying : Default_Entity
 
             }
         }
+
+        if (collision.CompareTag("PlayerRange") == false)
+        {
+            outOfRange = true;
+        }
+        
     }
 
     private void OnDrawGizmos()

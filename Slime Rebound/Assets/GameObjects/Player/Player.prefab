@@ -221,7 +221,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6091395231700948110}
   - component: {fileID: 2628909129785102683}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: Player Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -304,7 +304,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6283653480988682903}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Collisions
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -823,6 +823,73 @@ CapsuleCollider2D:
   m_Offset: {x: -0.082654476, y: -0.2912349}
   m_Size: {x: 1.0405855, y: 1.4199182}
   m_Direction: 0
+--- !u!1 &6072151059630030013
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5918210002122492180}
+  - component: {fileID: 7129553710515416100}
+  m_Layer: 15
+  m_Name: PlayerEnemyRange
+  m_TagString: PlayerRange
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5918210002122492180
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6072151059630030013}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6499743863659246992}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &7129553710515416100
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6072151059630030013}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 16.09
 --- !u!1 &6119674616037661962
 GameObject:
   m_ObjectHideFlags: 0
@@ -989,7 +1056,7 @@ GameObject:
   - component: {fileID: 3604176934007594281}
   - component: {fileID: 2597825698608133649}
   - component: {fileID: 5914262025164930502}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1014,6 +1081,7 @@ Transform:
   - {fileID: 8398999908843789498}
   - {fileID: 6283653480988682903}
   - {fileID: 6161852648166302700}
+  - {fileID: 5918210002122492180}
   - {fileID: 8665077805079447517}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1094,9 +1162,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 405d911ecf1f97948ba22f67523f3573, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wallTrigger: {fileID: 815367371195608878}
-  floorTrigger: {fileID: 6297004467124956182}
-  topTrigger: {fileID: 6119674616037661962}
+  wallTrigCol: {fileID: 0}
+  floorTrigCol: {fileID: 0}
+  topTriggerCol: {fileID: 0}
+  layermask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &6402261470639470098
 GameObject:
   m_ObjectHideFlags: 0
@@ -1106,7 +1177,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8517566698504649692}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Triggers
   m_TagString: Untagged
   m_Icon: {fileID: 0}

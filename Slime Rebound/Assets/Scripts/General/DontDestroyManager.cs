@@ -22,7 +22,7 @@ public class DontDestroyManager : Singleton<DontDestroyManager>
     // Start is called before the first frame update
     void Start()
     {
-        player = FindAnyObjectByType<Player>().gameObject;
+        
 
         
     }
@@ -65,6 +65,8 @@ public class DontDestroyManager : Singleton<DontDestroyManager>
         // Spawns in the starting Door
         GameObject doorStart = GameObject.FindGameObjectWithTag("DoorStart");
         sceneTrigger = GameObject.FindGameObjectsWithTag("SceneTrigger");
+
+        player = FindAnyObjectByType<Player>().gameObject;
 
         if (sceneTrigger.Length <= 0)
         {

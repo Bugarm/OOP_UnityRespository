@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,6 +10,7 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
 
     public GameObject player;
     private int maxHP;
+    string sceneName;
 
     private List<string> sceneLoaded = new List<string>();
     private PrefabSpawner[] spawner;
@@ -35,7 +37,17 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
 
         sceneStart = SceneManager.GetActiveScene();
 
-        GameData.LevelState = sceneStart.name;
+        // Checks if string has a digit
+        if(sceneStart.name.Any(char.IsDigit))
+        { 
+            sceneName = sceneStart.name.Substring(0, sceneStart.name.Length - 1);
+        }
+        else
+        { 
+            sceneName = sceneStart.name;
+        }
+
+        GameData.LevelState = sceneName;
 
         DontDestroyManager.Instance.DoorSpawnIn();
         StartCoroutine(DelayLevelDataLoad(SceneManager.GetActiveScene().name));
