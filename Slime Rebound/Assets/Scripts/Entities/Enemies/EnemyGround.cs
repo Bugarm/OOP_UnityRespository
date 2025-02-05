@@ -104,6 +104,8 @@ public class EnemyGround : Default_Entity
             DirectionStart();
   
             curPoint = set_point1.transform;
+
+            outOfRange = true;
         }
     }
 
@@ -122,12 +124,11 @@ public class EnemyGround : Default_Entity
                 FreeRoam();
             }
         }
-        else
+        else if(disableAI == false)
         {
             rb.velocity = Vector3.zero;
         }
 
-        
     }
 
     // Pointer Mode Functions //
@@ -280,10 +281,7 @@ public class EnemyGround : Default_Entity
             }
         }
 
-        if (collision.CompareTag("PlayerRange"))
-        {
-            outOfRange = false;
-        }
+        
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -300,13 +298,21 @@ public class EnemyGround : Default_Entity
                 if (collision.IsTouching(deathCollider))
                 {
                     StartCoroutine(EnemyDead());
-                    outOfRange = true;
                 }
             }
         }
 
-        
-        
+        if (disableAI == false)
+        {
+            if (collision.IsTouching(deathCollider))
+            {
+                if (collision.CompareTag("PlayerRange"))
+                {
+                    outOfRange = false;
+                }
+            }
+        }
+
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -335,10 +341,19 @@ public class EnemyGround : Default_Entity
             }
         }
 
-        if (!collision.IsTouchingLayers(LayerMask.GetMask("PlayerRange")))
-        {   
-            outOfRange = true;       
+        if (disableAI == false)
+        {
+            if (collision.CompareTag("PlayerRange"))
+            {
+                if (!collision.IsTouching(deathCollider))
+                {
+                    outOfRange = true;
+                }
+            }
         }
         
     }
+
+    
+
 }

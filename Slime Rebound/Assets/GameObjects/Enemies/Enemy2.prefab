@@ -313,7 +313,7 @@ MonoBehaviour:
   deathCollider: {fileID: 6726566228593921569}
   layermask:
     serializedVersion: 2
-    m_Bits: 36489
+    m_Bits: 4294967295
   pointerGroupObj: {fileID: 0}
   point1OffsetX: -2.71
   point2OffsetX: 5.23

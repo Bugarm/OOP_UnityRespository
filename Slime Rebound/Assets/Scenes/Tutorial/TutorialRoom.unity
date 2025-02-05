@@ -925,11 +925,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5077401216682089119, guid: f904240a0c6566c49a2e0e425a5cce9e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -61.23
+      value: -15.78
       objectReference: {fileID: 0}
     - target: {fileID: 5077401216682089119, guid: f904240a0c6566c49a2e0e425a5cce9e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.06
+      value: 0.51
       objectReference: {fileID: 0}
     - target: {fileID: 5077401216682089119, guid: f904240a0c6566c49a2e0e425a5cce9e, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3281,9 +3281,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemiesData: {fileID: 0}
   deathCollider: {fileID: 0}
-  layermask:
-    serializedVersion: 2
-    m_Bits: 0
   pointerGroupObj: {fileID: 50717626}
   pointers:
   - {x: -12.22, y: 6.2}

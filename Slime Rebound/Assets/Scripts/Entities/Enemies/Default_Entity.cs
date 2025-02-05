@@ -27,7 +27,6 @@ public class Default_Entity : MonoBehaviour
 
     protected Coroutine colorFlashRoutine;
 
-    [SerializeField] private LayerMask layermask;
     //
     protected virtual void Awake()
     {

@@ -79,6 +79,7 @@ public class DetectionScript : Singleton<DetectionScript>
         {
             if (collision.CompareTag("Enemies") || collision.CompareTag("Obsticales") || collision.CompareTag("EnemyBullet"))
             {
+                Debug.Log("A");
                 if (GameManager.Instance.damageRoutine == null)
                 {
                     GameManager.Instance.damageRoutine = StartCoroutine(GameManager.Instance.DamagePlayer());

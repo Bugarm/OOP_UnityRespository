@@ -105,6 +105,8 @@ public class EnemyFlying : Default_Entity
         }
 
         setupOnce = false;
+
+        outOfRange = true;
     }
 
     // Update is called once per frame
@@ -138,7 +140,7 @@ public class EnemyFlying : Default_Entity
             }
         }
 
-        Debug.Log(outOfRange);
+        
     }
 
     IEnumerator ShootBullet(ObjectPooling bulletPool)
@@ -210,12 +212,22 @@ public class EnemyFlying : Default_Entity
                 if (collision.IsTouching(deathCollider))
                 {
                     StartCoroutine(EnemyDead());
-                    outOfRange = true;
                 }
             }
         }
 
-        
+        if (disableAI == false)
+        {
+            if (collision.CompareTag("PlayerRange"))
+            {
+                if (collision.IsTouching(deathCollider))
+                {
+
+                    outOfRange = false;
+                }
+            }
+        }
+
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -228,10 +240,7 @@ public class EnemyFlying : Default_Entity
             }
         }
 
-        if (collision.CompareTag("PlayerRange"))
-        {
-            outOfRange = false;
-        }
+        
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -246,11 +255,16 @@ public class EnemyFlying : Default_Entity
             }
         }
 
-        if (collision.CompareTag("PlayerRange") == false)
-        {
-            outOfRange = true;
+        if(disableAI == false)
+        { 
+            if (collision.CompareTag("PlayerRange"))
+            {
+                if (!collision.IsTouching(deathCollider))
+                {
+                    outOfRange = true;
+                }
+            }
         }
-        
     }
 
     private void OnDrawGizmos()

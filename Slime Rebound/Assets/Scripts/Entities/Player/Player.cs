@@ -582,11 +582,6 @@ public class Player : Singleton<Player>
                 bounceTrigger.gameObject.SetActive(false);
                 break;
 
-            case "Head-Attack":
-                // WIP
-
-                break;
-
             case "Jump-Attack":
                 poundTrigger.gameObject.SetActive(false);
                 bounceAttackTrigger.gameObject.SetActive(false);
@@ -630,10 +625,9 @@ public class Player : Singleton<Player>
                 jumpAttackTrigger.gameObject.SetActive(false);
 
                 // Triggers
-                idleTrigger.gameObject.SetActive(true);
+                idleTrigger.gameObject.SetActive(false);
                 crouchTrigger.gameObject.SetActive(false);
                 bounceTrigger.gameObject.SetActive(false);
-
                 break;
 
             default:
@@ -1023,12 +1017,13 @@ public class Player : Singleton<Player>
     {
         PlayerState.IsAttackJump = true;
         dirY = attackJumpPower;
+        
         AttackTrigger("Jump-Attack");
         yield return new WaitForSeconds(0.4f);
         AttackTrigger("Reset");
         dirY = 0;
         PlayerState.IsAttackJump = false;
-
+        
         attackJumpRoutine = null;
     }
 

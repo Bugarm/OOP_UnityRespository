@@ -265,7 +265,7 @@ MonoBehaviour:
   deathCollider: {fileID: 783490310566019046}
   layermask:
     serializedVersion: 2
-    m_Bits: 36489
+    m_Bits: 4294967295
   pointerGroupObj: {fileID: 0}
   pointers:
   - {x: 0, y: 3.06}
