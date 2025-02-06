@@ -12,6 +12,8 @@ public class DontDestroyManager : Singleton<DontDestroyManager>
     private GameObject[] sceneTrigger;
     private GameObject player;
 
+    public float offset;
+
     Coroutine delaySpawnRoutine;
 
     protected override void Awake()
@@ -30,7 +32,6 @@ public class DontDestroyManager : Singleton<DontDestroyManager>
     // Start is called before the first frame update
     void Start()
     {
-
     }
 
     // Update is called once per frame
@@ -103,8 +104,8 @@ public class DontDestroyManager : Singleton<DontDestroyManager>
                 
                 if (GameData.SceneTransID == trig.id)
                 {
-                    float offset;
-                    if (player.GetComponent<Rigidbody2D>().velocity.x >= 0)
+                    
+                    if (player.transform.localScale.x == 1)
                     {
                         offset = 3;
                     }

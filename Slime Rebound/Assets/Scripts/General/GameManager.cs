@@ -22,6 +22,8 @@ public class GameManager : Singleton<GameManager>
 
     private int maxHP;
 
+    public bool sceneSwitch;
+
     public List<SaveableObjects> saveableObjects;
     SerializedLevelData myLevelData = new SerializedLevelData();
 
@@ -181,6 +183,7 @@ public class GameManager : Singleton<GameManager>
 
     public IEnumerator ScreenTrans(int? nextRoomNum)
     {
+
         blackTrans.gameObject.SetActive(true);
         blackTrans.color = new Color(0,0,0,0);
 
@@ -191,15 +194,17 @@ public class GameManager : Singleton<GameManager>
             yield return new WaitForSeconds(0.001f);
 
         }
+        
         SceneTransFunct(nextRoomNum);
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.35f);
+        
         while (blackTrans.color.a >= 0)
         {
             // Fade Out
             blackTrans.color = new Color(0, 0, 0, blackTrans.color.a - Time.deltaTime - 0.01f);
             yield return new WaitForSeconds(0.001f);
         }
-
+        sceneSwitch = false;
 
         blackTrans.color = new Color(0, 0, 0, 0);
         blackTrans.gameObject.SetActive(false);

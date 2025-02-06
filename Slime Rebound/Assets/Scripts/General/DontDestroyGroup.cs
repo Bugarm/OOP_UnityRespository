@@ -88,7 +88,7 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
 
     IEnumerator DelayLevelDataLoad(string sceneName)
     {
-        yield return new WaitForSeconds(0.02f);
+        yield return new WaitForSeconds(0.01f);
         DontDestroyManager.Instance.DoorSpawnIn();
 
         bool hasObjSpawned = HasObjectsSpawnedOnce(sceneName);

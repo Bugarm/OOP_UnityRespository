@@ -26,6 +26,7 @@ public class DoorRoomSwitch : Door
         {
             if (Input.GetKeyDown(KeyCode.W))
             {
+                GameManager.Instance.sceneSwitch = true;
                 GameData.HasEnteredDoor = true;
                 GameData.HasEnteredScreneTrig = false;
 

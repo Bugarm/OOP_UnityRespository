@@ -27,6 +27,7 @@ public class NextSceneTrigger : MonoBehaviour
     {
         if (collision.CompareTag("PlayerBody") && delay == false)
         {
+            GameManager.Instance.sceneSwitch = true;
             GameData.SceneTransID = id;
 
             GameData.HasEnteredDoor = false;

@@ -256,34 +256,54 @@ public class Player : Singleton<Player>
         //Normal movement
         if (PlayerState.IsStickActive == false && PlayerState.IsDash == false && PlayerState.IsPound == false && PlayerState.IsBounceMode == false)
         {
-            if (Input.GetKey(KeyCode.A) && PlayerState.IsTouchingWall == false)
+
+            if (GameManager.Instance.sceneSwitch == false)
             {
-                PlayerState.IsMove = true;
-                dirX = -speed;
+                if (Input.GetKey(KeyCode.A) && PlayerState.IsTouchingWall == false)
+                {
+                    PlayerState.IsMove = true;
+                    dirX = -speed;
+                }
+
+            
+                if (Input.GetKey(KeyCode.D) && PlayerState.IsTouchingWall == false)
+                {
+
+                    PlayerState.IsMove = true;
+                    dirX = speed;
                 
-
+                }
             }
-            if (Input.GetKey(KeyCode.D) && PlayerState.IsTouchingWall == false)
-            {
-                PlayerState.IsMove = true;
-                dirX = speed;
 
-            }
 
             if (Time.timeScale != 0f)
             { 
                 if (Input.GetKey(KeyCode.A))
                 {
-                    player.transform.localScale = new Vector2(-1, player.transform.localScale.y);
+                    if (GameManager.Instance.sceneSwitch == true && DontDestroyManager.Instance.offset < 0)
+                    {
+                        player.transform.localScale = new Vector2(-1, player.transform.localScale.y);
+                    }
+                    else if(GameManager.Instance.sceneSwitch == false)
+                    {
+                        player.transform.localScale = new Vector2(-1, player.transform.localScale.y);
+                    }
                 }
 
                 if (Input.GetKey(KeyCode.D))
                 {
-                    player.transform.localScale = new Vector2(1, player.transform.localScale.y);
+                    if (GameManager.Instance.sceneSwitch == true && DontDestroyManager.Instance.offset > 0)
+                    { 
+                        player.transform.localScale = new Vector2(1, player.transform.localScale.y);
+                    }
+                    else if(GameManager.Instance.sceneSwitch == false)
+                    {
+                        player.transform.localScale = new Vector2(1, player.transform.localScale.y);
+                    }
                 }
             }
-
         }
+    
 
         // Stick to wall mode
         if (Input.GetKeyDown(KeyCode.L) && PlayerState.IsCrouch == false && PlayerState.IsHeadAttack == false && PlayerState.IsBounceMode == false)
