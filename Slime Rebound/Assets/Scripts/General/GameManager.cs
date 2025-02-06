@@ -196,7 +196,7 @@ public class GameManager : Singleton<GameManager>
         }
         
         SceneTransFunct(nextRoomNum);
-        yield return new WaitForSeconds(0.35f);
+        yield return new WaitForSeconds(0.25f);
         
         while (blackTrans.color.a >= 0)
         {

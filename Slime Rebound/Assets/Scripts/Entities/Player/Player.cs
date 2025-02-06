@@ -78,21 +78,39 @@ public class Player : Singleton<Player>
         playerRB = GetComponent<Rigidbody2D>();
 
         throwArrow.SetActive(false);
-
-        dirX = 0;
-        dirY = 0;
+        
         jumpPower = 6.45f;
         attackJumpPower = 10.4f;
 
-        speed = walkSpeed;
+        
     }
 
     // Start is called before the first frame update
     void Start()
     {
+
+        
+
+
+    }
+
+    private void OnEnable()
+    {
+        PlayerCollision("Idle");
         AttackTrigger("Reset");
 
-        PlayerCollision("Idle");
+        if(PlayerState.IsRun == true && PlayerState.IsCrouch == false)
+        {
+            speed = runSpeed;
+        }
+        else if (PlayerState.IsCrouch == true)
+        {
+            speed = walkSpeed - 2;
+        }
+        else 
+        {
+            speed = walkSpeed;
+        }
     }
 
     // Update is called once per frame
@@ -135,6 +153,7 @@ public class Player : Singleton<Player>
         {
             dirX = 0; dirY = 0;
         }
+
     }
 
     public void ResetPlayerVel(string mode)
@@ -145,13 +164,7 @@ public class Player : Singleton<Player>
                 dirX = 0;
                 dirY = 0;
                 break;
-            case "isMove":
-                if(!Input.GetKey(KeyCode.A) || !Input.GetKey(KeyCode.D))
-                {
-                    dirX = 0;
-                    dirY = 0;
-                }
-                break;
+
         }
         
     }
@@ -245,65 +258,12 @@ public class Player : Singleton<Player>
 
     void KeyPressed()
     {
-      
         // Run
-        if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) && PlayerState.IsCrouch == false && PlayerState.IsSlide == false)
+        if ((Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) && PlayerState.IsCrouch == false && PlayerState.IsSlide == false)
         {
             PlayerState.IsRun = true;
             speed = runSpeed;
         }
-
-        //Normal movement
-        if (PlayerState.IsStickActive == false && PlayerState.IsDash == false && PlayerState.IsPound == false && PlayerState.IsBounceMode == false)
-        {
-
-            if (GameManager.Instance.sceneSwitch == false)
-            {
-                if (Input.GetKey(KeyCode.A) && PlayerState.IsTouchingWall == false)
-                {
-                    PlayerState.IsMove = true;
-                    dirX = -speed;
-                }
-
-            
-                if (Input.GetKey(KeyCode.D) && PlayerState.IsTouchingWall == false)
-                {
-
-                    PlayerState.IsMove = true;
-                    dirX = speed;
-                
-                }
-            }
-
-
-            if (Time.timeScale != 0f)
-            { 
-                if (Input.GetKey(KeyCode.A))
-                {
-                    if (GameManager.Instance.sceneSwitch == true && DontDestroyManager.Instance.offset < 0)
-                    {
-                        player.transform.localScale = new Vector2(-1, player.transform.localScale.y);
-                    }
-                    else if(GameManager.Instance.sceneSwitch == false)
-                    {
-                        player.transform.localScale = new Vector2(-1, player.transform.localScale.y);
-                    }
-                }
-
-                if (Input.GetKey(KeyCode.D))
-                {
-                    if (GameManager.Instance.sceneSwitch == true && DontDestroyManager.Instance.offset > 0)
-                    { 
-                        player.transform.localScale = new Vector2(1, player.transform.localScale.y);
-                    }
-                    else if(GameManager.Instance.sceneSwitch == false)
-                    {
-                        player.transform.localScale = new Vector2(1, player.transform.localScale.y);
-                    }
-                }
-            }
-        }
-    
 
         // Stick to wall mode
         if (Input.GetKeyDown(KeyCode.L) && PlayerState.IsCrouch == false && PlayerState.IsHeadAttack == false && PlayerState.IsBounceMode == false)
@@ -341,23 +301,6 @@ public class Player : Singleton<Player>
             }
         }
 
-        // Saves old Speed for the crouch
-        if (Input.GetKey(KeyCode.S) && (PlayerState.IsCrouch == true || PlayerState.IsSlide == true))
-        {
-            if (speed<= 0)
-            {
-                oldSpeed = walkSpeed;
-            }
-            else if(PlayerState.IsRun == true)
-            {
-                oldSpeed = runSpeed;
-            }
-            else
-            {
-                oldSpeed = walkSpeed;
-            }
-        }
-
         // Crouch & Slide & Jump Attack
         if (Input.GetKey(KeyCode.S) && PlayerState.IsHeadAttack == false && PlayerState.IsBounceMode == false)
         {
@@ -368,7 +311,7 @@ public class Player : Singleton<Player>
                 PlayerCollision("Crouch");
 
                 wallCollision.offset = new Vector2(0.4836431f, -0.55f);
-
+        
                 // Slide
                 if (PlayerState.IsRun == true)
                 {
@@ -382,11 +325,13 @@ public class Player : Singleton<Player>
                     }
                 }
                 // Normal Crouch Speed
-                else if(PlayerState.IsSlide == false)
+                else if (PlayerState.IsSlide == false)
                 {
+                    PlayerState.IsSlide = false;
                     PlayerState.IsCrouch = true;
                     speed = walkSpeed - 2;
                 }
+                
 
                 // Attack Jump
                 if (Input.GetKeyDown(KeyCode.Space))
@@ -401,7 +346,7 @@ public class Player : Singleton<Player>
         }
 
         // Ground Pound
-        if (Input.GetKeyDown(KeyCode.S) && PlayerState.IsHeadAttack == false)
+        if (Input.GetKeyDown(KeyCode.S) && GameManager.Instance.sceneSwitch == false && PlayerState.IsHeadAttack == false)
         {
             if (PlayerState.IsStickActive == false || (PlayerState.IsStickActive == true && PlayerState.IsTouchingWall == false))
             {
@@ -496,50 +441,110 @@ public class Player : Singleton<Player>
             }
         }
 
+        //Normal movement
+        if (PlayerState.IsStickActive == false && PlayerState.IsDash == false && PlayerState.IsPound == false && PlayerState.IsBounceMode == false)
+        {
+            if (GameManager.Instance.sceneSwitch == false)
+            {
+                // Left and Right
+                if (Input.GetKey(KeyCode.A) && PlayerState.IsTouchingWall == false)
+                {
+                    PlayerState.IsMove = true;
+                    dirX = -speed;
+                }
+                else if (Input.GetKey(KeyCode.D) && PlayerState.IsTouchingWall == false)
+                {
+                    PlayerState.IsMove = true;
+                    dirX = speed;
+                }
+
+                // Flips Player
+            
+                if (Time.timeScale != 0f)
+                {
+                    if (Input.GetKey(KeyCode.A))
+                    {
+
+                        player.transform.localScale = new Vector2(-1, player.transform.localScale.y);
+
+                    }
+
+                    if (Input.GetKey(KeyCode.D))
+                    {
+                        player.transform.localScale = new Vector2(1, player.transform.localScale.y);
+
+                    }
+                }
+            }
+
+        }
+
     }
 
     void KeyReleased()
     {
-        if ((Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.RightShift)) )
+        // Run Release
+        if (!Input.GetKey(KeyCode.LeftShift))
         {
-            PlayerState.IsRun = false;
-            if (PlayerState.IsCrouch == false && PlayerState.IsSlide == false)
+            if (GameManager.Instance.sceneSwitch == false)
             {
+                PlayerState.IsRun = false;
                 speed = walkSpeed;
             }
-            else
-            {
-                speed = walkSpeed - 2;
-            }
         }
 
+        // Movement Release
         if (PlayerState.IsStickActive == false && PlayerState.IsBounceMode == false)
-        { 
-            // Movement
-            if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))
+        {
+            if (GameManager.Instance.sceneSwitch == false)
             {
-                PlayerState.IsMove = false;
-                dirX = 0;
+                // Movement
+                if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+                {
+                
+                    PlayerState.IsMove = false;
+                    dirX = 0;
+                    Debug.Log("A");
+                }
             }
 
-            // Crouch (do this better)
-            if ((PlayerState.IsCrouch == true || PlayerState.IsSlide == true) && PlayerState.IsTouchingTop == false && (!Input.GetKey(KeyCode.S) || (Input.GetKeyUp(KeyCode.S)) ))
+            // Crouch   
+            if(!Input.GetKey(KeyCode.S) || Input.GetKeyUp(KeyCode.S))
             {
-                PlayerState.IsSlide = false;
-                PlayerState.IsCrouch = false;
+                if (GameManager.Instance.sceneSwitch == false)
+                {
+                    if ((PlayerState.IsCrouch == true || PlayerState.IsSlide == true) && PlayerState.IsTouchingTop == false)
+                    {
+                    
+                        PlayerState.IsSlide = false;
+                        PlayerState.IsCrouch = false;
+                    
+                        if(PlayerState.IsRun == true)
+                        {
+                            speed = runSpeed;
+                        }
+                        else
+                        {
+                            speed = walkSpeed;
+                        }
+                    
+                        // Collider Changes
+                        PlayerCollision("Idle");
+                
 
-                speed = oldSpeed;
-                // Collider Changes
-                PlayerCollision("Idle");
-
-                wallCollision.offset = new Vector2(0.4836431f, -0.2430587f);
+                        wallCollision.offset = new Vector2(0.4836431f, -0.2430587f);
+                    }
+                }
             }
         }
 
-        if (Input.GetKeyUp(KeyCode.K) && PlayerState.IsHeadAttack == false && PlayerState.IsCrouch == false && PlayerState.IsStickActive == false)
+        // Bounce Release
+        if (!Input.GetKey(KeyCode.K) && PlayerState.IsHeadAttack == false && PlayerState.IsCrouch == false && PlayerState.IsStickActive == false)
         {
             PlayerState.IsBounceMode = false;
         }
+        
+
     }
 
     // Collision and Triggers Setup

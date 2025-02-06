@@ -119,7 +119,6 @@ public class DontDestroyManager : Singleton<DontDestroyManager>
                 }
             }
 
-            Player.Instance.ResetPlayerVel("isMove");
         }
 
 
