@@ -12,8 +12,6 @@ public class SceneSwitchManager : Singleton<SceneSwitchManager>
 
     private int totalScenes;
 
-    private Coroutine sceneCount;
-
     protected override void Awake()
     {
         base.Awake();
@@ -34,7 +32,10 @@ public class SceneSwitchManager : Singleton<SceneSwitchManager>
 
     public void SwitchRoom(int? nextRoomNum)
     {
-        StartCoroutine(GameManager.Instance.ScreenTrans(nextRoomNum));
+        if(GameManager.Instance.screenTransRoutine == null)
+        {
+            GameManager.Instance.screenTransRoutine = StartCoroutine(GameManager.Instance.ScreenTrans(nextRoomNum));
+        }
     }
 
     public void SwitchToLevel(string Level)

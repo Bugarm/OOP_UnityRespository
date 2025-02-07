@@ -61,7 +61,7 @@ public class Player : Singleton<Player>
     private float newxPos;
     private float jumpPower;
     private float attackJumpPower;
-    private float speed;
+    private float speed = 4;
 
     // Collision Check
     private PhysicsMaterial2D curMaterial;
@@ -82,14 +82,12 @@ public class Player : Singleton<Player>
         jumpPower = 6.45f;
         attackJumpPower = 10.4f;
 
-        
     }
 
     // Start is called before the first frame update
     void Start()
     {
 
-        
 
 
     }
@@ -98,19 +96,6 @@ public class Player : Singleton<Player>
     {
         PlayerCollision("Idle");
         AttackTrigger("Reset");
-
-        if(PlayerState.IsRun == true && PlayerState.IsCrouch == false)
-        {
-            speed = runSpeed;
-        }
-        else if (PlayerState.IsCrouch == true)
-        {
-            speed = walkSpeed - 2;
-        }
-        else 
-        {
-            speed = walkSpeed;
-        }
     }
 
     // Update is called once per frame
@@ -131,28 +116,34 @@ public class Player : Singleton<Player>
             }
         }
 
-        if (PlayerState.IsDamaged == false)
+        //Debug.Log(GameData.HasSceneTransAnim);
+        if (PlayerState.IsDamaged == true)
         {
-            KeyPressed();
-            KeyReleased();
-            ResetChecks();
-        
-            AnimationController();
-            PlayerAcceleration();
+            dirX = 0; dirY = 0;
+        }
+        else
+        {
+            if(GameData.HasSceneTransAnim == false)
+            { 
+                KeyPressed();
+                KeyReleased();
+                ResetChecks();
+            
+                AnimationController();
+                PlayerAcceleration();
+            }
 
-            if(PlayerState.IsBounceMode == true)
+            if (PlayerState.IsBounceMode == true)
             {
                 playerRB.velocity = new Vector3(dirX, playerRB.velocity.y, 0);
             }
             else
             {
                 playerRB.velocity = new Vector3(dirX, dirY, 0);
+                //Debug.Log(dirX);
             }
-        }
-        else
-        {
-            dirX = 0; dirY = 0;
-        }
+            
+        } 
 
     }
 
@@ -250,7 +241,7 @@ public class Player : Singleton<Player>
             playerSprite.sprite = crouch;
         }
 
-        if (!Input.GetKey(KeyCode.S) && PlayerState.IsTouchingTop == false)
+        if (Input.GetKeyDown(KeyCode.S) && PlayerState.IsTouchingTop == false)
         {
             playerSprite.sprite = idle;
         }
@@ -258,11 +249,116 @@ public class Player : Singleton<Player>
 
     void KeyPressed()
     {
+         
+        // Flips Player
+        if (PlayerState.IsStickActive == false && PlayerState.IsDash == false && PlayerState.IsPound == false && PlayerState.IsBounceMode == false)
+        {
+            
+            if (Time.timeScale != 0f) // FOR THE PAUSE MENU
+            {
+                if (Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.A))
+                {
+                    player.transform.localScale = new Vector2(player.transform.localScale.x, player.transform.localScale.y);
+                }
+                else
+                { 
+                    if (Input.GetKey(KeyCode.A))
+                    {
+
+                        player.transform.localScale = new Vector2(-1, player.transform.localScale.y);
+
+                    }
+
+                    if (Input.GetKey(KeyCode.D))
+                    {
+                        player.transform.localScale = new Vector2(1, player.transform.localScale.y);
+
+                    }
+                }
+            }
+        }
+
+        //Normal movement
+        if (PlayerState.IsStickActive == false && PlayerState.IsDash == false && PlayerState.IsPound == false && PlayerState.IsBounceMode == false)
+        {
+
+            // Left and Right
+            if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.D))
+            {
+                dirX = 0;
+            }
+            else if (Input.GetKey(KeyCode.A) && PlayerState.IsTouchingWall == false)
+            {
+                PlayerState.IsMove = true;
+                if (PlayerState.IsCrouch == false || PlayerState.IsRun == false)
+                { 
+                    dirX = -speed;
+                }
+                
+            }
+            else if (Input.GetKey(KeyCode.D) && PlayerState.IsTouchingWall == false)
+            {
+                PlayerState.IsMove = true;
+                if (PlayerState.IsCrouch == false || PlayerState.IsRun == false)
+                {
+                    dirX = speed;
+                }
+                
+            }
+
+        }
+
         // Run
-        if ((Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) && PlayerState.IsCrouch == false && PlayerState.IsSlide == false)
+        if ((Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)))
         {
             PlayerState.IsRun = true;
-            speed = runSpeed;
+
+            if (PlayerState.IsCrouch == false && PlayerState.IsSlide == false)
+            {
+                speed = runSpeed;
+            }
+
+        }
+
+        // Crouch & Slide & Jump Attack
+        if (Input.GetKey(KeyCode.S) && PlayerState.IsHeadAttack == false && PlayerState.IsBounceMode == false)
+        {
+            if (PlayerState.IsStickActive == false && PlayerState.IsTouchingGround == true)
+            {
+
+                // Collider Changes
+                PlayerCollision("Crouch");
+
+                wallCollision.offset = new Vector2(0.4836431f, -0.55f);
+
+                // Slide
+                if (PlayerState.IsRun == true)
+                {
+                    PlayerState.IsSlide = true;
+
+                    speed -= Time.deltaTime + 0.025f;
+                }
+                // Normal Crouch Speed
+                
+                if (PlayerState.IsSlide == false || speed <= 0)
+                {
+                    PlayerState.IsSlide = false;
+                    PlayerState.IsCrouch = true;
+                    PlayerState.IsRun = false;
+
+                    speed = walkSpeed - 2;
+                }
+
+                // Attack Jump
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    if (attackJumpRoutine == null)
+                    {
+                        attackJumpRoutine = StartCoroutine(AttackJumpFunc());
+                    }
+                }
+
+            }
         }
 
         // Stick to wall mode
@@ -300,51 +396,7 @@ public class Player : Singleton<Player>
                 bounceRoutine = StartCoroutine(BounceFunction());
             }
         }
-
-        // Crouch & Slide & Jump Attack
-        if (Input.GetKey(KeyCode.S) && PlayerState.IsHeadAttack == false && PlayerState.IsBounceMode == false)
-        {
-            if (PlayerState.IsStickActive == false && PlayerState.IsTouchingGround == true)
-            {
-
-                // Collider Changes
-                PlayerCollision("Crouch");
-
-                wallCollision.offset = new Vector2(0.4836431f, -0.55f);
         
-                // Slide
-                if (PlayerState.IsRun == true)
-                {
-                    PlayerState.IsSlide = true;
-
-                    speed -= 0.025f;
-                    if (speed < 0)
-                    {
-                        speed = walkSpeed - 2;
-
-                    }
-                }
-                // Normal Crouch Speed
-                else if (PlayerState.IsSlide == false)
-                {
-                    PlayerState.IsSlide = false;
-                    PlayerState.IsCrouch = true;
-                    speed = walkSpeed - 2;
-                }
-                
-
-                // Attack Jump
-                if (Input.GetKeyDown(KeyCode.Space))
-                {
-                    if (attackJumpRoutine == null)
-                    {
-                        attackJumpRoutine = StartCoroutine(AttackJumpFunc());
-                    }
-                }
-                
-            }
-        }
-
         // Ground Pound
         if (Input.GetKeyDown(KeyCode.S) && GameManager.Instance.sceneSwitch == false && PlayerState.IsHeadAttack == false)
         {
@@ -441,100 +493,55 @@ public class Player : Singleton<Player>
             }
         }
 
-        //Normal movement
-        if (PlayerState.IsStickActive == false && PlayerState.IsDash == false && PlayerState.IsPound == false && PlayerState.IsBounceMode == false)
-        {
-            if (GameManager.Instance.sceneSwitch == false)
-            {
-                // Left and Right
-                if (Input.GetKey(KeyCode.A) && PlayerState.IsTouchingWall == false)
-                {
-                    PlayerState.IsMove = true;
-                    dirX = -speed;
-                }
-                else if (Input.GetKey(KeyCode.D) && PlayerState.IsTouchingWall == false)
-                {
-                    PlayerState.IsMove = true;
-                    dirX = speed;
-                }
-
-                // Flips Player
-            
-                if (Time.timeScale != 0f)
-                {
-                    if (Input.GetKey(KeyCode.A))
-                    {
-
-                        player.transform.localScale = new Vector2(-1, player.transform.localScale.y);
-
-                    }
-
-                    if (Input.GetKey(KeyCode.D))
-                    {
-                        player.transform.localScale = new Vector2(1, player.transform.localScale.y);
-
-                    }
-                }
-            }
-
-        }
-
+        
     }
 
     void KeyReleased()
     {
         // Run Release
-        if (!Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetKeyUp(KeyCode.LeftShift) && PlayerState.IsRun == true)
         {
-            if (GameManager.Instance.sceneSwitch == false)
+            PlayerState.IsRun = false;
+            if (PlayerState.IsCrouch == false && PlayerState.IsSlide == false)
             {
-                PlayerState.IsRun = false;
                 speed = walkSpeed;
+                Debug.Log("A");
             }
+            else
+            {
+                speed = walkSpeed - 2;
+            }
+            //Debug.Log(PlayerState.IsRun);   
         }
-
+        
         // Movement Release
         if (PlayerState.IsStickActive == false && PlayerState.IsBounceMode == false)
         {
-            if (GameManager.Instance.sceneSwitch == false)
+            // Movement
+            if ((Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D)))
             {
-                // Movement
-                if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
-                {
-                
-                    PlayerState.IsMove = false;
-                    dirX = 0;
-                    Debug.Log("A");
-                }
+                PlayerState.IsMove = false;
+                dirX = 0;
             }
-
+            
             // Crouch   
-            if(!Input.GetKey(KeyCode.S) || Input.GetKeyUp(KeyCode.S))
+            if(Input.GetKeyUp(KeyCode.S))
             {
-                if (GameManager.Instance.sceneSwitch == false)
-                {
-                    if ((PlayerState.IsCrouch == true || PlayerState.IsSlide == true) && PlayerState.IsTouchingTop == false)
-                    {
-                    
-                        PlayerState.IsSlide = false;
-                        PlayerState.IsCrouch = false;
-                    
-                        if(PlayerState.IsRun == true)
-                        {
-                            speed = runSpeed;
-                        }
-                        else
-                        {
-                            speed = walkSpeed;
-                        }
-                    
-                        // Collider Changes
-                        PlayerCollision("Idle");
                 
+                if ((PlayerState.IsCrouch == true || PlayerState.IsSlide == true) && PlayerState.IsTouchingTop == false)
+                {
+                    
+                    PlayerState.IsSlide = false;
+                    PlayerState.IsCrouch = false;
+                    
+                    // Collider Changes
+                    PlayerCollision("Idle");
 
-                        wallCollision.offset = new Vector2(0.4836431f, -0.2430587f);
-                    }
+                    speed = walkSpeed;
+                    
+                    wallCollision.offset = new Vector2(0.4836431f, -0.2430587f);
                 }
+                
             }
         }
 

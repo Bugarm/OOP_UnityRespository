@@ -82,6 +82,7 @@ public class DetectionScript : Singleton<DetectionScript>
                     GameManager.Instance.damageRoutine = StartCoroutine(GameManager.Instance.DamagePlayer());
                 }
             }
+
         }
     }
 

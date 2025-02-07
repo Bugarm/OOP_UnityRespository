@@ -48,6 +48,7 @@ public class GameManager : Singleton<GameManager>
         GameData.Hp = 3;
         GameData.Score = 0;
         GameData.TotalBounces = 0;
+        GameData.HasSceneTransAnim = false;
 
         DisplayScore();
         DisplayHp();
@@ -196,16 +197,17 @@ public class GameManager : Singleton<GameManager>
         }
         
         SceneTransFunct(nextRoomNum);
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(0.35f);
         
+
         while (blackTrans.color.a >= 0)
         {
             // Fade Out
             blackTrans.color = new Color(0, 0, 0, blackTrans.color.a - Time.deltaTime - 0.01f);
             yield return new WaitForSeconds(0.001f);
         }
-        sceneSwitch = false;
 
+        GameData.HasSceneTransAnim = false;
         blackTrans.color = new Color(0, 0, 0, 0);
         blackTrans.gameObject.SetActive(false);
         screenTransRoutine = null;

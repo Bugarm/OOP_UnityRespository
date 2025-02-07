@@ -18,7 +18,10 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
     public GameObject exitDoor;
     public GameObject exitTrigger;
 
+    private GameObject[] sceneTrigger;
 
+    public float offset;
+    float savePlayerVel;
     protected override void Awake()
     {
         base.Awake();
@@ -43,30 +46,32 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
         sceneStart = SceneManager.GetActiveScene();
 
         // Checks if string has a digit
-        if(sceneStart.name.Any(char.IsDigit))
-        { 
+        if (sceneStart.name.Any(char.IsDigit))
+        {
             sceneName = sceneStart.name.Substring(0, sceneStart.name.Length - 1);
         }
         else
-        { 
+        {
             sceneName = sceneStart.name;
         }
 
         GameData.LevelState = sceneName;
 
-        DontDestroyManager.Instance.DoorSpawnIn();
+        DoorSpawnIn();
         StartCoroutine(DelayLevelDataLoad(SceneManager.GetActiveScene().name));
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     // Load Scene
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+
+        //Debug.Log(savePlayerVel);
 
         if (scene.name.StartsWith("TutorialRoom") || scene.name.StartsWith("ForestLevel"))
         {
@@ -74,8 +79,8 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
             exitTrigger = GameObject.FindGameObjectWithTag("ExitTrigger");
             
             StartCoroutine(DelayLevelDataLoad(scene.name));
-            
-            LevelExitDoor.Instance.DestroyDoorCheck(exitDoor,exitTrigger);
+
+            LevelExitDoor.Instance.DestroyDoorCheck(exitDoor, exitTrigger);
         }
         else
         {
@@ -84,12 +89,12 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
     }
 
     // So the data can load in time
-    
+
 
     IEnumerator DelayLevelDataLoad(string sceneName)
     {
         yield return new WaitForSeconds(0.01f);
-        DontDestroyManager.Instance.DoorSpawnIn();
+        DoorSpawnIn();
 
         bool hasObjSpawned = HasObjectsSpawnedOnce(sceneName);
 
@@ -99,7 +104,7 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
         {
             SaveLoadManager.Instance.LoadLevelData(sceneName);
         }
-        
+
     }
 
 
@@ -120,7 +125,7 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
             }
 
             if (checkedScene == false)
-            {         
+            {
                 LoadObjects(sceneName);
                 return true;
             }
@@ -165,4 +170,63 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
         GameManager.Instance.DisplayScore();
     }
 
+    public void DoorSpawnIn()
+    {
+        player = FindAnyObjectByType<Player>().gameObject;
+        // Spawns in the starting Door
+        GameObject doorStart = GameObject.FindGameObjectWithTag("DoorStart");
+        sceneTrigger = GameObject.FindGameObjectsWithTag("SceneTrigger");
+
+        //Debug.Log(GameData.HasEnteredDoor + " " + GameData.HasEnteredScreneTrig);
+
+        if (GameData.HasEnteredDoor == true && GameData.HasEnteredScreneTrig == false)
+        {
+            if (doorStart == null)
+            {
+                player.transform.position = new Vector3(0, 0, 0);
+                GameData.PlayerPos = new Vector3(0, 0, 0);
+
+            }
+            else
+            {
+                player.transform.position = new Vector3(doorStart.transform.position.x, doorStart.transform.position.y - 0.4f, 0);
+                GameData.PlayerPos = new Vector3(doorStart.transform.position.x, doorStart.transform.position.y - 0.4f, 0);
+            }
+
+            // Reset Player Velocity on Scene Loaded
+            Player.Instance.ResetPlayerVel("stop");
+
+            PlayerState.IsRun = false;
+            PlayerState.IsBounceMode = false;
+            PlayerState.IsStickActive = false;
+            PlayerState.IsHeadAttack = false;
+        }
+
+        else if (GameData.HasEnteredDoor == false && GameData.HasEnteredScreneTrig == true)
+        {
+            //Debug.Log(GameData.SceneTransID);
+
+            foreach (GameObject sceneTrig in sceneTrigger)
+            {
+                NextSceneTrigger trig = sceneTrig.GetComponent<NextSceneTrigger>();
+
+                if (GameData.SceneTransID == trig.id)
+                {
+
+                    if (player.transform.localScale.x == 1)
+                    {
+                        offset = 3;
+                    }
+                    else
+                    {
+                        offset = -3;
+                    }
+
+                    player.transform.position = new Vector3(sceneTrig.transform.position.x + offset, sceneTrig.transform.position.y - 0.4f, 0);
+                    GameData.PlayerPos = new Vector3(sceneTrig.transform.position.x + offset, sceneTrig.transform.position.y - 0.4f, 0);
+                }
+            }
+
+        }
+    }
 }

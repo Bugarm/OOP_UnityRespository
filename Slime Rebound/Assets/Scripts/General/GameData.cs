@@ -13,6 +13,7 @@ public abstract class GameData : MonoBehaviour
     private static int _totalBounces = 0;
     private static Vector3 _playerPos;
     private static int _sceneTransID;
+    private static bool _hasSceneTransAnim;
 
     private static bool _hasEnteredDoor = true;
     private static bool _hasEnteredScreneTrig = false;
@@ -23,6 +24,12 @@ public abstract class GameData : MonoBehaviour
     private static int _level1_HighScore;
 
     // 
+
+    public static bool HasSceneTransAnim
+    {
+        get { return _hasSceneTransAnim; }
+        set { _hasSceneTransAnim = value; }
+    }
 
     public static bool HasEnteredDoor
     {
