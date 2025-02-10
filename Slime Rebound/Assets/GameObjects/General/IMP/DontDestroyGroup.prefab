@@ -287,6 +287,14 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 2946525147099557722}
+    - target: {fileID: 2465203562587741407, guid: 9936b7b5776bb1542b6730aec25b3cb6, type: 3}
+      propertyPath: placeableObjects.Array.data[3].id
+      value: BoxObj
+      objectReference: {fileID: 0}
+    - target: {fileID: 2465203562587741407, guid: 9936b7b5776bb1542b6730aec25b3cb6, type: 3}
+      propertyPath: placeableObjects.Array.data[3].prefab
+      value: 
+      objectReference: {fileID: 1090065876558376771, guid: 935a8bdd89223ed449cfb97613b94f35, type: 3}
     - target: {fileID: 5504839371982922821, guid: 9936b7b5776bb1542b6730aec25b3cb6, type: 3}
       propertyPath: m_Name
       value: GameManager_Level

@@ -9,11 +9,13 @@ public class DetectionScript : Singleton<DetectionScript>
 {
     private Rigidbody2D playerRB;
     private Vector3 playerPos;
+    private bool touchingWall;
 
     [Header("Triggers")]
     public BoxCollider2D wallTrigCol;
     public BoxCollider2D floorTrigCol;
     public BoxCollider2D topTriggerCol;
+    public BoxCollider2D fakeWallTriggerCol;
 
     protected override void Awake()
     {
@@ -33,15 +35,33 @@ public class DetectionScript : Singleton<DetectionScript>
     // Update is called once per frame
     void Update()
     {
-
+        
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.CompareTag("Level") || collision.CompareTag("SwitchDoor"))
+
+        if (this.gameObject.activeInHierarchy == true)
         {
-            if(collision.IsTouching(wallTrigCol) )
-            { 
+            // Damaging the Player
+            if (collision.IsTouching(Player.Instance.idleCollider) || collision.IsTouching(Player.Instance.crouchCollider) || collision.IsTouching(Player.Instance.bounceCollider))
+            {
+
+                if (collision.CompareTag("Enemies") || collision.CompareTag("Obsticales") || collision.CompareTag("EnemyBullet"))
+                {
+                    if (GameManager.Instance.damageRoutine == null)
+                    {
+                        GameManager.Instance.damageRoutine = StartCoroutine(GameManager.Instance.DamagePlayer());
+                    }
+                }
+            }
+        }
+
+        // Level Collision
+        if (collision.CompareTag("Level") || collision.CompareTag("SwitchDoor") || collision.CompareTag("Platforms"))
+        {
+            if (collision.IsTouching(wallTrigCol))
+            {
                 PlayerState.IsTouchingWall = true;
             }
 
@@ -56,39 +76,58 @@ public class DetectionScript : Singleton<DetectionScript>
             }
         }
 
-        if (collision.CompareTag("Platforms"))
-        {
-            if (collision.IsTouching(floorTrigCol))
-            {
-                PlayerState.IsTouchingPlatform = true;
-            }
 
-            if (collision.IsTouching(wallTrigCol))
+        // Box Collision
+        if (collision.CompareTag("Box"))
+        {
+            if (collision.IsTouching(wallTrigCol) && collision.GetComponent<BoxScript>().isDestroyed == false && PlayerState.IsBounceMode == false)
             {
                 PlayerState.IsTouchingWall = true;
             }
+
+            if (collision.IsTouching(floorTrigCol) && PlayerState.IsPound == false)
+            {
+                PlayerState.IsTouchingGround = true;
+            }
+
+            if (collision.IsTouching(topTriggerCol) && collision.GetComponent<BoxScript>().isDestroyed == false)
+            {
+                PlayerState.IsTouchingTop = true;
+            }
+        }
+
+        //
+
+        if (collision.IsTouching(fakeWallTriggerCol))
+        {
+            if (collision.CompareTag("Level") )
+            {
+                touchingWall = true;
+            }
+            else
+            {
+                touchingWall = false;
+            }
+
+            if (collision.CompareTag("FakeWall") && touchingWall == false)
+            {
+                touchingWall = false;
+                PlayerState.IsFakeWallAllowed = true;
+            }
+            Debug.Log(touchingWall);
         }
 
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.IsTouching(Player.Instance.idleTrigger) || collision.IsTouching(Player.Instance.crouchTrigger) || collision.IsTouching(Player.Instance.bounceTrigger))
-        {
-            if (collision.CompareTag("Enemies") || collision.CompareTag("Obsticales") || collision.CompareTag("EnemyBullet"))
-            {
-                if (GameManager.Instance.damageRoutine == null)
-                {
-                    GameManager.Instance.damageRoutine = StartCoroutine(GameManager.Instance.DamagePlayer());
-                }
-            }
-
-        }
+        
+        //Debug.Log(collision.IsTouchingLayers(LayerMask.NameToLayer("Level")));
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if ((collision.CompareTag("Level") || collision.CompareTag("SwitchDoor")) && DetectionScript.Instance.IsDestroyed() == false)
+        if ((collision.CompareTag("Level") || collision.CompareTag("SwitchDoor")) || collision.CompareTag("Box") && DetectionScript.Instance.IsDestroyed() == false)
         {
             if (!collision.IsTouching(wallTrigCol))
             {
@@ -120,5 +159,17 @@ public class DetectionScript : Singleton<DetectionScript>
             }
         }
 
+        if(collision.CompareTag("FakeWall"))
+        { 
+            if (!collision.IsTouching(fakeWallTriggerCol) )
+            {
+                PlayerState.IsFakeWallAllowed = false;
+            }
+        }
+       
+
+        //Debug.Log(collision.IsTouchingLayers(LayerMask.NameToLayer("Level")));
     }
+    
+
 }

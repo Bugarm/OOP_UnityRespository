@@ -17,7 +17,7 @@ public class EnemyFlying : Default_Entity
     // set up
     [Header("Settings")]
     public bool isHoming = false;
-    public int fireRateDelay;
+    public float fireRateDelay;
 
     private ObjectPooling bulletPool;
     // set up
@@ -78,9 +78,6 @@ public class EnemyFlying : Default_Entity
     {
         base.Start();
 
-        player = GameObject.FindGameObjectWithTag("Player");
-        playerRB = player.GetComponentInParent<Rigidbody2D>();
-
         clampRotationLow = Quaternion.Euler(0, 0, 0f);
         clampRotationHigh = Quaternion.Euler(0, 0, +360f);
 
@@ -101,58 +98,65 @@ public class EnemyFlying : Default_Entity
             enemySr.flipX = true;
         }
 
-        
-
         pointerGroupObj = GameObject.Find("EnemyPointsGroup");
 
         setupOnce = false;
 
         outOfRange = true;
+
+        // Get Pooling
+        if (bulletPool == null)
+        {
+            if (isHoming == true)
+            {
+                bulletPool = GameObject.Find("ObjectsToPool Homing Bullet").GetComponent<ObjectPooling>();
+            }
+            else
+            {
+                bulletPool = GameObject.Find("ObjectsToPool Normal Bullet").GetComponent<ObjectPooling>();
+            }
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (disableAI == false && outOfRange == false)
+        if (player == null && playerRB == null)
         {
-            if(bulletPool == null)
-            { 
-                if (isHoming == true)
-                {
-                    bulletPool = GameObject.Find("ObjectsToPool Homing Bullet").GetComponent<ObjectPooling>();
-                }
-                else
-                {
-                    bulletPool = GameObject.Find("ObjectsToPool Normal Bullet").GetComponent<ObjectPooling>();
-                }
-            }
-
-            FollowPoints();
-
-            if (seesPlayer == true)
-            {
-                // Homing Function
-                if (bulletPool.name == "ObjectsToPool Homing Bullet")
-                {
-                    PointAtPlayer();
-                }
-            }
-
-            if (bulletRoutine == null)
-            {
-                bulletRoutine = StartCoroutine(ShootBullet(bulletPool));
-            }
-
+            player = GameObject.FindGameObjectWithTag("Player");
+            playerRB = player.GetComponentInParent<Rigidbody2D>();
         }
         else
         {
-            if (bulletRoutine != null)
+            if (disableAI == false && outOfRange == false)
             {
-                StopCoroutine(bulletRoutine);
-                bulletRoutine = null;
+                
+                FollowPoints();
+
+                if (seesPlayer == true)
+                {
+                    // Homing Function
+                    if (bulletPool.name == "ObjectsToPool Homing Bullet")
+                    {
+                        PointAtPlayer();
+                    }
+                }
+
+                if (bulletRoutine == null)
+                {
+                    bulletRoutine = StartCoroutine(ShootBullet(bulletPool));
+                }
+
+            }
+            else
+            {
+                if (bulletRoutine != null)
+                {
+                    StopCoroutine(bulletRoutine);
+                    bulletRoutine = null;
+                }
             }
         }
-
         
     }
 
@@ -165,10 +169,13 @@ public class EnemyFlying : Default_Entity
                 // Spawn bullet from pool
                 GameObject getBullet = bulletPool.GetPoolObject();
 
-                getBullet.transform.position = shootPointObj.transform.position;
-                getBullet.transform.rotation = shootPointObj.transform.rotation;
-            
-                getBullet.SetActive(true);
+                if (getBullet != null)
+                {
+                    getBullet.transform.position = shootPointObj.transform.position;
+                    getBullet.transform.rotation = shootPointObj.transform.rotation;
+
+                    getBullet.SetActive(true);
+                }
             }
             yield return new WaitForSeconds(fireRateDelay);
             
@@ -235,7 +242,6 @@ public class EnemyFlying : Default_Entity
             {
                 if (collision.IsTouching(deathCollider))
                 {
-
                     outOfRange = false;
                 }
             }
@@ -247,9 +253,10 @@ public class EnemyFlying : Default_Entity
     {
         if (disableAI == false && outOfRange == false)
         {
-            if (enemy.activeInHierarchy == true && collision.CompareTag("Player"))
+            if (enemy.activeInHierarchy == true && collision.CompareTag("PlayerBody"))
             {
                 seesPlayer = true;
+                //Debug.Log("Looked");
             }
         }
 
@@ -260,7 +267,7 @@ public class EnemyFlying : Default_Entity
     {
         if (disableAI == false && outOfRange == false)
         {
-            if (enemy.activeInHierarchy == true && collision.CompareTag("Player"))
+            if (enemy.activeInHierarchy == true && collision.CompareTag("PlayerBody"))
             {
 
                 seesPlayer = false;

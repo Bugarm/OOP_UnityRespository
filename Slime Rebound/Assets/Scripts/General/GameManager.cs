@@ -276,7 +276,7 @@ public class GameManager : Singleton<GameManager>
 
     public void BouncesTotalCounted(int bounces)
     {
-        if (GameData.TotalBounces <= bounces)
+        if (GameData.TotalBounces < bounces)
         {
             GameData.TotalBounces = bounces;
 
@@ -300,5 +300,6 @@ public class GameManager : Singleton<GameManager>
             SaveLoadManager.Instance.SaveLevelData(SceneManager.GetActiveScene().name);
             SceneManager.LoadScene(GameData.LevelState + nextRoomNum);
         }
+        this.gameObject.GetComponentInParent<DontDestroyGroup>().enabled = true;
     }
 }

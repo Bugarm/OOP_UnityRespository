@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelData : MonoBehaviour
+public abstract class LevelData : MonoBehaviour
 {
-    //
+    // Tutorial
     public static List<SaveableObjects> _saveableObj_Tutorial;
 
     public static List<SaveableObjects> SaveableObj_Tutorial
@@ -27,5 +27,22 @@ public class LevelData : MonoBehaviour
     {
         get { return _saveableObj_Tutorial2; }
         set { _saveableObj_Tutorial2 = value; }
+    }
+
+    // Forest Level
+    public static List<SaveableObjects> _saveableObj_ForestLevel;
+
+    public static List<SaveableObjects> SaveableObj_ForestLevel
+    {
+        get { return _saveableObj_ForestLevel; }
+        set { _saveableObj_ForestLevel = value; }
+    }
+
+    public static List<SaveableObjects> _saveableObj_ForestLevel1;
+
+    public static List<SaveableObjects> SaveableObj_ForestLevel1
+    {
+        get { return _saveableObj_ForestLevel1; }
+        set { _saveableObj_ForestLevel1 = value; }
     }
 }

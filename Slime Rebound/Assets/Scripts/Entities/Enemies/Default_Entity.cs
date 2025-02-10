@@ -57,7 +57,8 @@ public class Default_Entity : MonoBehaviour
 
     public IEnumerator EnemyDead()
     {
-        Destroy(deathCollider);
+        //To stop from player on detecting them while dying
+        enemy.tag = "Untagged";
 
         disableAI = true;
 

@@ -22,10 +22,12 @@ public class DoorRoomSwitch : Door
     // Update is called once per frame
     void Update()
     {
-        if (isAtDoor == true && delay == false)
+        if (isAtDoor == true && delay == false && GameData.HasEnteredScreneTrig == false)
         {
-            if (Input.GetKeyDown(KeyCode.W))
-            {
+            if (Input.GetKeyDown(KeyCode.W) && Player.Instance.RetrurnPos().x == 0 && PlayerState.IsHeadAttack == false)
+            { 
+                GameData.DoorID = id;
+
                 GameManager.Instance.sceneSwitch = true;
                 GameData.HasEnteredDoor = true;
                 GameData.HasEnteredScreneTrig = false;

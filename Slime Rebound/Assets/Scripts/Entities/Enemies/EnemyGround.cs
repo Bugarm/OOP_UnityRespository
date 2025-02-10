@@ -8,9 +8,8 @@ using Unity.VisualScripting;
 
 public class EnemyGround : Default_Entity
 {
-    [Header("Group Obj")]
     // Settings
-    [SerializeField] private GameObject pointerGroupObj;
+    private GameObject pointerGroupObj;
 
     [Header("Pointers")]
     //Points
@@ -60,6 +59,8 @@ public class EnemyGround : Default_Entity
         rb = this.gameObject.GetComponent<Rigidbody2D>();
         enemySr = enemy.GetComponent<SpriteRenderer>();
 
+        pointerGroupObj = GameObject.Find("EnemyPointsGroup");
+
         // Gizmo Setup //
         setupOnce = false;
         
@@ -75,6 +76,9 @@ public class EnemyGround : Default_Entity
         }
         else
         {
+            // Create
+            PointerCreation();
+
             Destroy(pitDectection);
         }
 
@@ -93,9 +97,7 @@ public class EnemyGround : Default_Entity
 
         if (freeRoamMode == false)
         {
-            // Create
-            PointerCreation();
-
+            
             //This will offset the pointer pos depends on the set position added to the starting enemy pos
             set_point1.transform.position = new Vector3(enemy.transform.position.x + point1OffsetX, this.gameObject.transform.position.y + yOffset, 0);
             set_point2.transform.position = new Vector3(enemy.transform.position.x + point2OffsetX, this.gameObject.transform.position.y + yOffset, 0);
@@ -112,29 +114,29 @@ public class EnemyGround : Default_Entity
     // Update is called once per frame
     void Update()
     {
-        if (disableAI == false && outOfRange == false)
+        if (player == null && playerRB == null)
         {
-
-            if (player == null || playerRB == null)
+            player = GameObject.FindGameObjectWithTag("Player");
+            playerRB = player.GetComponentInParent<Rigidbody2D>();
+        }
+        else
+        {
+            if (disableAI == false && outOfRange == false)
             {
-                player = GameObject.FindGameObjectWithTag("Player");
-                playerRB = player.GetComponentInParent<Rigidbody2D>();
+                if (freeRoamMode == false)
+                {
+                    FollowPoints();
+                }
+                else if (freeRoamMode == true)
+                {
+                    FreeRoam();
+                }
             }
-
-            if (freeRoamMode == false)
+            else if(disableAI == false)
             {
-                FollowPoints();
-            }
-            else if (freeRoamMode == true)
-            {
-                FreeRoam();
+                rb.velocity = Vector3.zero;
             }
         }
-        else if(disableAI == false)
-        {
-            rb.velocity = Vector3.zero;
-        }
-
     }
 
     // Pointer Mode Functions //
@@ -292,7 +294,7 @@ public class EnemyGround : Default_Entity
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (disableAI == false && outOfRange == false)
+        if (disableAI == false && outOfRange == false && enemy.activeInHierarchy == true)
         {
             if (enemy.activeInHierarchy == true && collision.CompareTag("Level") && wallDectection.IsTouching(collision) && jumpDectection.IsTouching(collision))
             {
@@ -328,7 +330,7 @@ public class EnemyGround : Default_Entity
             isOnGround = false;
 
             // Ledge Decection
-            if (enemy.activeInHierarchy == true && collision.CompareTag("Level"))
+            if (collision.CompareTag("Level"))
             {
                 if (freeRoamMode == false)
                 {
@@ -360,6 +362,10 @@ public class EnemyGround : Default_Entity
         
     }
 
-    
+    private void OnDisable()
+    {
+        this.gameObject.GetComponent<EnemyGround>().enabled = false;
+    }
+
 
 }

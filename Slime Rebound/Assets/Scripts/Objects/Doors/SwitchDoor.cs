@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class SwitchDoor : MonoBehaviour
 {
+    public string Objectid = "switchDoor";
+
     public int id;
     public int speed;
     public float yOffset;
@@ -13,7 +15,8 @@ public class SwitchDoor : MonoBehaviour
 
     private bool setupOnce = true;
     
-    private float startPosY;
+    private static float startPosY;
+
 
     // Start is called before the first frame update
     void Start()
@@ -38,7 +41,9 @@ public class SwitchDoor : MonoBehaviour
         { 
             doorObj.transform.position = Vector3.MoveTowards(doorObj.transform.position, doorPos, speed * Time.deltaTime);
             yield return new WaitForSeconds(0.01f);
+
         }
+
     }
 
     private void OnDrawGizmos()

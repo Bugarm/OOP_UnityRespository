@@ -6,7 +6,7 @@ public class PlatformMove : MonoBehaviour
 {
     [Header("Group Obj")]
     // Settings
-    [SerializeField] private GameObject pointerGroupObj;
+    private GameObject pointerGroupObj;
 
     [Header("Pointers")]
     //Points X
@@ -46,6 +46,11 @@ public class PlatformMove : MonoBehaviour
 
         startPosX = platform.transform.position.x;
         startPosY = platform.transform.position.y;
+
+        if(pointerGroupObj == null )
+        { 
+            pointerGroupObj = GameObject.Find("Platform Pointers Group");
+        }
     }
 
     // Start is called before the first frame update
@@ -158,6 +163,7 @@ public class PlatformMove : MonoBehaviour
         curPoint = point;
 
     }
+
 
     private void OnDrawGizmos()
     {

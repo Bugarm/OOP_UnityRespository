@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 
 public class SceneSwitchManager : Singleton<SceneSwitchManager>
 {
-    SerializedLevelData myLevelData = new SerializedLevelData();
 
     public GameObject player;
 
@@ -15,8 +14,7 @@ public class SceneSwitchManager : Singleton<SceneSwitchManager>
     protected override void Awake()
     {
         base.Awake();
-        
-        
+
     }
     // Start is called before the first frame update
     void Start()
@@ -34,7 +32,9 @@ public class SceneSwitchManager : Singleton<SceneSwitchManager>
     {
         if(GameManager.Instance.screenTransRoutine == null)
         {
+            
             GameManager.Instance.screenTransRoutine = StartCoroutine(GameManager.Instance.ScreenTrans(nextRoomNum));
+            this.gameObject.GetComponentInParent<DontDestroyGroup>().enabled = false;
         }
     }
 

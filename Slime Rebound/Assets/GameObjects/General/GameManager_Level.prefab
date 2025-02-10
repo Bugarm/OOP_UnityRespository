@@ -54,6 +54,7 @@ MonoBehaviour:
   bounceUI: {fileID: 0}
   blackTrans: {fileID: 0}
   player: {fileID: 0}
+  sceneSwitch: 0
   saveableObjects: []
 --- !u!114 &6111968868941069064
 MonoBehaviour:
@@ -126,3 +127,5 @@ MonoBehaviour:
     prefab: {fileID: 5392201174721124192, guid: 1db92bcbe06bd6b489c908f3f297bb80, type: 3}
   - id: SkeleChains
     prefab: {fileID: 1819696704134704814, guid: 54e84449482e64d43ad6a46d69e7e2ab, type: 3}
+  - id: SwitchDoor
+    prefab: {fileID: 1663948339314503353, guid: c4c7c6cf533b24e498fc5eda2f3eb953, type: 3}

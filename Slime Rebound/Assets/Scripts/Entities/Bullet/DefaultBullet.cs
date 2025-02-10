@@ -51,7 +51,7 @@ public class DefaultBullet : MonoBehaviour
             }
         }
         
-        if (collision.CompareTag("Player"))
+        if (collision.CompareTag("PlayerBody"))
         {
             if (deleteCourtine == null)
             {

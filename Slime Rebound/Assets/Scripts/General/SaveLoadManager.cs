@@ -28,12 +28,6 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
         //Debug.Log(Application.persistentDataPath);
         System.IO.File.WriteAllText(Application.persistentDataPath + "/ImportantData.json", jsonToSave);
 
-        //BinaryFormatter binaryFormatter = new BinaryFormatter();
-
-        //FileStream myfile = File.Create(Application.persistentDataPath + "/SuperCannonData.save");
-        //binaryFormatter.Serialize(myfile, mydata);
-        //myfile.Close();
-
     }
 
     public void SaveDataCheckPoint(Vector3 playerPos)
@@ -148,7 +142,6 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
                 if (levelObj[i].id == FindAllSaveableObj.Instance.placeableObjects[j].id)
                 {
                     GameObject newObj = Instantiate(FindAllSaveableObj.Instance.placeableObjects[j].prefab);
-                    //Debug.Log("A");
                     newObj.transform.position = levelObj[i].ReturnPosition();
                 }
 
@@ -171,6 +164,14 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
             case "TutorialRoom2":
                 LevelData.SaveableObj_Tutorial2 = FindAllSaveableObj.Instance.ReturnScriptObj();
                 return LevelData.SaveableObj_Tutorial2;
+
+            case "ForestLevel":
+                LevelData.SaveableObj_ForestLevel = FindAllSaveableObj.Instance.ReturnScriptObj();
+                return LevelData.SaveableObj_ForestLevel;
+
+            case "ForestLevel1":
+                LevelData.SaveableObj_ForestLevel1 = FindAllSaveableObj.Instance.ReturnScriptObj();
+                return LevelData.SaveableObj_ForestLevel1;
 
             default:
                 LevelData.SaveableObj_Tutorial = FindAllSaveableObj.Instance.ReturnScriptObj();
@@ -196,6 +197,14 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
             case "TutorialRoom2":
                 myLevelData.saveableObj_Tutorial2 = GetLevelData(sceneName);
                 break;
+
+            case "ForestLevel":
+                myLevelData.saveableObj_ForestLevel = GetLevelData(sceneName);
+                break;
+
+            case "ForestLevel1":
+                myLevelData.saveableObj_ForestLevel1 = GetLevelData(sceneName);
+                break;
         }
     }
 
@@ -216,6 +225,16 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
             case "TutorialRoom2":
                 LevelData.SaveableObj_Tutorial2 = myLevelData.saveableObj_Tutorial2;
                 Reinstantiate(LevelData.SaveableObj_Tutorial2);
+                break;
+
+            case "ForestLevel":
+                LevelData.SaveableObj_Tutorial = myLevelData.saveableObj_ForestLevel;
+                Reinstantiate(LevelData.SaveableObj_ForestLevel);
+                break;
+
+            case "ForestLevel1":
+                LevelData.SaveableObj_Tutorial = myLevelData.saveableObj_ForestLevel1;
+                Reinstantiate(LevelData.SaveableObj_ForestLevel1);
                 break;
 
         }

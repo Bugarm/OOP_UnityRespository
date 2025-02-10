@@ -13,10 +13,12 @@ public abstract class GameData : MonoBehaviour
     private static int _totalBounces = 0;
     private static Vector3 _playerPos;
     private static int _sceneTransID;
+    private static int _doorID = 0;
     private static bool _hasSceneTransAnim;
 
     private static bool _hasEnteredDoor = true;
     private static bool _hasEnteredScreneTrig = false;
+
 
     // High Score Varibles
 
@@ -41,6 +43,14 @@ public abstract class GameData : MonoBehaviour
     {
         get { return _hasEnteredScreneTrig; }
         set { _hasEnteredScreneTrig = value; }
+    }
+
+    // Door ID
+
+    public static int DoorID
+    {
+        get { return _doorID; }
+        set { _doorID = value; }
     }
 
     // Scene ID

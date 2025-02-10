@@ -11,8 +11,7 @@ GameObject:
   - component: {fileID: 5077401216682089119}
   - component: {fileID: 1420686870135206521}
   - component: {fileID: 8932485282618114387}
-  - component: {fileID: -7164706332743604657}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: DoorStart
   m_TagString: DoorStart
   m_Icon: {fileID: 0}
@@ -72,8 +71,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1730291429
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: e76fe411a89378e459c7c272548e495b, type: 3}
   m_Color: {r: 0.46743304, g: 0.5372549, b: 0.3372549, a: 1}
@@ -131,16 +130,3 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &-7164706332743604657
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4954285485800196257}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51b1a4bfae0d4e942a4575ff089f6355, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  switchRoomNum: 0

@@ -19,6 +19,11 @@ TagManager:
   - ExitTrigger
   - SceneTrigger
   - PlayerRange
+  - Box
+  - Doors
+  - Switch
+  - PlayerWallDetect
+  - FakeWall
   layers:
   - Default
   - TransparentFX
@@ -36,8 +41,8 @@ TagManager:
   - Switch
   - NormalWalls
   - PlayerRange
-  - 
-  - 
+  - Boxes
+  - FakeWall
   - 
   - 
   - 

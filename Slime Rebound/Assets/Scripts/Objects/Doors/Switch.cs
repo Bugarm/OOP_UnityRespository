@@ -5,15 +5,19 @@ using UnityEngine.UIElements;
 
 public class Switch : MonoBehaviour
 {
+    public string Objectid = "switch";
+
     public int id;
 
     public GameObject particlePlay;
 
     private GameObject thisGameObj;
 
-    private bool switchActive;
+    public bool switchActive;
 
     private Coroutine doorRoutine;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -38,7 +42,7 @@ public class Switch : MonoBehaviour
                 foreach (GameObject door in doors)
                 {
                     SwitchDoor doorSwitch = door.GetComponent<SwitchDoor>();
-
+                    
                     if(doorSwitch.id == id)
                     {
                         Instantiate(particlePlay,this.gameObject.transform.position, Quaternion.LookRotation(Vector3.up));

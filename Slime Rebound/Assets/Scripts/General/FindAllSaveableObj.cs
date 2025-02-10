@@ -23,20 +23,23 @@ public class FindAllSaveableObj : Singleton<FindAllSaveableObj>
     {
         List<SaveableObjects> saveableObjects = new List<SaveableObjects>();
         GameObject[] scoreItems = GameObject.FindGameObjectsWithTag("Collectables");
+        int returnId = 0;
+
         for (int i = 0; i < scoreItems.Length; i++)
         {
-            int returnId = 0;
+            
             if(scoreItems[i].name.StartsWith("Food") == true)
             {
                 returnId = 0;
+                saveableObjects.Add(new SaveableObjects(placeableObjects[returnId].id, scoreItems[i].transform.position));
             }
             else if(scoreItems[i].name.StartsWith("Score") == true)
             {
                 returnId = 1;
+                saveableObjects.Add(new SaveableObjects(placeableObjects[returnId].id, scoreItems[i].transform.position));
             }
-
-            saveableObjects.Add(new SaveableObjects(placeableObjects[returnId].id, scoreItems[i].transform.position));
         }
+
 
         GameObject[] chainsInLevel = GameObject.FindGameObjectsWithTag("SkeleChain");
         for (int i = 0; i < chainsInLevel.Length; i++)
@@ -44,6 +47,13 @@ public class FindAllSaveableObj : Singleton<FindAllSaveableObj>
             saveableObjects.Add(new SaveableObjects(placeableObjects[2].id, chainsInLevel[i].transform.position));
         }
 
+        GameObject[] boxesInLevel = GameObject.FindGameObjectsWithTag("Box");
+        for(int i = 0; i < boxesInLevel.Length; i++)
+        {
+            saveableObjects.Add(new SaveableObjects(placeableObjects[3].id, boxesInLevel[i].transform.position));
+        }
+
         return saveableObjects;
     }
+
 }

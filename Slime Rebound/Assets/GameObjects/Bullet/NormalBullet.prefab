@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2834235977717874459}
   - component: {fileID: 6321322563950190286}
   - component: {fileID: 6633135254718434248}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: NormalBullet
   m_TagString: EnemyBullet
   m_Icon: {fileID: 0}
@@ -134,7 +134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e3e7065bca85d540b35af224ee31463, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: -2
+  speed: -4
 --- !u!50 &6633135254718434248
 Rigidbody2D:
   serializedVersion: 4

@@ -25,7 +25,7 @@ public class NextSceneTrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("PlayerBody") && delay == false)
+        if (collision.CompareTag("PlayerBody") && delay == false && GameData.HasEnteredDoor == false)
         {
             GameData.HasSceneTransAnim = true;
             GameData.SceneTransID = id;
