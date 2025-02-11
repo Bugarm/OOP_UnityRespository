@@ -9,13 +9,11 @@ public class DetectionScript : Singleton<DetectionScript>
 {
     private Rigidbody2D playerRB;
     private Vector3 playerPos;
-    private bool touchingWall;
 
     [Header("Triggers")]
     public BoxCollider2D wallTrigCol;
     public BoxCollider2D floorTrigCol;
     public BoxCollider2D topTriggerCol;
-    public BoxCollider2D fakeWallTriggerCol;
 
     protected override void Awake()
     {
@@ -74,6 +72,7 @@ public class DetectionScript : Singleton<DetectionScript>
             {
                 PlayerState.IsTouchingTop = true;
             }
+            
         }
 
 
@@ -96,34 +95,10 @@ public class DetectionScript : Singleton<DetectionScript>
             }
         }
 
-        //
-
-        if (collision.IsTouching(fakeWallTriggerCol))
-        {
-            if (collision.CompareTag("Level") )
-            {
-                touchingWall = true;
-            }
-            else
-            {
-                touchingWall = false;
-            }
-
-            if (collision.CompareTag("FakeWall") && touchingWall == false)
-            {
-                touchingWall = false;
-                PlayerState.IsFakeWallAllowed = true;
-            }
-            Debug.Log(touchingWall);
-        }
 
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        
-        //Debug.Log(collision.IsTouchingLayers(LayerMask.NameToLayer("Level")));
-    }
+    
 
     private void OnTriggerExit2D(Collider2D collision)
     {
@@ -143,7 +118,10 @@ public class DetectionScript : Singleton<DetectionScript>
             {
                 PlayerState.IsTouchingTop = false;
             }
+
+            
         }
+        
 
         if (collision.CompareTag("Platforms"))
         {
@@ -158,15 +136,6 @@ public class DetectionScript : Singleton<DetectionScript>
                 PlayerState.IsTouchingWall = false;
             }
         }
-
-        if(collision.CompareTag("FakeWall"))
-        { 
-            if (!collision.IsTouching(fakeWallTriggerCol) )
-            {
-                PlayerState.IsFakeWallAllowed = false;
-            }
-        }
-       
 
         //Debug.Log(collision.IsTouchingLayers(LayerMask.NameToLayer("Level")));
     }
