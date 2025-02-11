@@ -107,7 +107,16 @@ public class EnemyFlying : Default_Entity
         // Get Pooling
         TryGetComponent<ObjectPooling>(out ObjectPooling hasPool);
 
-        if (bulletPool == null && hasPool == true)
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+        TryGetComponent<ObjectPooling>(out ObjectPooling hasPool);
+
+        if (bulletPool == null)
         {
             if (isHoming == true)
             {
@@ -118,13 +127,6 @@ public class EnemyFlying : Default_Entity
                 bulletPool = GameObject.Find("ObjectsToPool Normal Bullet").GetComponent<ObjectPooling>();
             }
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-        TryGetComponent<ObjectPooling>(out ObjectPooling hasPool);
 
         if (player == null && playerRB == null)
         {
@@ -133,7 +135,7 @@ public class EnemyFlying : Default_Entity
         }
         else
         {
-            if (disableAI == false && outOfRange == false && hasPool == true)
+            if (disableAI == false && outOfRange == false )
             {
                 
                 FollowPoints();

@@ -24,6 +24,7 @@ TagManager:
   - Switch
   - PlayerWallDetect
   - FakeWall
+  - TextRange
   layers:
   - Default
   - TransparentFX

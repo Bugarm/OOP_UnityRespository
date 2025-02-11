@@ -26,7 +26,24 @@ public class ExitTrigger : Singleton<ExitTrigger>
     {
         if (collision.CompareTag("Player"))
         {
+            CheckStateAndSave(GameData.LevelState);
             SceneSwitchManager.Instance.SwitchToLevel("HUB");
         }
+    }
+
+    private void CheckStateAndSave(string scene)
+    {
+        switch (scene)
+        {
+            case "TutorialRoom":
+                GameData.Tutorial_HighScore = GameData.Score;
+                break;
+
+            case "ForestLevel":
+                GameData.Tutorial_HighScore = GameData.Score;
+                break;
+
+        }
+        SaveLoadManager.Instance.SaveImportantData();
     }
 }

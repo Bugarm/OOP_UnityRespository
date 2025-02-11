@@ -28,14 +28,11 @@ public class FakeWalls : MonoBehaviour
         
     }
 
-
-
     private void OnTriggerStay2D(Collider2D collision)
     {
 
         if (collision.CompareTag("PlayerWallDetect") && PlayerState.IsFakeWallAllowed == true)
         {
-            //spriteRenderer.enabled = false;
             active = true;
 
             if (fadeRoutine == null)
@@ -52,7 +49,6 @@ public class FakeWalls : MonoBehaviour
         
         if (collision.CompareTag("PlayerWallDetect"))
         {
-            //spriteRenderer.enabled = true;
             active = false;
         }
         
@@ -83,6 +79,7 @@ public class FakeWalls : MonoBehaviour
 
     }
 
+    // Debugging purposes 
     private void OnDrawGizmos()
     {
         

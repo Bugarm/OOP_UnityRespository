@@ -539,19 +539,20 @@ public class Player : Singleton<Player>
             if (!Input.GetKey(KeyCode.S))
             {
                 
-                if ((PlayerState.IsCrouch == true || PlayerState.IsSlide == true) && PlayerState.IsTouchingTop == false)
+                if ((PlayerState.IsCrouch == true || PlayerState.IsSlide == true) )
                 {
+                    if(PlayerState.IsTouchingTop == false)
+                    { 
+                        PlayerState.IsSlide = false;
+                        PlayerState.IsCrouch = false;
                     
-                    PlayerState.IsSlide = false;
-                    PlayerState.IsCrouch = false;
-                    
-                    // Collider Changes
-                    PlayerCollision("Idle");
+                        // Collider Changes
+                        PlayerCollision("Idle");
 
-                    speed = walkSpeed;
+                        speed = walkSpeed;
                     
-                    wallCollision.offset = new Vector2(0.4836431f, -0.2430587f);
-
+                        wallCollision.offset = new Vector2(0.4836431f, -0.2430587f);
+                    }
                 }
                 
             }

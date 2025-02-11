@@ -14,6 +14,8 @@ public class BoxScript : MonoBehaviour
 
     public int score;
 
+    public bool floorBreak;
+
     Coroutine destroyRoutine;
 
     // Start is called before the first frame update
@@ -32,7 +34,26 @@ public class BoxScript : MonoBehaviour
     {
         if(collision.CompareTag("PlayerAttack"))
         {
-            if(destroyRoutine == null)
+            bool attackCheck = true;
+
+            // Toggle for breakable floor
+            if (floorBreak == true)
+            { 
+                if (PlayerState.IsPound == true || PlayerState.IsAttackJump == true)
+                {
+                    attackCheck = true;
+                }
+                else 
+                {
+                    attackCheck = false;
+                }
+            }
+            else
+            {
+                attackCheck = true;
+            }
+
+            if (destroyRoutine == null && attackCheck == true)
             {
                 destroyRoutine = StartCoroutine(DestroyAnim());
             }

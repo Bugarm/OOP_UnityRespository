@@ -144,6 +144,73 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.5058546, y: 0.7689338}
   m_EdgeRadius: 0
+--- !u!1 &912559336098696181
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7942455328860888048}
+  - component: {fileID: 8508354221155115177}
+  m_Layer: 15
+  m_Name: PopUpRange
+  m_TagString: TextRange
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7942455328860888048
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 912559336098696181}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6499743863659246992}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &8508354221155115177
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 912559336098696181}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 4.7727394
 --- !u!1 &1668583647360236708
 GameObject:
   m_ObjectHideFlags: 0
@@ -982,6 +1049,7 @@ Transform:
   - {fileID: 5918210002122492180}
   - {fileID: 8665077805079447517}
   - {fileID: 705853868153677066}
+  - {fileID: 7942455328860888048}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3604176934007594281
@@ -1060,7 +1128,6 @@ MonoBehaviour:
   wallTrigCol: {fileID: 8659519319265619268}
   floorTrigCol: {fileID: 6328353723741828510}
   topTriggerCol: {fileID: 7424255838794632895}
-  fakeWallTriggerCol: {fileID: 5504030568621837786}
 --- !u!1 &6402261470639470098
 GameObject:
   m_ObjectHideFlags: 0
