@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 2435087015012228461}
   m_Layer: 16
   m_Name: BreakableFloor
-  m_TagString: Box
+  m_TagString: FloorBreakable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -101,9 +101,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boxColl: {fileID: 5697306951254560534}
-  particleBreak: {fileID: 2499312308014208717, guid: a3b1a01b5a6b61948ac7ec14bce670e5, type: 3}
   isDestroyed: 0
   score: 0
+  floorBreak: 0
 --- !u!61 &5697306951254560534
 BoxCollider2D:
   m_ObjectHideFlags: 0

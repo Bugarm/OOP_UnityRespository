@@ -75,12 +75,12 @@ public class Player : Singleton<Player>
         
         jumpPower = 6.45f;
         attackJumpPower = 10.4f;
-
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        
 
     }
 
@@ -140,7 +140,6 @@ public class Player : Singleton<Player>
                 speed = walkSpeed;
                 PlayerState.IsCrouch = false;
             }
-
 
         }
 
@@ -208,7 +207,7 @@ public class Player : Singleton<Player>
         {
 
             // Always Apply Gravity
-            if (PlayerState.IsBounceMode == false || PlayerState.IsStickActive == true)
+            if (PlayerState.IsBounceMode == false && PlayerState.IsStickActive == false)
             {
                 if (PlayerState.IsTouchingGround == true || PlayerState.IsTouchingPlatform == true)
                 {
@@ -237,6 +236,23 @@ public class Player : Singleton<Player>
                     }
                 }
             }
+            
+            
+            else if (PlayerState.IsStickActive == true)
+            {
+                
+                if ((PlayerState.IsTouchingGround == false || PlayerState.IsTouchingPlatform == false) && PlayerState.IsTouchingWall == true)
+                {
+                    // Reset Velocity when it hits ground
+                    dirY = 0;
+                }
+                else if ((playerRB.velocity.y < 0f) && PlayerState.IsTouchingWall == false && !(playerRB.velocity.y < -9f))
+                {
+                    dirY -= 0.15f;
+                }
+                
+            }
+
         }
 
     }
@@ -694,6 +710,8 @@ public class Player : Singleton<Player>
     IEnumerator BounceFunction()
     {
         int bounces = 0;
+        int failedBounces = 0;
+        bool hasFailed = false;
         float extraRunSpeed = 0;
 
         PlayerCollision("Bounce");
@@ -703,8 +721,8 @@ public class Player : Singleton<Player>
         if (PlayerState.IsBounceMode == true)
         {
             wallCollision.offset = new Vector2(0.72f, -0.2430587f);
-            bounces = 0;
-            GameManager.Instance.UpdateBounces(bounces);
+
+            GameManager.Instance.UpdateBounces(bounces, false);
 
             PlayerCollision("Bounce");
             AttackTrigger("Bounce");
@@ -755,10 +773,19 @@ public class Player : Singleton<Player>
 
                 if (PlayerState.IsJump == true)
                 {
+                    failedBounces = 0;
                     bounces++;
-                    GameManager.Instance.UpdateBounces(bounces);
+                    GameManager.Instance.UpdateBounces(bounces,false);
+
+                    Vector3 look = player.transform.localScale.x == 1 ? Vector3.right : Vector3.left;
+
+                    StartCoroutine(ParticleSpawnerManager.Instance.PlayParticle(ParticleSpawnerManager.Instance.particleSlimeSplash, new Vector2(player.transform.position.x, player.transform.position.y + 0.6f), Quaternion.LookRotation(look)));
 
                     playerRB.velocity = new Vector3(playerRB.velocity.x, 12.3f, 0);
+                }
+                else
+                {
+                    failedBounces++;
                 }
 
                 yield return new WaitForSeconds(0.020f);
@@ -770,6 +797,13 @@ public class Player : Singleton<Player>
                 playerRB.velocity = new Vector3(playerRB.velocity.x, -0.1f, 0);
             }
 
+            // Stops when player does enough failed wall bounces
+            if (failedBounces >= 3)
+            {
+                GameManager.Instance.UpdateBounces(bounces, true);
+                PlayerState.IsBounceMode = false;
+                hasFailed = true;
+            }
         }
 
         // Cooldown
@@ -788,7 +822,14 @@ public class Player : Singleton<Player>
                 GameManager.Instance.OutbounceUIRoutine = StartCoroutine(GameManager.Instance.FadeOutBounceUI());
             }
 
-            GameManager.Instance.BouncesTotalCounted(bounces);
+            if(hasFailed == false || GameData.TotalBounces < bounces)
+            { 
+                GameManager.Instance.BouncesTotalCounted(bounces,false);
+            }
+            else
+            {
+                GameManager.Instance.BouncesTotalCounted(bounces, true);
+            }
 
             PlayerCollision("Idle");
             AttackTrigger("Reset");
@@ -956,6 +997,8 @@ public class Player : Singleton<Player>
             dirY = -13.5f;
             yield return new WaitForSeconds(0.1f);
         }
+
+        StartCoroutine(ParticleSpawnerManager.Instance.PlayParticle(ParticleSpawnerManager.Instance.particleSlimeSplash, new Vector2(player.transform.position.x, player.transform.position.y - 0.6f), Quaternion.LookRotation(Vector3.down)));
 
         playerRB.gravityScale = 10;
         PlayerState.IsPound = false;

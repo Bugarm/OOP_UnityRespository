@@ -9,7 +9,6 @@ public class EnemyFlying : Default_Entity
     //[Header("Group Obj")]
     //// Settings
     //[SerializeField]
-    private GameObject pointerGroupObj;
     [Header("Pointers")]
     //Points
     public List<Vector2> pointers;
@@ -19,38 +18,27 @@ public class EnemyFlying : Default_Entity
     public bool isHoming = false;
     public float fireRateDelay;
 
-    private ObjectPooling bulletPool;
+    // Colliders
+    [Header("Colliders")]
+    public GameObject playerRangeObj;
+    public GameObject shootPointObj;
+
     // set up
+    private ObjectPooling bulletPool;
+    
     protected Rigidbody2D rb;
     protected SpriteRenderer enemySr;
     private bool setupOnce = true;
 
     // Enemy Simple AI
-    private List<GameObject> setPointList;
-
-    private GameObject pointGroup;
-
     private Vector3 moveToPoint;
-    private Transform nextPos;
     private int moveToIndex;
-
-    private Quaternion clampRotationLow, clampRotationHigh;
-
-    private Coroutine bulletRoutine;
 
     private bool seesPlayer;
 
     private bool outOfRange = false;
 
-    // Colliders
-    private BoxCollider2D myBoxcoll;
-
-    [Header("Colliders")]
-    public GameObject playerRangeObj;
-    private CircleCollider2D playerRangeTrigger;
-
-    public GameObject shootPointObj;
-    private BoxCollider2D shootPointTrigger;
+    private Coroutine bulletRoutine;
 
     protected override void Awake()
     {
@@ -60,11 +48,6 @@ public class EnemyFlying : Default_Entity
         rb = this.gameObject.GetComponent<Rigidbody2D>();
         enemySr = enemy.GetComponent<SpriteRenderer>();
 
-        setPointList = new List<GameObject>();
-
-        myBoxcoll = enemy.GetComponent<BoxCollider2D>();
-        playerRangeTrigger = playerRangeObj.GetComponent<CircleCollider2D>();
-        shootPointTrigger = shootPointObj.GetComponent<BoxCollider2D>();
         outOfRange = true;
     }
 
@@ -77,9 +60,6 @@ public class EnemyFlying : Default_Entity
     protected override void Start()
     {
         base.Start();
-
-        clampRotationLow = Quaternion.Euler(0, 0, 0f);
-        clampRotationHigh = Quaternion.Euler(0, 0, +360f);
 
         // stops rotation
         rb.freezeRotation = true;
@@ -98,8 +78,6 @@ public class EnemyFlying : Default_Entity
             enemySr.flipX = true;
         }
 
-        pointerGroupObj = GameObject.Find("EnemyPointsGroup");
-
         setupOnce = false;
 
         outOfRange = true;
@@ -107,7 +85,6 @@ public class EnemyFlying : Default_Entity
         // Get Pooling
         TryGetComponent<ObjectPooling>(out ObjectPooling hasPool);
 
-        
     }
 
     // Update is called once per frame

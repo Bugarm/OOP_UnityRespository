@@ -67,6 +67,8 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
 
         GameData.LevelState = sceneName;
 
+        SaveLoadManager.Instance.SaveLevelData(sceneName);
+
         GameObject doorStart = GameObject.FindGameObjectWithTag("DoorStart");
         // First first door in the hierarchy (IMP)
         DoorRoomSwitch doorScript = GameObject.FindFirstObjectByType<DoorRoomSwitch>();
@@ -102,7 +104,7 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
     void OnSceneLoadedLevel(Scene scene, LoadSceneMode mode)
     {
         
-        if (scene.name.StartsWith("TutorialRoom") || scene.name.StartsWith("ForestLevel"))
+        if (scene.name.StartsWith("TestRoom") || scene.name.StartsWith("TutorialRoom") || scene.name.StartsWith("ForestLevel"))
         {
             exitDoor = GameObject.FindGameObjectWithTag("ExitDoor");
             exitTrigger = GameObject.FindGameObjectWithTag("ExitTrigger");

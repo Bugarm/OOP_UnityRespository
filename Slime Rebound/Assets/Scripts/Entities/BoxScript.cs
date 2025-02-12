@@ -6,8 +6,6 @@ public class BoxScript : MonoBehaviour
 {
     [SerializeField] private BoxCollider2D boxColl;
 
-    [SerializeField] private GameObject particleBreak;
-
     private Animator boxAnimator;
 
     public bool isDestroyed;
@@ -22,6 +20,7 @@ public class BoxScript : MonoBehaviour
     void Start()
     {
         boxAnimator = GetComponent<Animator>();
+        boxColl = GetComponent<BoxCollider2D>();
     }
 
     // Update is called once per frame
@@ -62,6 +61,7 @@ public class BoxScript : MonoBehaviour
 
     private IEnumerator DestroyAnim()
     {
+
         isDestroyed = true; 
 
         GameData.Score += score;
@@ -72,11 +72,13 @@ public class BoxScript : MonoBehaviour
 
         // Box Destroy Effect here
         boxAnimator.SetBool("isBreak", true);
-        GameObject particleBreakObj = Instantiate(particleBreak, this.gameObject.transform.position,Quaternion.identity);
 
-        yield return new WaitForSeconds(0.5f);
-        Destroy(particleBreakObj);
         yield return new WaitForSeconds(0.1f);
+        boxColl.enabled = false;
+
+
+        yield return new WaitForSeconds(1f);
+
         Destroy(this.gameObject);
 
     }

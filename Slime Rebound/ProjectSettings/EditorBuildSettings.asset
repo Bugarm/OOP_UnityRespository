@@ -12,6 +12,12 @@ EditorBuildSettings:
     path: Assets/Scenes/1-Level/ForestLevel1.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
+    path: Assets/Scenes/TestRoom/TestRoom.unity
+    guid: f54090650efd83b47a035e19a9815260
+  - enabled: 1
+    path: Assets/Scenes/TestRoom/TestRoom1.unity
+    guid: fe87676d6a218404091b303f39826f27
+  - enabled: 1
     path: Assets/Scenes/HUB/HUB.unity
     guid: e819201b9a94718429466276444f2766
   - enabled: 1
@@ -23,9 +29,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Menu/OptionScreen.unity
     guid: 96e4c298c2b9fc04d80e9305e9f4a00b
-  - enabled: 1
-    path: Assets/Scenes/TestRoom.unity
-    guid: 41c0a294d410c9441a594efd68135a5b
   - enabled: 1
     path: Assets/Scenes/Tutorial/TutorialRoom.unity
     guid: 76032bd68fcfdeb4c8a571498473a0f7

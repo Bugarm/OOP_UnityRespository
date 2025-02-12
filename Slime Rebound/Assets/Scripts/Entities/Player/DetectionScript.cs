@@ -77,7 +77,7 @@ public class DetectionScript : Singleton<DetectionScript>
 
 
         // Box Collision
-        if (collision.CompareTag("Box"))
+        if (collision.CompareTag("Box") || collision.CompareTag("FloorBreakable"))
         {
             if (collision.IsTouching(wallTrigCol) && collision.GetComponent<BoxScript>().isDestroyed == false && PlayerState.IsBounceMode == false)
             {
@@ -102,7 +102,7 @@ public class DetectionScript : Singleton<DetectionScript>
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if ((collision.CompareTag("Level") || collision.CompareTag("SwitchDoor")) || collision.CompareTag("Box") && DetectionScript.Instance.IsDestroyed() == false)
+        if ((collision.CompareTag("Level") || collision.CompareTag("SwitchDoor")) || collision.CompareTag("Box") || collision.CompareTag("FloorBreakable") && DetectionScript.Instance.IsDestroyed() == false)
         {
             if (!collision.IsTouching(wallTrigCol))
             {

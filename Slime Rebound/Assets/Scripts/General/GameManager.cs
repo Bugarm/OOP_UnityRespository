@@ -214,18 +214,20 @@ public class GameManager : Singleton<GameManager>
     }
 
     // Bounce UI Functions
-    private IEnumerator HighestBounceEffect()
+    private IEnumerator HighestBounceEffect(bool failed)
     {
         int repeat = 0;
+
+        Color colorPick = failed == false ? Color.yellow : Color.red;
 
         while (repeat < 2)
         {
             yield return new WaitForSeconds(0.3f);
-            bounceUI.color = Color.yellow;
+            bounceUI.color = colorPick;
             yield return new WaitForSeconds(0.3f);
             bounceUI.color = Color.white;
             yield return new WaitForSeconds(0.3f);
-            bounceUI.color = Color.yellow;
+            bounceUI.color = colorPick;
             repeat++;
         }
 
@@ -269,21 +271,37 @@ public class GameManager : Singleton<GameManager>
 
     }
 
-    public void UpdateBounces(int bounces)
+    public void UpdateBounces(int bounces, bool failed)
     {
-        bounceUI.text = "Bounces: " + bounces;
+
+        if(GameData.TotalBounces < bounces || failed == false)
+        {
+            bounceUI.text = "Bounces: " + bounces.ToString();
+        }
+        else if (failed == true)
+        {
+            bounceUI.text = "Owie..Tired...";
+        }
+        
     }
 
-    public void BouncesTotalCounted(int bounces)
+    public void BouncesTotalCounted(int bounces, bool failed)
     {
-        if (GameData.TotalBounces < bounces)
+        if (GameData.TotalBounces < bounces && failed == false)
         {
             GameData.TotalBounces = bounces;
 
             // High Bounce Count Effect
             if(highBounceRoutine == null)
             {
-                highBounceRoutine = StartCoroutine(HighestBounceEffect());
+                highBounceRoutine = StartCoroutine(HighestBounceEffect(failed));
+            }
+        }
+        else if(failed == true)
+        {
+            if (highBounceRoutine == null)
+            {
+                highBounceRoutine = StartCoroutine(HighestBounceEffect(failed));
             }
         }
     }

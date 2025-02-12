@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 1592399009523712291}
   - component: {fileID: 9055407155491440187}
   - component: {fileID: 2465203562587741407}
+  - component: {fileID: 4120758360413929071}
   m_Layer: 0
   m_Name: GameManager_Level
   m_TagString: Untagged
@@ -127,5 +128,20 @@ MonoBehaviour:
     prefab: {fileID: 5392201174721124192, guid: 1db92bcbe06bd6b489c908f3f297bb80, type: 3}
   - id: SkeleChains
     prefab: {fileID: 1819696704134704814, guid: 54e84449482e64d43ad6a46d69e7e2ab, type: 3}
-  - id: SwitchDoor
-    prefab: {fileID: 1663948339314503353, guid: c4c7c6cf533b24e498fc5eda2f3eb953, type: 3}
+  - id: BoxObj
+    prefab: {fileID: 1090065876558376771, guid: 935a8bdd89223ed449cfb97613b94f35, type: 3}
+--- !u!114 &4120758360413929071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5504839371982922821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5c8c8072fc216542bc3ac070c3e68f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  particleBreak: {fileID: 2499312308014208717, guid: a3b1a01b5a6b61948ac7ec14bce670e5, type: 3}
+  particleBasketWin: {fileID: 614863489156338088, guid: 43a36aa68c427e04585592f52e538ced, type: 3}
+  particleSlimeSplash: {fileID: 5068521333658625299, guid: 87d73fa489e3b10429fb037915d6b0b7, type: 3}

@@ -76,7 +76,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3886627345746890463}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: shootTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -111,6 +111,7 @@ GameObject:
   - component: {fileID: 8418134105331207937}
   - component: {fileID: 783490310566019046}
   - component: {fileID: 2577096613517204169}
+  - component: {fileID: 1400714109824885247}
   m_Layer: 0
   m_Name: Enemy1
   m_TagString: Enemies
@@ -263,6 +264,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemiesData: {fileID: 11400000, guid: 801bfbbe2fc98a8479808f55edf6153b, type: 2}
+  deathAnim: {fileID: 1400714109824885247}
   deathCollider: {fileID: 1389852566835822634}
   pointers:
   - {x: 0, y: 3.06}
@@ -271,6 +273,27 @@ MonoBehaviour:
   fireRateDelay: 3
   playerRangeObj: {fileID: 1914103485628938774}
   shootPointObj: {fileID: 4505044785281677860}
+--- !u!95 &1400714109824885247
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6322585503858361997}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8aa61b6bb07648945ace945788b99869, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &7836132393972366166
 GameObject:
   m_ObjectHideFlags: 0
@@ -283,7 +306,7 @@ GameObject:
   - component: {fileID: 1389852566835822634}
   m_Layer: 8
   m_Name: Collider
-  m_TagString: Untagged
+  m_TagString: Enemies
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

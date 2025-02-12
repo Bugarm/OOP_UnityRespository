@@ -87,7 +87,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2273279605685365966}
   - component: {fileID: 2655770448759984435}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: wallTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -154,7 +154,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6393929386040092139}
   - component: {fileID: 2149823275255035697}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: jumpTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -235,6 +235,7 @@ GameObject:
   - component: {fileID: 6675384946955956910}
   - component: {fileID: 2885289850575268320}
   - component: {fileID: 5237406802844652485}
+  - component: {fileID: 7231109988449806803}
   m_Layer: 0
   m_Name: Enemy3
   m_TagString: Enemies
@@ -353,8 +354,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemiesData: {fileID: 11400000, guid: 83ca3947d42fa794db6984ce153c2ea7, type: 2}
+  deathAnim: {fileID: 7231109988449806803}
   deathCollider: {fileID: 824306969888658971}
-  pointerGroupObj: {fileID: 0}
   point1OffsetX: 3.46
   point2OffsetX: -3.89
   freeRoamMode: 0
@@ -440,6 +441,27 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.12908173, y: 1.0902514}
   m_EdgeRadius: 0
+--- !u!95 &7231109988449806803
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3781066511576801709}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8aa61b6bb07648945ace945788b99869, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &6716783493896363086
 GameObject:
   m_ObjectHideFlags: 0
@@ -452,7 +474,7 @@ GameObject:
   - component: {fileID: 824306969888658971}
   m_Layer: 8
   m_Name: Collider
-  m_TagString: Untagged
+  m_TagString: Enemies
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -504,6 +526,6 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.14440387, y: -0.3495431}
+  m_Offset: {x: -0.14440387, y: -0.1492399}
   serializedVersion: 2
-  m_Radius: 0.46934748
+  m_Radius: 0.6696507

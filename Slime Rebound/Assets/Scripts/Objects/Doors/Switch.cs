@@ -15,6 +15,8 @@ public class Switch : MonoBehaviour
 
     public bool switchActive;
 
+    private ParticleSpawnerManager particleInstance;
+
     private Coroutine doorRoutine;
 
 
@@ -45,7 +47,7 @@ public class Switch : MonoBehaviour
                     
                     if(doorSwitch.id == id)
                     {
-                        Instantiate(particlePlay,this.gameObject.transform.position, Quaternion.LookRotation(Vector3.up));
+                        StartCoroutine(ParticleSpawnerManager.Instance.PlayParticle(ParticleSpawnerManager.Instance.particleBasketWin, thisGameObj.transform.position, Quaternion.LookRotation(Vector3.up)));
                         StartCoroutine(doorSwitch.SlideDoorOpen());     
                         
                     }

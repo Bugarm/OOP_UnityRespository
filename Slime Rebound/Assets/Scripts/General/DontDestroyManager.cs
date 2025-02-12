@@ -14,7 +14,6 @@ public class DontDestroyManager : Singleton<DontDestroyManager>
 
     public float offset;
 
-    public GameObject levelManagerObj;
 
     protected override void Awake()
     {
@@ -36,12 +35,12 @@ public class DontDestroyManager : Singleton<DontDestroyManager>
                 Instantiate(hubDontDest);
             }
         }
-
-        if (scene.StartsWith("TutorialRoom") || scene.StartsWith("ForestLevel"))
+        
+        if (scene.StartsWith("TestRoom") || scene.StartsWith("TutorialRoom") || scene.StartsWith("ForestLevel"))
         {
             if (GameObject.FindFirstObjectByType<DontDestroyGroup>() == null)
             {
-                levelManagerObj = Instantiate(levelDontDest);
+                Instantiate(levelDontDest);
 
             }
         }

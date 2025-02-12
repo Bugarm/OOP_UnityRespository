@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2814037115331634749}
   m_Layer: 8
   m_Name: Collider
-  m_TagString: Untagged
+  m_TagString: Enemies
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -77,7 +77,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6663075908778530387}
   - component: {fileID: 5396252340773929636}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: wallTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -144,7 +144,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4067743049518531848}
   - component: {fileID: 592827001649382195}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: pitTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -225,6 +225,7 @@ GameObject:
   - component: {fileID: 6726566228593921569}
   - component: {fileID: 4292650948801513124}
   - component: {fileID: 8449950465437504098}
+  - component: {fileID: 5308960005703587907}
   m_Layer: 0
   m_Name: Enemy2
   m_TagString: Enemies
@@ -378,8 +379,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemiesData: {fileID: 11400000, guid: 9a768bd8c928cd548a511909d297141a, type: 2}
+  deathAnim: {fileID: 5308960005703587907}
   deathCollider: {fileID: 2814037115331634749}
-  pointerGroupObj: {fileID: 0}
   point1OffsetX: -2.71
   point2OffsetX: 5.23
   freeRoamMode: 1
@@ -430,6 +431,27 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.22720146, y: 0.6731794}
   m_EdgeRadius: 0
+--- !u!95 &5308960005703587907
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8407709400044093970}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8aa61b6bb07648945ace945788b99869, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8823549646016619620
 GameObject:
   m_ObjectHideFlags: 0
@@ -440,7 +462,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4436960422101543076}
   - component: {fileID: 1701493738028795417}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: jumpTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
