@@ -142,7 +142,7 @@ public class Player : Singleton<Player>
             }
 
         }
-
+        //Debug.Log(PlayerState.IsStickActive);
     }
 
     public Vector2 RetrurnPos()
@@ -170,9 +170,17 @@ public class Player : Singleton<Player>
         // Disable when stick active Touches Ground
         if (PlayerState.IsStickActive == true && PlayerState.IsTouchingGround == true)
         {
-            PlayerState.IsStickActive = false;
+            if(stickModeRoutine != null)
+            { 
+                StopCoroutine(stickModeRoutine);
+                stickModeRoutine = null;
+            }
+
             dirX = 0;
-            playerRB.sharedMaterial = curMaterial;
+            playerRB.sharedMaterial = slip;
+            PlayerState.IsStickActive = false;
+            
+
         }
 
         // Disable Jump when groundpound
@@ -187,7 +195,7 @@ public class Player : Singleton<Player>
         {
             PlayerState.IsBounceMode = false;
 
-            playerRB.sharedMaterial = curMaterial;
+            playerRB.sharedMaterial = slip;
             playerRB.gravityScale = 10; // DO smn different asp
             //Reset velocity
             dirX = 0;
@@ -273,12 +281,12 @@ public class Player : Singleton<Player>
     void KeyPressed()
     {
 
-        // Flips Player
+        
         if (GameData.HasSceneTransAnim == false && Time.timeScale != 0f) // FOR THE PAUSE MENU
         {
             if (PlayerState.IsStickActive == false && PlayerState.IsDash == false && PlayerState.IsPound == false && PlayerState.IsBounceMode == false)
             {
-                
+                // Flips Player
                 if (Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.A))
                 {
                     player.transform.localScale = new Vector2(player.transform.localScale.x, player.transform.localScale.y);
@@ -704,6 +712,8 @@ public class Player : Singleton<Player>
             }
         }
 
+        dirX = 0;
+        playerRB.sharedMaterial = slip;
         stickModeRoutine = null;
     }
 
@@ -834,7 +844,7 @@ public class Player : Singleton<Player>
             PlayerCollision("Idle");
             AttackTrigger("Reset");
 
-            playerRB.sharedMaterial = curMaterial;
+            playerRB.sharedMaterial = slip;
             playerRB.gravityScale = 10;
             //Reset velocity
             dirX = 0;

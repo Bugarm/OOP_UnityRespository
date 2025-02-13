@@ -102,7 +102,7 @@ public class DetectionScript : Singleton<DetectionScript>
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if ((collision.CompareTag("Level") || collision.CompareTag("SwitchDoor")) || collision.CompareTag("Box") || collision.CompareTag("FloorBreakable") && DetectionScript.Instance.IsDestroyed() == false)
+        if ((collision.CompareTag("Level") || collision.CompareTag("Platforms") || collision.CompareTag("SwitchDoor")) || collision.CompareTag("Box") || collision.CompareTag("FloorBreakable") && DetectionScript.Instance.IsDestroyed() == false)
         {
             if (!collision.IsTouching(wallTrigCol))
             {

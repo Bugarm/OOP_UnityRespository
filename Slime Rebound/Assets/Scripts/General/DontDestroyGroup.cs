@@ -109,6 +109,7 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
             exitDoor = GameObject.FindGameObjectWithTag("ExitDoor");
             exitTrigger = GameObject.FindGameObjectWithTag("ExitTrigger");
             
+
             StartCoroutine(DelayLevelDataLoad(scene.name));
         }
         else
@@ -124,12 +125,13 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
     {
         
         yield return new WaitUntil(() => player.activeInHierarchy == true);
-        
+
         DoorSpawnIn();
 
         yield return new WaitForSeconds(0.1f);
 
         HasObjectsSpawnedOnce(sceneName);
+        BackgroundScroll.Instance.ResetBackGroundPos();
 
         yield return new WaitForSeconds(0.01f);
 

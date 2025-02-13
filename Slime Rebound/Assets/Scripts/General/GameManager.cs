@@ -49,9 +49,12 @@ public class GameManager : Singleton<GameManager>
         GameData.Score = 0;
         GameData.TotalBounces = 0;
         GameData.HasSceneTransAnim = false;
+        GameData.HasEnteredDoor = false;
 
         DisplayScore();
         DisplayHp();
+
+        BackgroundScroll.Instance.ResetBackGroundPos();
 
     }
 

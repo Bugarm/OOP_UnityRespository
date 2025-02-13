@@ -32,21 +32,25 @@ public class BackgroundScroll : Singleton<BackgroundScroll>
     {
         player = FindObjectOfType<Player>();
 
-        if (player != null)
+        if (player != null && (BackGround_Back != null && BackGround_Front != null))
         {
-            if (doOnce == false)
-            {
-                BackGround_Back.transform.position = player.transform.position;
-                BackGround_Front.transform.position = player.transform.position;
-                doOnce = true;
-            }
 
             savePlayerPos = player.transform.position;
 
             BackGround_Back.transform.position = Vector3.MoveTowards(BackGround_Back.transform.position, new Vector2(player.transform.position.x, player.transform.position.y), 14 * Time.deltaTime);
 
-            BackGround_Front.transform.position = Vector3.MoveTowards(BackGround_Front.transform.position, new Vector2(player.transform.position.x, player.transform.position.y), 10.5f * Time.deltaTime);
+            BackGround_Front.transform.position = Vector3.MoveTowards(BackGround_Front.transform.position, new Vector2(player.transform.position.x, player.transform.position.y), 6.5f * Time.deltaTime);
 
+        }
+    }
+
+    public void ResetBackGroundPos()
+    {
+        player = FindObjectOfType<Player>();
+        if (player != null && (BackGround_Back != null && BackGround_Front != null))
+        {
+            BackGround_Back.transform.position = player.transform.position;
+            BackGround_Front.transform.position = player.transform.position;
         }
     }
 }
