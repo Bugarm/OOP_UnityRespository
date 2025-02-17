@@ -10,7 +10,8 @@ using static UnityEngine.EventSystems.EventTrigger;
 public class GameManager : Singleton<GameManager>
 {
 
-    public TMP_Text hpUI;
+    public List<Image> hpBarsUI;
+
     public TMP_Text scoreUI;
     public TMP_Text bounceUI;
     public Image blackTrans;
@@ -35,7 +36,7 @@ public class GameManager : Singleton<GameManager>
     {
         base.Awake();
 
-        maxHP = 10;
+        maxHP = hpBarsUI.Count;
         bounceUI.alpha = 0;
         bounceUI.gameObject.SetActive(false);
     }
@@ -45,7 +46,7 @@ public class GameManager : Singleton<GameManager>
     {
         playerRB = player.GetComponentInParent<Rigidbody2D>();
 
-        GameData.Hp = 3;
+        GameData.Hp = hpBarsUI.Count;
         GameData.Score = 0;
         GameData.TotalBounces = 0;
         GameData.HasSceneTransAnim = false;
@@ -90,6 +91,8 @@ public class GameManager : Singleton<GameManager>
 
         PlayerState.IsDamaged = true;
 
+        PlayerAnimationManager.Instance.PlayAnimation("damaged");
+
         // KnockBack
         playerRB.gravityScale = 0.5f;
 
@@ -113,6 +116,7 @@ public class GameManager : Singleton<GameManager>
 
         playerRB.gravityScale = 10f;
         player.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().color = Color.white;
+        PlayerAnimationManager.Instance.PlayAnimation("idle");
 
         // Delay before getting damaged again
         yield return new WaitForSeconds(1.5f);
@@ -160,8 +164,19 @@ public class GameManager : Singleton<GameManager>
             GameData.Hp = maxHP;
         }
 
-        hpUI.text = GameData.Hp.ToString() + "/10";
-        // save data here?
+        for (int i = 0; i < maxHP; i++)
+        {
+            if(i < GameData.Hp)
+            { 
+                hpBarsUI[i].enabled = true;
+            }
+            else
+            {
+                hpBarsUI[i].enabled = false;
+            }
+        }
+
+        //hpUI.text = GameData.Hp.ToString() + "/10";
     }
 
     public void DisplayScore()
@@ -201,7 +216,8 @@ public class GameManager : Singleton<GameManager>
         
         SceneTransFunct(nextRoomNum);
         yield return new WaitForSeconds(0.35f);
-        
+        CameraFollow.Instance.UpdateCam();
+
 
         while (blackTrans.color.a >= 0)
         {
@@ -210,6 +226,7 @@ public class GameManager : Singleton<GameManager>
             yield return new WaitForSeconds(0.001f);
         }
 
+        PlayerState.DisableAllMove = false;
         GameData.HasSceneTransAnim = false;
         blackTrans.color = new Color(0, 0, 0, 0);
         blackTrans.gameObject.SetActive(false);
@@ -323,4 +340,5 @@ public class GameManager : Singleton<GameManager>
         }
         this.gameObject.GetComponentInParent<DontDestroyGroup>().enabled = true;
     }
+
 }

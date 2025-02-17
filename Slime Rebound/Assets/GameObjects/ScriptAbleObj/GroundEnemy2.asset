@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: GroundEnemy2
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 3781066511576801709, guid: 816fa8f9551737c42aa0b0627639713d, type: 3}
-  speed: 2
+  speed: 3.5
   score: 50

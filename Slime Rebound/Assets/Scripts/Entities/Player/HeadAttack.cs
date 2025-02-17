@@ -29,7 +29,7 @@ public class HeadAttack : Singleton<HeadAttack>
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if((collision.CompareTag("Level") || collision.CompareTag("Platforms") || collision.CompareTag("Box") || collision.CompareTag("SkeleChain") || collision.CompareTag("Enemies") || collision.CompareTag("Box") || collision.CompareTag("Obsticales")) && PlayerState.IsHeadThrown == true)
+        if((collision.CompareTag("Level") || collision.CompareTag("Platforms") || collision.CompareTag("FloorBreakable") || collision.CompareTag("Box") || collision.CompareTag("SkeleChain") || collision.CompareTag("Enemies") || collision.CompareTag("Box") || collision.CompareTag("Obsticales")) && PlayerState.IsHeadThrown == true)
         {
             if(headDestroy == null)
             { 

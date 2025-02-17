@@ -26,6 +26,7 @@ TagManager:
   - FakeWall
   - TextRange
   - FloorBreakable
+  - OneWay
   layers:
   - Default
   - TransparentFX

@@ -29,6 +29,14 @@ public abstract class LevelData : MonoBehaviour
         set { _saveableObj_Tutorial2 = value; }
     }
 
+    public static List<SaveableObjects> _saveableObj_Tutorial3;
+
+    public static List<SaveableObjects> SaveableObj_Tutorial3
+    {
+        get { return _saveableObj_Tutorial3; }
+        set { _saveableObj_Tutorial3 = value; }
+    }
+
     // Forest Level
     public static List<SaveableObjects> _saveableObj_ForestLevel;
 

@@ -30,6 +30,12 @@ public class FakeWalls : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
+        if(collision.CompareTag("PlayerBody"))
+        { 
+            PlayerState.IsFakeWallAllowed = true;
+
+            PlayerState.InFakeWall = true;
+        }
 
         if (collision.CompareTag("PlayerWallDetect") && PlayerState.IsFakeWallAllowed == true)
         {
@@ -51,7 +57,12 @@ public class FakeWalls : MonoBehaviour
         {
             active = false;
         }
-        
+
+        if (collision.CompareTag("PlayerBody"))
+        {
+            PlayerState.InFakeWall = false;
+        }
+
     }
 
     private IEnumerator FadeEffect()

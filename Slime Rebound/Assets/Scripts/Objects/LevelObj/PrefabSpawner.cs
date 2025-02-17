@@ -29,8 +29,15 @@ public class PrefabSpawner : MonoBehaviour
 
     public void SpawnItemOnce()
     {
-        
-        Instantiate(prefab, thisObj.transform.position, Quaternion.identity);
+
+        GameObject obj = Instantiate(prefab, thisObj.transform.position, Quaternion.identity);
+
+        GameObject group = GameObject.Find("Objects");
+
+        if (group != null)
+        {
+            obj.transform.parent = group.transform;
+        }
 
     }
 

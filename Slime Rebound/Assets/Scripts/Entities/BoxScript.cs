@@ -21,6 +21,12 @@ public class BoxScript : MonoBehaviour
     {
         boxAnimator = GetComponent<Animator>();
         boxColl = GetComponent<BoxCollider2D>();
+
+
+        if(this.gameObject.name.StartsWith("FakeWallBreakable"))
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
+        }
     }
 
     // Update is called once per frame

@@ -15,6 +15,7 @@ public class EnemyFlying : Default_Entity
     
     // set up
     [Header("Settings")]
+    public bool doAttack = true;
     public bool isHoming = false;
     public float fireRateDelay;
 
@@ -49,11 +50,6 @@ public class EnemyFlying : Default_Entity
         enemySr = enemy.GetComponent<SpriteRenderer>();
 
         outOfRange = true;
-    }
-
-    private void OnEnable()
-    {
-        
     }
 
     // Start is called before the first frame update
@@ -93,7 +89,7 @@ public class EnemyFlying : Default_Entity
 
         TryGetComponent<ObjectPooling>(out ObjectPooling hasPool);
 
-        if (bulletPool == null)
+        if (bulletPool == null && doAttack == true)
         {
             if (isHoming == true)
             {
@@ -117,20 +113,22 @@ public class EnemyFlying : Default_Entity
                 
                 FollowPoints();
 
-                if (seesPlayer == true )
-                {
-                    // Homing Function
-                    if (bulletPool.name == "ObjectsToPool Homing Bullet")
+                if (doAttack == true)
+                { 
+                    if (seesPlayer == true )
                     {
-                        PointAtPlayer();
+                        // Homing Function
+                        if (bulletPool.name == "ObjectsToPool Homing Bullet")
+                        {
+                            PointAtPlayer();
+                        }
+                    }
+
+                    if (bulletRoutine == null)
+                    {
+                        bulletRoutine = StartCoroutine(ShootBullet(bulletPool));
                     }
                 }
-
-                if (bulletRoutine == null)
-                {
-                    bulletRoutine = StartCoroutine(ShootBullet(bulletPool));
-                }
-
             }
             else
             {

@@ -267,9 +267,9 @@ MonoBehaviour:
   deathAnim: {fileID: 1400714109824885247}
   deathCollider: {fileID: 1389852566835822634}
   pointers:
-  - {x: 0, y: 3.06}
-  - {x: -5.92, y: 3.06}
-  isHoming: 1
+  - {x: 0, y: 0}
+  doAttack: 0
+  isHoming: 0
   fireRateDelay: 3
   playerRangeObj: {fileID: 1914103485628938774}
   shootPointObj: {fileID: 4505044785281677860}

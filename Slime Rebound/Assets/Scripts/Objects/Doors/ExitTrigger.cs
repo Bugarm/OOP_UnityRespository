@@ -13,7 +13,7 @@ public class ExitTrigger : Singleton<ExitTrigger>
     // Start is called before the first frame update
     void Start()
     {
-        this.gameObject.SetActive(false);
+        
     }
 
     // Update is called once per frame
@@ -24,7 +24,7 @@ public class ExitTrigger : Singleton<ExitTrigger>
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (collision.CompareTag("PlayerBody"))
         {
             CheckStateAndSave(GameData.LevelState);
             SceneSwitchManager.Instance.SwitchToLevel("HUB");

@@ -25,7 +25,8 @@ public class DoorRoomSwitch : Door
         if (isAtDoor == true && delay == false && GameData.HasEnteredScreneTrig == false)
         {
             if (Input.GetKeyDown(KeyCode.W) && Player.Instance.RetrurnPos().x == 0 && PlayerState.IsHeadAttack == false)
-            { 
+            {
+                PlayerState.DisableAllMove = true;
                 GameData.DoorID = id;
 
                 GameManager.Instance.sceneSwitch = true;

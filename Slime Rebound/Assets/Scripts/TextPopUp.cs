@@ -14,7 +14,7 @@ public class TextPopUp : MonoBehaviour
     {
         
         render = GetComponent<SpriteRenderer>();
-        render.color = new Color(render.color.r, render.color.b, render.color.g, 0);
+        render.color = new Color(0.5f,1f,0.5f, 0);
     }
 
     // Update is called once per frame
@@ -50,7 +50,7 @@ public class TextPopUp : MonoBehaviour
         while (render.color.a <= 1f)
         {
             // Fade In
-            render.color = new Color(render.color.r, render.color.b, render.color.g, render.color.a + Time.deltaTime + 0.005f);
+            render.color = new Color(0.5f, 1f, 0.5f, render.color.a + Time.deltaTime + 0.005f);
             yield return new WaitForSeconds(0.001f);
 
         }
@@ -60,7 +60,7 @@ public class TextPopUp : MonoBehaviour
         while (render.color.a >= 0)
         {
             // Fade Out
-            render.color = new Color(render.color.r, render.color.b, render.color.g, render.color.a - Time.deltaTime - 0.005f);
+            render.color = new Color(0.5f, 1f, 0.5f, render.color.a - Time.deltaTime - 0.005f);
             yield return new WaitForSeconds(0.001f);
         }
 

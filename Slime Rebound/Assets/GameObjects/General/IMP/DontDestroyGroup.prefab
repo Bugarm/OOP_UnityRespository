@@ -156,12 +156,37 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5670116191717892350, guid: 96b2a127c3e43bf47aa6e4002caf60c5, type: 3}
+      propertyPath: m_Color.b
+      value: 0.55078864
+      objectReference: {fileID: 0}
+    - target: {fileID: 5670116191717892350, guid: 96b2a127c3e43bf47aa6e4002caf60c5, type: 3}
+      propertyPath: m_Color.g
+      value: 0.9622642
+      objectReference: {fileID: 0}
+    - target: {fileID: 5670116191717892350, guid: 96b2a127c3e43bf47aa6e4002caf60c5, type: 3}
+      propertyPath: m_Color.r
+      value: 0.52198297
+      objectReference: {fileID: 0}
+    - target: {fileID: 6960752798898926618, guid: 96b2a127c3e43bf47aa6e4002caf60c5, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2.42
+      objectReference: {fileID: 0}
+    - target: {fileID: 6960752798898926618, guid: 96b2a127c3e43bf47aa6e4002caf60c5, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2.42
+      objectReference: {fileID: 0}
+    - target: {fileID: 6960752798898926618, guid: 96b2a127c3e43bf47aa6e4002caf60c5, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2.42
+      objectReference: {fileID: 0}
     - target: {fileID: 7484165258822413001, guid: 96b2a127c3e43bf47aa6e4002caf60c5, type: 3}
       propertyPath: m_BlockingMask.m_Bits
       value: 2147745791
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 8354682000251543431, guid: 96b2a127c3e43bf47aa6e4002caf60c5, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96b2a127c3e43bf47aa6e4002caf60c5, type: 3}
@@ -170,6 +195,28 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 518258913939681486, guid: 96b2a127c3e43bf47aa6e4002caf60c5, type: 3}
   m_PrefabInstance: {fileID: 1064476546492117263}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1157199216237301648 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2218855460906925727, guid: 96b2a127c3e43bf47aa6e4002caf60c5, type: 3}
+  m_PrefabInstance: {fileID: 1064476546492117263}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1411217014237550405 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2112295576802977354, guid: 96b2a127c3e43bf47aa6e4002caf60c5, type: 3}
+  m_PrefabInstance: {fileID: 1064476546492117263}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &5178619752633823870 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5268051567577842545, guid: 96b2a127c3e43bf47aa6e4002caf60c5, type: 3}
@@ -197,20 +244,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &7883814819804427908 stripped
+--- !u!114 &6732512692919002280 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7182441002127493003, guid: 96b2a127c3e43bf47aa6e4002caf60c5, type: 3}
+  m_CorrespondingSourceObject: {fileID: 6029043749401351591, guid: 96b2a127c3e43bf47aa6e4002caf60c5, type: 3}
   m_PrefabInstance: {fileID: 1064476546492117263}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &8000857890957464252 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7047295708990481331, guid: 96b2a127c3e43bf47aa6e4002caf60c5, type: 3}
+  m_PrefabInstance: {fileID: 1064476546492117263}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &9185531259030328449 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8195521922018731406, guid: 96b2a127c3e43bf47aa6e4002caf60c5, type: 3}
   m_PrefabInstance: {fileID: 1064476546492117263}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
@@ -268,10 +326,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 317381565666975327, guid: 9936b7b5776bb1542b6730aec25b3cb6, type: 3}
-      propertyPath: hpUI
-      value: 
-      objectReference: {fileID: 7883814819804427908}
-    - target: {fileID: 317381565666975327, guid: 9936b7b5776bb1542b6730aec25b3cb6, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 2946525147099557722}
@@ -287,6 +341,22 @@ PrefabInstance:
       propertyPath: blackTrans
       value: 
       objectReference: {fileID: 8000857890957464252}
+    - target: {fileID: 317381565666975327, guid: 9936b7b5776bb1542b6730aec25b3cb6, type: 3}
+      propertyPath: hpBarsUI.Array.data[0]
+      value: 
+      objectReference: {fileID: 1157199216237301648}
+    - target: {fileID: 317381565666975327, guid: 9936b7b5776bb1542b6730aec25b3cb6, type: 3}
+      propertyPath: hpBarsUI.Array.data[1]
+      value: 
+      objectReference: {fileID: 1411217014237550405}
+    - target: {fileID: 317381565666975327, guid: 9936b7b5776bb1542b6730aec25b3cb6, type: 3}
+      propertyPath: hpBarsUI.Array.data[2]
+      value: 
+      objectReference: {fileID: 9185531259030328449}
+    - target: {fileID: 317381565666975327, guid: 9936b7b5776bb1542b6730aec25b3cb6, type: 3}
+      propertyPath: hpBarsUI.Array.data[3]
+      value: 
+      objectReference: {fileID: 6732512692919002280}
     - target: {fileID: 1592399009523712291, guid: 9936b7b5776bb1542b6730aec25b3cb6, type: 3}
       propertyPath: player
       value: 

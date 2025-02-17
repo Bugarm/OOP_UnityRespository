@@ -57,7 +57,8 @@ public class Default_Entity : MonoBehaviour
 
     public IEnumerator EnemyDead()
     {
-        
+        Player.Instance.failedBounces++;
+
         //To stop from player on detecting them while dying
         enemy.tag = "Untagged";
 

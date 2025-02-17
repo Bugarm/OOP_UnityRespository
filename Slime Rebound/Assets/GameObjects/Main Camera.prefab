@@ -107,10 +107,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b45d9ef020764564f82a1479263bb6e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  point1X: -20.1
-  point2X: 95.5
+  point1X: -20.75
+  point2X: 96.2
   point1Y: 2.8
-  point2Y: 18.04
+  point2Y: 18.15
 --- !u!68 &8342527812793958283
 EdgeCollider2D:
   m_ObjectHideFlags: 0
@@ -167,11 +167,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a160d838ff8b4b4693ac20007e008c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AssetsPPU: 32
-  m_RefResolutionX: 302
-  m_RefResolutionY: 279
-  m_UpscaleRT: 1
-  m_PixelSnapping: 0
+  m_AssetsPPU: 16
+  m_RefResolutionX: 262
+  m_RefResolutionY: 140
+  m_UpscaleRT: 0
+  m_PixelSnapping: 1
   m_CropFrameX: 0
   m_CropFrameY: 0
   m_StretchFill: 0

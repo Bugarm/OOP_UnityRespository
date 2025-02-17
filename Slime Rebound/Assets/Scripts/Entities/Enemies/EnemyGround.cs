@@ -217,12 +217,10 @@ public class EnemyGround : Default_Entity
             // Pointer Mode //
             if (curPoint == set_point1.transform)
             {
-                Debug.Log("te");
                 curPoint = set_point2.transform;
             }
             else
             {
-                Debug.Log("22");
                 curPoint = set_point1.transform;
             }
         }
@@ -291,7 +289,7 @@ public class EnemyGround : Default_Entity
     {
         if (disableAI == false && outOfRange == false && enemy.activeInHierarchy == true)
         {
-            if (enemy.activeInHierarchy == true && collision.CompareTag("Level") && collision.IsTouching(wallDectection) && collision.IsTouching(jumpDectection))
+            if (enemy.activeInHierarchy == true && (collision.CompareTag("Level") || collision.CompareTag("Platforms") || collision.CompareTag("FloorBreakable")) && collision.IsTouching(wallDectection) && collision.IsTouching(jumpDectection))
             {
                 TurnFunc();
             }
@@ -325,7 +323,7 @@ public class EnemyGround : Default_Entity
             isOnGround = false;
 
             // Ledge Decection
-            if (collision.CompareTag("Level"))
+            if ((collision.CompareTag("Level") || collision.CompareTag("Platforms") || collision.CompareTag("FloorBreakable")))
             {
                 if (freeRoamMode == false)
                 {

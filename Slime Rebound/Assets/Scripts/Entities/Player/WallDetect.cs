@@ -17,12 +17,11 @@ public class WallDetect : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(touchingWall);
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-
+        
         if (touchingWall <= 0)
         {
             if (collision.CompareTag("FakeWall"))
@@ -31,7 +30,7 @@ public class WallDetect : MonoBehaviour
                 PlayerState.IsFakeWallAllowed = true;
             }
         }
-        else
+        else if(PlayerState.InFakeWall == false)
         {
             PlayerState.IsFakeWallAllowed = false;
         }

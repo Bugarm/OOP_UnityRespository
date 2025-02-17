@@ -24,6 +24,8 @@ public class SerializedLevelData
     public List<SaveableObjects> saveableObj_Tutorial;
     public List<SaveableObjects> saveableObj_Tutorial1;
     public List<SaveableObjects> saveableObj_Tutorial2;
+    public List<SaveableObjects> saveableObj_Tutorial3;
+
 
     // Forest Level
     public List<SaveableObjects> saveableObj_ForestLevel;

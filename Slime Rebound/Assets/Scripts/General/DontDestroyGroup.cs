@@ -72,15 +72,17 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
         GameObject doorStart = GameObject.FindGameObjectWithTag("DoorStart");
         // First first door in the hierarchy (IMP)
         DoorRoomSwitch doorScript = GameObject.FindFirstObjectByType<DoorRoomSwitch>();
-        GameObject door = doorScript.gameObject;
 
         if (doorStart != null) 
         {
-            player.transform.position = new Vector3(doorStart.transform.position.x, doorStart.transform.position.y - 0.4f, 0);
-            GameData.PlayerPos = new Vector3(doorStart.transform.position.x, doorStart.transform.position.y - 0.4f, 0);
+            player.transform.position = new Vector3(doorStart.transform.position.x + 0.8f, doorStart.transform.position.y - 0.4f, 0);
+            GameData.PlayerPos = new Vector3(doorStart.transform.position.x + 0.8f, doorStart.transform.position.y - 0.4f, 0);
         }
         else
         {
+            
+            GameObject door = doorScript.gameObject;
+            
             player.transform.position = new Vector3(door.transform.position.x, door.transform.position.y - 0.4f, 0);
             GameData.PlayerPos = new Vector3(door.transform.position.x, door.transform.position.y - 0.4f, 0);
         }
@@ -91,6 +93,9 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
 
             doOnce = true;
         }
+
+        exitDoor = GameObject.FindGameObjectWithTag("ExitDoor");
+        exitTrigger = GameObject.FindGameObjectWithTag("ExitTrigger");
 
     }
 
@@ -125,6 +130,8 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
     {
         
         yield return new WaitUntil(() => player.activeInHierarchy == true);
+
+        ExitTrigger.Instance.gameObject.SetActive(false);
 
         DoorSpawnIn();
 
@@ -236,7 +243,7 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
             }
 
             // Reset Player Velocity on Scene Loaded
-            Player.Instance.ResetPlayerVel("stop");
+            Player.Instance.ResetPlayerVel();
 
             PlayerState.IsRun = false;
             PlayerState.IsBounceMode = false;

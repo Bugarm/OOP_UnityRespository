@@ -32,25 +32,39 @@ public class BackgroundScroll : Singleton<BackgroundScroll>
     {
         player = FindObjectOfType<Player>();
 
-        if (player != null && (BackGround_Back != null && BackGround_Front != null))
+        if (player != null)
         {
 
             savePlayerPos = player.transform.position;
+            if(BackGround_Back != null)
+            {
+                Vector3 backBacknewPos = Vector3.MoveTowards(BackGround_Back.transform.position, new Vector3(player.transform.position.x, player.transform.position.y, 0), 22.5f * Time.deltaTime);
+                BackGround_Back.transform.position = Vector3.Slerp(BackGround_Back.transform.position, backBacknewPos, Time.deltaTime * 75);
+            }
 
-            BackGround_Back.transform.position = Vector3.MoveTowards(BackGround_Back.transform.position, new Vector2(player.transform.position.x, player.transform.position.y), 14 * Time.deltaTime);
+            if (BackGround_Front != null)
+            {
+                Vector3 backFrontnewPos = Vector3.MoveTowards(BackGround_Front.transform.position, new Vector3(player.transform.position.x, player.transform.position.y, 0), 24 * Time.deltaTime);
 
-            BackGround_Front.transform.position = Vector3.MoveTowards(BackGround_Front.transform.position, new Vector2(player.transform.position.x, player.transform.position.y), 6.5f * Time.deltaTime);
-
+                BackGround_Front.transform.position = Vector3.Slerp(BackGround_Front.transform.position, backFrontnewPos, Time.deltaTime * 84);
+            }
         }
     }
 
     public void ResetBackGroundPos()
     {
         player = FindObjectOfType<Player>();
-        if (player != null && (BackGround_Back != null && BackGround_Front != null))
+        if (player != null)
         {
-            BackGround_Back.transform.position = player.transform.position;
-            BackGround_Front.transform.position = player.transform.position;
+            if (BackGround_Back != null)
+            {
+                BackGround_Back.transform.position = player.transform.position;
+            }
+
+            if (BackGround_Front != null)
+            {
+                BackGround_Front.transform.position = player.transform.position;
+            }
         }
     }
 }

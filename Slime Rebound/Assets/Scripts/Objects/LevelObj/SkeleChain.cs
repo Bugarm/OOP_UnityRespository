@@ -22,8 +22,6 @@ public class SkeleChain : MonoBehaviour
     void Start()
     {
         powerXval = 4;
-
-       
     }
 
     // Update is called once per frame
@@ -61,7 +59,8 @@ public class SkeleChain : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         LevelExitDoor.Instance.DestroyDoorCheck(DontDestroyGroup.Instance.exitDoor, DontDestroyGroup.Instance.exitTrigger);
-                
+        yield return new WaitForSeconds(0.4f);
+
         Destroy(this.gameObject);
     }
 }

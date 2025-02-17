@@ -96,6 +96,15 @@ public class DetectionScript : Singleton<DetectionScript>
         }
 
 
+        if (collision.CompareTag("OneWay"))
+        {
+
+            if (collision.IsTouching(floorTrigCol))
+            {
+                PlayerState.IsTouchingGround = true;
+            }
+        }
+
     }
 
     
@@ -134,6 +143,20 @@ public class DetectionScript : Singleton<DetectionScript>
             if (!collision.IsTouching(wallTrigCol))
             {
                 PlayerState.IsTouchingWall = false;
+            }
+        }
+
+        if (collision.CompareTag("OneWay"))
+        {
+            if (collision.IsTouching(wallTrigCol))
+            {
+                PlayerState.IsTouchingWall = false;
+            }
+
+            if (collision.IsTouching(floorTrigCol))
+            {
+                
+                PlayerState.IsTouchingGround = false;
             }
         }
 

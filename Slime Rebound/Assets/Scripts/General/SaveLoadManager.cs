@@ -153,6 +153,7 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
     {
         switch (sceneName)
         {
+            // Tutorial Room
             case "TutorialRoom":
                 LevelData.SaveableObj_Tutorial = FindAllSaveableObj.Instance.ReturnScriptObj();
                 return LevelData.SaveableObj_Tutorial;
@@ -165,6 +166,11 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
                 LevelData.SaveableObj_Tutorial2 = FindAllSaveableObj.Instance.ReturnScriptObj();
                 return LevelData.SaveableObj_Tutorial2;
 
+            case "TutorialRoom3":
+                LevelData.SaveableObj_Tutorial3 = FindAllSaveableObj.Instance.ReturnScriptObj();
+                return LevelData.SaveableObj_Tutorial3;
+
+            // Forest Level
             case "ForestLevel":
                 LevelData.SaveableObj_ForestLevel = FindAllSaveableObj.Instance.ReturnScriptObj();
                 return LevelData.SaveableObj_ForestLevel;
@@ -198,6 +204,10 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
                 myLevelData.saveableObj_Tutorial2 = GetLevelData(sceneName);
                 break;
 
+            case "TutorialRoom3":
+                myLevelData.saveableObj_Tutorial3 = GetLevelData(sceneName);
+                break;
+
             case "ForestLevel":
                 myLevelData.saveableObj_ForestLevel = GetLevelData(sceneName);
                 break;
@@ -225,6 +235,11 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
             case "TutorialRoom2":
                 LevelData.SaveableObj_Tutorial2 = myLevelData.saveableObj_Tutorial2;
                 Reinstantiate(LevelData.SaveableObj_Tutorial2);
+                break;
+
+            case "TutorialRoom3":
+                LevelData.SaveableObj_Tutorial3 = myLevelData.saveableObj_Tutorial3;
+                Reinstantiate(LevelData.SaveableObj_Tutorial3);
                 break;
 
             case "ForestLevel":

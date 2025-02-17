@@ -43,7 +43,7 @@ public class DefaultBullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Level") || collision.CompareTag("Box") || collision.CompareTag("Obsticales"))
+        if (collision.CompareTag("Level") || collision.CompareTag("Box") || collision.CompareTag("Obsticales") || collision.CompareTag("Platforms") || collision.CompareTag("FloorBreakable"))
         {
             if (deleteCourtine == null)
             {

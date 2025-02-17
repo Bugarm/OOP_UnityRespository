@@ -4,7 +4,7 @@ using System.Drawing;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class CameraFollow : MonoBehaviour
+public class CameraFollow : Singleton<CameraFollow>
 {
     private GameObject cam;
 
@@ -24,16 +24,21 @@ public class CameraFollow : MonoBehaviour
 
     private Player player;
     private Vector3 savePlayerPos;
+
+    protected override void Awake()
+    {
+        base.Awake();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        
+
         cam = this.gameObject;
         point1Pos = new Vector3(cam.transform.position.x + point1X, cam.transform.position.y, -10);
         point2Pos = new Vector3(cam.transform.position.x + point2X, cam.transform.position.y, -10);
 
         
-        this.transform.position = new Vector3(savePlayerPos.x, savePlayerPos.y + 1, -10);
         isActiveOnce = true;
 
 
@@ -69,6 +74,13 @@ public class CameraFollow : MonoBehaviour
             }
         }
 
+    }
+
+    public void UpdateCam()
+    {
+        player = FindObjectOfType<Player>();
+
+        this.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 1, -10);
     }
 
     private void OnDrawGizmos()
