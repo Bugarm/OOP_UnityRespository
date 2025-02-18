@@ -13,8 +13,7 @@ public class Default_Entity : MonoBehaviour
 
     private int powerX;
     private int powerXval;
-    protected GameObject player;
-    protected Rigidbody2D playerRB;
+
     private SpriteRenderer enemyRender;
     private ParticleSpawnerManager particleInstance;
 
@@ -69,7 +68,7 @@ public class Default_Entity : MonoBehaviour
 
         enemy.GetComponent<Rigidbody2D>().gravityScale = 0.5f;
 
-        powerX = Mathf.Sign(playerRB.velocity.x) < 0 ? -powerXval : powerXval;
+        powerX = Mathf.Sign(enemy.GetComponent<Rigidbody2D>().velocity.x) < 0 ? -powerXval : powerXval;
         enemy.GetComponent<Rigidbody2D>().velocity = new Vector3(powerX, 3,1);
 
         yield return new WaitForSeconds(0.7f);

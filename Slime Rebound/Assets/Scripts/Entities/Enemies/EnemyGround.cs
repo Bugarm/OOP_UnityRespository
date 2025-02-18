@@ -114,29 +114,23 @@ public class EnemyGround : Default_Entity
     // Update is called once per frame
     void Update()
     {
-        if (player == null && playerRB == null)
+        
+        if (disableAI == false && outOfRange == false)
         {
-            player = GameObject.FindGameObjectWithTag("Player");
-            playerRB = player.GetComponentInParent<Rigidbody2D>();
-        }
-        else
-        {
-            if (disableAI == false && outOfRange == false)
+            if (freeRoamMode == false)
             {
-                if (freeRoamMode == false)
-                {
-                    FollowPoints();
-                }
-                else if (freeRoamMode == true)
-                {
-                    FreeRoam();
-                }
+                FollowPoints();
             }
-            else if(disableAI == false)
+            else if (freeRoamMode == true)
             {
-                rb.velocity = Vector3.zero;
+                FreeRoam();
             }
         }
+        else if(disableAI == false)
+        {
+            rb.velocity = Vector3.zero;
+        }
+        
     }
 
     // Pointer Mode Functions //

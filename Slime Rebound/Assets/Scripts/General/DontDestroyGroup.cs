@@ -109,7 +109,7 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
     void OnSceneLoadedLevel(Scene scene, LoadSceneMode mode)
     {
         
-        if (scene.name.StartsWith("TestRoom") || scene.name.StartsWith("TutorialRoom") || scene.name.StartsWith("ForestLevel"))
+        if (scene.name.StartsWith("TestRoom") || scene.name.StartsWith("Bonus") || scene.name.StartsWith("TutorialRoom") || scene.name.StartsWith("ForestLevel"))
         {
             exitDoor = GameObject.FindGameObjectWithTag("ExitDoor");
             exitTrigger = GameObject.FindGameObjectWithTag("ExitTrigger");
@@ -152,7 +152,7 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
         }
     }
 
-
+    
     // Data Related
     public void HasObjectsSpawnedOnce(string sceneName)
     {

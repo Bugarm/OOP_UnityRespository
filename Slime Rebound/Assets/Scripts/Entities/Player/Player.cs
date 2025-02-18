@@ -67,7 +67,6 @@ public class Player : Singleton<Player>
     protected override void Awake()
     {
         base.Awake();
-
         player = this.gameObject;
         playerRB = GetComponent<Rigidbody2D>();
 
@@ -1087,18 +1086,23 @@ public class Player : Singleton<Player>
     IEnumerator JumpFunction()
     {
         
-        if(PlayerState.IsBounceMode == false && PlayerState.IsStickActive == false)
+        if(PlayerState.IsBounceMode == false)
         { 
-            jumpTimes++;
-            PlayerAnimationManager.Instance.PlayAnimation("jump");
+            if(PlayerState.IsStickActive == false)
+            { 
+                jumpTimes++;
+                PlayerAnimationManager.Instance.PlayAnimation("jump");
+            }
+            dirY = jumpPower;
         }
-
-        dirY = jumpPower;
         PlayerState.IsJump = true;
         yield return new WaitForSeconds(0.20f);
         PlayerState.IsJump = false;
-        dirY = 0;
 
+        if (PlayerState.IsBounceMode == false)
+        {
+            dirY = 0;
+        }
         // For extra jumps in mid air
         
         if (jumpTimes >= amountOfJumps && PlayerState.IsBounceMode == false && PlayerState.IsStickActive == false)

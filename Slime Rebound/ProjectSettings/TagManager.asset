@@ -27,6 +27,7 @@ TagManager:
   - TextRange
   - FloorBreakable
   - OneWay
+  - BlackScreen
   layers:
   - Default
   - TransparentFX

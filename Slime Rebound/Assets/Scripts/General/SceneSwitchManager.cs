@@ -28,20 +28,14 @@ public class SceneSwitchManager : Singleton<SceneSwitchManager>
         
     }
 
-    public void SwitchRoom(int? nextRoomNum)
+    public void SwitchRoom(int nextRoomNum)
     {
-        if(GameManager.Instance.screenTransRoutine == null)
-        {
-            
-            GameManager.Instance.screenTransRoutine = StartCoroutine(GameManager.Instance.ScreenTrans(nextRoomNum));
-            this.gameObject.GetComponentInParent<DontDestroyGroup>().enabled = false;
-        }
+        StartCoroutine(DontDestroyManager.Instance.ScreenTrans(true,"",nextRoomNum));        
     }
 
     public void SwitchToLevel(string Level)
     {
-        SceneManager.LoadScene(Level);
-
+        StartCoroutine(DontDestroyManager.Instance.ScreenTrans(false,Level));
     }
 
     

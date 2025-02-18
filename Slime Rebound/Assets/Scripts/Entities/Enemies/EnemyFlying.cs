@@ -39,7 +39,7 @@ public class EnemyFlying : Default_Entity
 
     private bool outOfRange = false;
 
-    private Coroutine bulletRoutine;
+    private Coroutine bulletRoutine, playerLoadRoutine;
 
     protected override void Awake()
     {
@@ -93,52 +93,55 @@ public class EnemyFlying : Default_Entity
         {
             if (isHoming == true)
             {
-                bulletPool = GameObject.Find("ObjectsToPool Homing Bullet").GetComponent<ObjectPooling>();
+                GameObject homing = GameObject.Find("ObjectsToPool Homing Bullet");
+                if (homing != null)
+                {
+                    bulletPool = homing.GetComponent<ObjectPooling>();
+                }
             }
             else
             {
-                bulletPool = GameObject.Find("ObjectsToPool Normal Bullet").GetComponent<ObjectPooling>();
+                GameObject normal = GameObject.Find("ObjectsToPool Normal Bullet");
+                if(normal != null)
+                { 
+                bulletPool = normal.GetComponent<ObjectPooling>();
+                }
             }
+
+            
         }
 
-        if (player == null && playerRB == null)
+        if (disableAI == false && outOfRange == false )
         {
-            player = GameObject.FindGameObjectWithTag("Player");
-            playerRB = player.GetComponentInParent<Rigidbody2D>();
+                
+            FollowPoints();
+
+            if (doAttack == true)
+            { 
+                if (seesPlayer == true )
+                {
+                    // Homing Function
+                    if (bulletPool.name == "ObjectsToPool Homing Bullet")
+                    {
+                        PointAtPlayer();
+                    }
+                }
+
+                if (bulletRoutine == null)
+                {
+                    bulletRoutine = StartCoroutine(ShootBullet(bulletPool));
+                }
+            }
         }
         else
         {
-            if (disableAI == false && outOfRange == false )
+            if (bulletRoutine != null)
             {
-                
-                FollowPoints();
-
-                if (doAttack == true)
-                { 
-                    if (seesPlayer == true )
-                    {
-                        // Homing Function
-                        if (bulletPool.name == "ObjectsToPool Homing Bullet")
-                        {
-                            PointAtPlayer();
-                        }
-                    }
-
-                    if (bulletRoutine == null)
-                    {
-                        bulletRoutine = StartCoroutine(ShootBullet(bulletPool));
-                    }
-                }
-            }
-            else
-            {
-                if (bulletRoutine != null)
-                {
-                    StopCoroutine(bulletRoutine);
-                    bulletRoutine = null;
-                }
+                StopCoroutine(bulletRoutine);
+                bulletRoutine = null;
             }
         }
+        
         
     }
 
@@ -196,7 +199,7 @@ public class EnemyFlying : Default_Entity
     private void PointAtPlayer()
     {
 
-        Vector3 relativePos = shootPointObj.transform.position - player.transform.position;
+        Vector2 relativePos = shootPointObj.transform.position - Player.Instance.gameObject.transform.position;
         Quaternion newrotation = Quaternion.LookRotation(relativePos, Vector3.back);
         newrotation.x = 0;
         newrotation.y = 0;

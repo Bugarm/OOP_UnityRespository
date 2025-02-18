@@ -29,6 +29,7 @@ public class DontDestroyHUB : Singleton<DontDestroyHUB>
         base.Awake();
 
         DontDestroyOnLoad(this.gameObject);
+
     }
 
     // Scene Loading Managers
@@ -47,6 +48,7 @@ public class DontDestroyHUB : Singleton<DontDestroyHUB>
     // Start is called before the first frame update
     void Start()
     {
+
         sceneStart = SceneManager.GetActiveScene();
 
         // Checks if string has a digit
@@ -86,19 +88,25 @@ public class DontDestroyHUB : Singleton<DontDestroyHUB>
         
     }
 
+
+
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
 
         if (scene.name.StartsWith("HUB"))
         {
-            DoorSpawnIn();
+            StartCoroutine(DelayLevelDataLoad());
         }
         else
         {
             Destroy(this.gameObject);
         }
     }
-
+    IEnumerator DelayLevelDataLoad()
+    {
+        yield return new WaitUntil(() => player.activeInHierarchy == true);
+        DoorSpawnIn();
+    }
     public void DoorSpawnIn()
     {
         player = FindAnyObjectByType<Player>().gameObject;

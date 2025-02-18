@@ -29,7 +29,7 @@ public class GameManager : Singleton<GameManager>
     SerializedLevelData myLevelData = new SerializedLevelData();
 
 
-    public Coroutine screenTransRoutine, damageRoutine, flashRoutine, dataSwitchRoutine, InbounceUIRoutine, OutbounceUIRoutine, highBounceRoutine;
+    public Coroutine damageRoutine, flashRoutine, dataSwitchRoutine, InbounceUIRoutine, OutbounceUIRoutine, highBounceRoutine;
 
 
     protected override void Awake()
@@ -200,38 +200,6 @@ public class GameManager : Singleton<GameManager>
         // save data here?
     }
 
-    public IEnumerator ScreenTrans(int? nextRoomNum)
-    {
-
-        blackTrans.gameObject.SetActive(true);
-        blackTrans.color = new Color(0,0,0,0);
-
-        while (blackTrans.color.a <= 1)
-        {
-            // Fade In
-            blackTrans.color = new Color(0, 0, 0, blackTrans.color.a + Time.deltaTime + 0.01f); 
-            yield return new WaitForSeconds(0.001f);
-
-        }
-        
-        SceneTransFunct(nextRoomNum);
-        yield return new WaitForSeconds(0.35f);
-        CameraFollow.Instance.UpdateCam();
-
-
-        while (blackTrans.color.a >= 0)
-        {
-            // Fade Out
-            blackTrans.color = new Color(0, 0, 0, blackTrans.color.a - Time.deltaTime - 0.01f);
-            yield return new WaitForSeconds(0.001f);
-        }
-
-        PlayerState.DisableAllMove = false;
-        GameData.HasSceneTransAnim = false;
-        blackTrans.color = new Color(0, 0, 0, 0);
-        blackTrans.gameObject.SetActive(false);
-        screenTransRoutine = null;
-    }
 
     // Bounce UI Functions
     private IEnumerator HighestBounceEffect(bool failed)
@@ -326,19 +294,5 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
-    private void SceneTransFunct(int? nextRoomNum)
-    {
-        if (nextRoomNum <= 0)
-        {
-            SaveLoadManager.Instance.SaveLevelData(SceneManager.GetActiveScene().name);
-            SceneManager.LoadScene(GameData.LevelState);
-        }
-        else
-        {
-            SaveLoadManager.Instance.SaveLevelData(SceneManager.GetActiveScene().name);
-            SceneManager.LoadScene(GameData.LevelState + nextRoomNum);
-        }
-        this.gameObject.GetComponentInParent<DontDestroyGroup>().enabled = true;
-    }
 
 }

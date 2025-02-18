@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class HubManager : Singleton<HubManager>
 {
+
     protected override void Awake()
     {
         base.Awake();
@@ -40,4 +42,5 @@ public class HubManager : Singleton<HubManager>
         this.gameObject.GetComponentInParent<DontDestroyGroup>().enabled = true;
     }
 
+    
 }

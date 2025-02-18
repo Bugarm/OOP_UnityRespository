@@ -59,10 +59,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 4424621438276569496}
     m_Modifications:
     - target: {fileID: 1025730421531338684, guid: 024ca089d7f636b4a95030e3a2b55a38, type: 3}
-      propertyPath: pauseMenu
-      value: 
-      objectReference: {fileID: 4195377346652100306, guid: 372963890eba5784d962e0c200e40f01, type: 3}
-    - target: {fileID: 1025730421531338684, guid: 024ca089d7f636b4a95030e3a2b55a38, type: 3}
       propertyPath: playerHUD
       value: 
       objectReference: {fileID: 5998005342592797457}
@@ -106,6 +102,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4540175930738523144, guid: 024ca089d7f636b4a95030e3a2b55a38, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 2470534487507102398}
     - target: {fileID: 7927652616597988756, guid: 024ca089d7f636b4a95030e3a2b55a38, type: 3}
       propertyPath: m_Name
       value: HubManager
@@ -128,6 +128,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4424621438276569496}
     m_Modifications:
+    - target: {fileID: 66415640890176610, guid: f4938870e16dd034da0d63e4170d5857, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 518258913939681486, guid: f4938870e16dd034da0d63e4170d5857, type: 3}
       propertyPath: m_Name
       value: Player_HUD_HUB
@@ -213,10 +217,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 4347962743434412335, guid: f4938870e16dd034da0d63e4170d5857, type: 3}
-    - {fileID: 5636299012671751843, guid: f4938870e16dd034da0d63e4170d5857, type: 3}
-    - {fileID: 900490940256195978, guid: f4938870e16dd034da0d63e4170d5857, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f4938870e16dd034da0d63e4170d5857, type: 3}
