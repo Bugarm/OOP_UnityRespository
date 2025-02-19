@@ -4,8 +4,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class ButtonManagerMainMenu : Singleton<ButtonManagerMainMenu>
+public class ButtonManagerMainMenu : MonoBehaviour
 {
+
     [SerializeField] List<Button> buttons;
 
     // Start is called before the first frame update
@@ -13,41 +14,42 @@ public class ButtonManagerMainMenu : Singleton<ButtonManagerMainMenu>
     {
         foreach (var button in buttons)
         {
-            if (button.name == "StartGameButton")
+
+            if (button.name == "Start")
             {
                 button.onClick.AddListener(StartGame);
             }
-            if (button.name == "OptionButton")
+            if (button.name == "Option")
             {
-                button.onClick.AddListener(OptionStateSwitch);
+                button.onClick.AddListener(OptionState);
             }
-            if (button.name == "ExitGameButton")
+            if (button.name == "Quit")
             {
                 button.onClick.AddListener(QuitGame);
             }
 
-
         }
-    }
-
-    void StartGame()
-    {
-        SceneManager.LoadScene("HUD");
     }
 
     void QuitGame()
     {
-        #if UNITY_EDITOR
-                UnityEditor.EditorApplication.isPlaying = false;
-        #else
-                Application.Quit();
+        Debug.Log("You have clicked the exit button");
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+                        Application.Quit();
     
-        #endif
+#endif
     }
 
-    void OptionStateSwitch()
+    void OptionState()
     {
         SceneManager.LoadScene("OptionScreen");
+    }
+
+    void StartGame()
+    {
+        SceneManager.LoadScene("HUB");
     }
 
 }

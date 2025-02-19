@@ -64,6 +64,7 @@ public class DontDestroyHUB : Singleton<DontDestroyHUB>
         GameData.LevelState = sceneName;
 
         GameObject doorStart = GameObject.FindGameObjectWithTag("DoorStart");
+        GameObject doorlevel = GameObject.FindGameObjectWithTag("LevelDoor");
         // First first door in the hierarchy (IMP)
         DoorRoomSwitch doorScript = GameObject.FindFirstObjectByType<DoorRoomSwitch>();
 
@@ -72,14 +73,19 @@ public class DontDestroyHUB : Singleton<DontDestroyHUB>
             player.transform.position = new Vector3(doorStart.transform.position.x + 0.8f, doorStart.transform.position.y - 0.4f, 0);
             GameData.PlayerPos = new Vector3(doorStart.transform.position.x + 0.8f, doorStart.transform.position.y - 0.4f, 0);
         }
-        else
+        else if(doorScript != null)
         {
-
             GameObject door = doorScript.gameObject;
 
             player.transform.position = new Vector3(door.transform.position.x, door.transform.position.y - 0.4f, 0);
             GameData.PlayerPos = new Vector3(door.transform.position.x, door.transform.position.y - 0.4f, 0);
         }
+        else if(doorlevel != null)
+        {
+            player.transform.position = new Vector3(doorlevel.transform.position.x, doorlevel.transform.position.y - 0.4f, 0);
+            GameData.PlayerPos = new Vector3(doorlevel.transform.position.x, doorlevel.transform.position.y - 0.4f, 0);
+        }
+
     }
 
     // Update is called once per frame

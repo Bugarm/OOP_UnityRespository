@@ -33,9 +33,24 @@ public class FindAllSaveableObj : Singleton<FindAllSaveableObj>
                 returnId = 0;
                 saveableObjects.Add(new SaveableObjects(placeableObjects[returnId].id, scoreItems[i].transform.position));
             }
-            else if(scoreItems[i].name.StartsWith("Score") == true)
+            else if(scoreItems[i].name.StartsWith("5Score") == true)
             {
-                returnId = 1;
+                returnId = 3;
+                saveableObjects.Add(new SaveableObjects(placeableObjects[returnId].id, scoreItems[i].transform.position));
+            }
+            else if (scoreItems[i].name.StartsWith("10Score") == true)
+            {
+                returnId = 4;
+                saveableObjects.Add(new SaveableObjects(placeableObjects[returnId].id, scoreItems[i].transform.position));
+            }
+            else if (scoreItems[i].name.StartsWith("50Score") == true)
+            {
+                returnId = 5;
+                saveableObjects.Add(new SaveableObjects(placeableObjects[returnId].id, scoreItems[i].transform.position));
+            }
+            else if (scoreItems[i].name.StartsWith("100Score") == true)
+            {
+                returnId = 6;
                 saveableObjects.Add(new SaveableObjects(placeableObjects[returnId].id, scoreItems[i].transform.position));
             }
         }
@@ -44,13 +59,13 @@ public class FindAllSaveableObj : Singleton<FindAllSaveableObj>
         GameObject[] chainsInLevel = GameObject.FindGameObjectsWithTag("SkeleChain");
         for (int i = 0; i < chainsInLevel.Length; i++)
         {
-            saveableObjects.Add(new SaveableObjects(placeableObjects[2].id, chainsInLevel[i].transform.position));
+            saveableObjects.Add(new SaveableObjects(placeableObjects[1].id, chainsInLevel[i].transform.position));
         }
 
         GameObject[] boxesInLevel = GameObject.FindGameObjectsWithTag("Box");
         for(int i = 0; i < boxesInLevel.Length; i++)
         {
-            saveableObjects.Add(new SaveableObjects(placeableObjects[3].id, boxesInLevel[i].transform.position));
+            saveableObjects.Add(new SaveableObjects(placeableObjects[2].id, boxesInLevel[i].transform.position));
         }
 
         return saveableObjects;

@@ -49,6 +49,7 @@ public class GameManager : Singleton<GameManager>
         GameData.Hp = hpBarsUI.Count;
         GameData.Score = 0;
         GameData.TotalBounces = 0;
+        GameData.ChainsInLevel = 0;
         GameData.HasSceneTransAnim = false;
         GameData.HasEnteredDoor = false;
 

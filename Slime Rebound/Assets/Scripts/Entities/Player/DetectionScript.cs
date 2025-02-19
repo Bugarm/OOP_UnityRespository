@@ -160,6 +160,24 @@ public class DetectionScript : Singleton<DetectionScript>
             }
         }
 
+        // Box Collision
+        if (collision.CompareTag("Box") || collision.CompareTag("FloorBreakable"))
+        {
+            if (!collision.IsTouching(wallTrigCol) )
+            {
+                PlayerState.IsTouchingWall = false;
+            }
+
+            if (!collision.IsTouching(floorTrigCol) )
+            {
+                PlayerState.IsTouchingGround = false;
+            }
+
+            if (!collision.IsTouching(topTriggerCol))
+            {
+                PlayerState.IsTouchingTop = false;
+            }
+        }
         //Debug.Log(collision.IsTouchingLayers(LayerMask.NameToLayer("Level")));
     }
     

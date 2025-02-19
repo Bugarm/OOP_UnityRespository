@@ -128,12 +128,18 @@ MonoBehaviour:
   placeableObjects:
   - id: FoodObj
     prefab: {fileID: 6058577865697632578, guid: d2e7a475096256843b47a57ac5df3172, type: 3}
-  - id: ScoreObj
-    prefab: {fileID: 5392201174721124192, guid: 1db92bcbe06bd6b489c908f3f297bb80, type: 3}
   - id: SkeleChains
     prefab: {fileID: 1819696704134704814, guid: 54e84449482e64d43ad6a46d69e7e2ab, type: 3}
   - id: BoxObj
     prefab: {fileID: 1090065876558376771, guid: 935a8bdd89223ed449cfb97613b94f35, type: 3}
+  - id: ScoreObj5
+    prefab: {fileID: 5392201174721124192, guid: 1db92bcbe06bd6b489c908f3f297bb80, type: 3}
+  - id: ScoreObj10
+    prefab: {fileID: 5392201174721124192, guid: cc7e605da40ad694c9ca4eb1fef4e7b3, type: 3}
+  - id: ScoreObj50
+    prefab: {fileID: 5392201174721124192, guid: 5dfb8012a0968394c92e696d5a3d9a5b, type: 3}
+  - id: ScoreObj100
+    prefab: {fileID: 5392201174721124192, guid: 515c7b56fbf88ad479093fd8d8ae68ee, type: 3}
 --- !u!114 &4120758360413929071
 MonoBehaviour:
   m_ObjectHideFlags: 0

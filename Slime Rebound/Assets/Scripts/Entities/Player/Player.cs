@@ -62,7 +62,7 @@ public class Player : Singleton<Player>
     private bool offLedge;
     private bool disableMove;
 
-    private Coroutine ledgeDelayRoutine, jumpRoutine, dashRoutine, poundRoutine, attackRoutine, attackJumpRoutine, headAttackRoutine, bounceRoutine, slideRoutine, stickModeRoutine;
+    private Coroutine ledgeDelayRoutine, slideRoutine, jumpRoutine, dashRoutine, poundRoutine, attackRoutine, attackJumpRoutine, headAttackRoutine, bounceRoutine, stickModeRoutine;
 
     protected override void Awake()
     {
@@ -208,8 +208,6 @@ public class Player : Singleton<Player>
             PlayerState.IsBounceMode = false;
         }
 
-        //
-
     }
 
     void PlayerAcceleration()
@@ -300,70 +298,54 @@ public class Player : Singleton<Player>
         if (disableMove == false)
         {
             // Run
-            if ((Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) && PlayerState.IsPound == false)
-        {
-            PlayerState.IsRun = true;
-
-            if (PlayerState.IsCrouch == false && PlayerState.IsSlide == false)
+            if ((Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) && PlayerState.IsPound == false && PlayerState.IsCrouch == false && PlayerState.IsSlide == false)
             {
+                PlayerState.IsRun = true;
                 speed = runSpeed;
-            }
 
-        }
+            }
 
             // Crouch & Slide & Jump Attack
             if (Input.GetKey(KeyCode.S) && PlayerState.IsHeadAttack == false && PlayerState.IsBounceMode == false)
-        {
-            if (PlayerState.IsStickActive == false && PlayerState.IsTouchingGround == true)
             {
-
-                // Collider Changes
-                PlayerCollision("Crouch");
-
-                if (PlayerState.IsAttackJump == false)
-                { 
-                    PlayerAnimationManager.Instance.PlayAnimation("crouch");
-                }
-
-                wallCollision.offset = new Vector2(0.4836431f, -0.55f);
-
-                // Slide
-                if (PlayerState.IsRun == true)
+                if (PlayerState.IsStickActive == false && PlayerState.IsTouchingGround == true)
                 {
-                    PlayerState.IsSlide = true;
 
-                    speed -= Time.deltaTime + 0.025f;
+                    // Collider Changes
+                    PlayerCollision("Crouch");
 
-                    // Reset back to crouch when sliding has depleted
-                    if(speed <= 0)
-                    {
-                        PlayerState.IsRun = false;
-                        PlayerState.IsSlide = false;
+                    if (PlayerState.IsAttackJump == false)
+                    { 
+                        PlayerAnimationManager.Instance.PlayAnimation("crouch");
                     }
 
-                }
-                
-                if (PlayerState.IsSlide == false)
-                {
-                    PlayerState.IsSlide = false;
-                    PlayerState.IsCrouch = true;
+                    wallCollision.offset = new Vector2(0.4836431f, -0.55f);
 
-                    speed = walkSpeed - 2;
-                }
 
-                // Attack Jump
-                if (Input.GetKeyDown(KeyCode.Space))
-                {
-
-                    if (attackJumpRoutine == null)
+                    if (Input.GetKeyDown(KeyCode.S) && PlayerState.IsRun == true && slideRoutine == null && PlayerState.IsCrouch == false)
                     {
-                        attackJumpRoutine = StartCoroutine(AttackJumpFunc());
+                        slideRoutine = StartCoroutine(SlideFunc());
                     }
+
+                    if (PlayerState.IsSlide == false)
+                    {
+                        PlayerState.IsCrouch = true;
+                        speed = walkSpeed / 2;
+                    }
+
+                    // Attack Jump
+                    if (Input.GetKeyDown(KeyCode.Space) && PlayerState.IsTouchingTop == false)
+                    {
+
+                        if (attackJumpRoutine == null)
+                        {
+                            attackJumpRoutine = StartCoroutine(AttackJumpFunc());
+                        }
+                    }
+
+
                 }
-
-
             }
-        }
 
             //Normal movement
             if (PlayerState.IsStickActive == false && PlayerState.IsDash == false && PlayerState.IsBounceMode == false)
@@ -372,7 +354,11 @@ public class Player : Singleton<Player>
                 if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.D) )
                 {
                     dirX = 0;
-                    PlayerAnimationManager.Instance.PlayAnimation("idle");
+
+                    if(PlayerState.IsSlide == false && PlayerState.IsCrouch == false)
+                    { 
+                        PlayerAnimationManager.Instance.PlayAnimation("idle");
+                    }
 
                 }
                 else if (Input.GetKey(KeyCode.A) && PlayerState.IsTouchingWall == false)
@@ -413,7 +399,7 @@ public class Player : Singleton<Player>
             // Jump
             if (Input.GetKeyDown(KeyCode.Space) && attackJumpRoutine == null && PlayerState.IsTouchingTop == false && PlayerState.IsPound == false)
             {
-                if (ledgeDelayRoutine == null)
+                if (ledgeDelayRoutine == null && jumpTimes <= 1)
                 {
                     ledgeDelayRoutine = StartCoroutine(LedgeDelay());
                 }
@@ -582,18 +568,19 @@ public class Player : Singleton<Player>
                 
                 if ((PlayerState.IsCrouch == true || PlayerState.IsSlide == true) )
                 {
-                    if(PlayerState.IsTouchingTop == false)
-                    { 
+                    if (PlayerState.IsTouchingTop == false)
+                    {
                         PlayerState.IsSlide = false;
                         PlayerState.IsCrouch = false;
-                    
+
                         // Collider Changes
                         PlayerCollision("Idle");
 
                         speed = walkSpeed;
-                    
+
                         wallCollision.offset = new Vector2(0.4836431f, -0.2430587f);
                     }
+
                 }
                 
             }
@@ -719,6 +706,32 @@ public class Player : Singleton<Player>
         ledgeDelayRoutine = null;
     }
 
+    IEnumerator SlideFunc()
+    {
+        PlayerState.IsSlide = true;
+
+        while (PlayerState.IsSlide == true )
+        {
+            yield return new WaitForSeconds(0.01f);
+            // Slide
+            speed -= Time.deltaTime + 0.045f;
+
+            // Reset back to crouch when sliding has depleted
+            if (speed <= 0)
+            {
+                PlayerState.IsSlide = false;
+                PlayerState.IsCrouch = true;
+                PlayerState.IsRun = false;
+            }
+        }
+
+        PlayerState.IsSlide = false;
+        PlayerState.IsCrouch = true;
+        PlayerState.IsRun = false;
+
+        slideRoutine = null;
+    }
+
     IEnumerator StickVelocity()
     {
         float timer = 0;
@@ -775,7 +788,10 @@ public class Player : Singleton<Player>
         {
             wallCollision.offset = new Vector2(0.72f, -0.2430587f);
 
-            GameManager.Instance.UpdateBounces(bounces, false);
+            if (GameObject.FindAnyObjectByType<GameManager>() != null)
+            {
+                GameManager.Instance.UpdateBounces(bounces, false);
+            }
 
             PlayerCollision("Bounce");
             AttackTrigger("Bounce");
@@ -784,15 +800,18 @@ public class Player : Singleton<Player>
             playerRB.gravityScale = 1.7f;
             playerRB.velocity = new Vector2(playerRB.velocity.x,2f);
 
-            if (GameManager.Instance.OutbounceUIRoutine != null)
+            if (GameObject.FindAnyObjectByType<GameManager>() != null)
             {
-                StopCoroutine(GameManager.Instance.OutbounceUIRoutine);
-                GameManager.Instance.OutbounceUIRoutine = null;
-            }
+                if (GameManager.Instance.OutbounceUIRoutine != null)
+                {
+                    StopCoroutine(GameManager.Instance.OutbounceUIRoutine);
+                    GameManager.Instance.OutbounceUIRoutine = null;
+                }
 
-            if (GameManager.Instance.InbounceUIRoutine == null)
-            {
-                GameManager.Instance.InbounceUIRoutine = StartCoroutine(GameManager.Instance.FadeInBounceUI());
+                if (GameManager.Instance.InbounceUIRoutine == null)
+                {
+                    GameManager.Instance.InbounceUIRoutine = StartCoroutine(GameManager.Instance.FadeInBounceUI());
+                }
             }
         }
 
@@ -818,7 +837,11 @@ public class Player : Singleton<Player>
                     oldPos = playerSprite.transform.position.x;
                     failedBounces = 0;
                     bounces++;
-                    GameManager.Instance.UpdateBounces(bounces,false);
+
+                    if (GameObject.FindAnyObjectByType<GameManager>() != null)
+                    {
+                        GameManager.Instance.UpdateBounces(bounces, false);
+                    }
 
                     Vector3 look = player.transform.localScale.x == 1 ? Vector3.right : Vector3.left;
 
@@ -843,7 +866,10 @@ public class Player : Singleton<Player>
             // Stops when player does enough failed wall bounces
             if (failedBounces >= 3)
             {
-                GameManager.Instance.UpdateBounces(bounces, true);
+                if (GameObject.FindAnyObjectByType<GameManager>() != null)
+                {
+                    GameManager.Instance.UpdateBounces(bounces, true);
+                }
                 PlayerState.IsBounceMode = false;
                 hasFailed = true;
             }
@@ -858,26 +884,28 @@ public class Player : Singleton<Player>
 
             wallCollision.offset = new Vector2(0.4836431f, -0.2430587f);
 
-            if (GameManager.Instance.InbounceUIRoutine != null)
-            { 
-                StopCoroutine(GameManager.Instance.InbounceUIRoutine);
-                GameManager.Instance.InbounceUIRoutine = null;
-            }
-
-            if (GameManager.Instance.OutbounceUIRoutine == null)
+            if (GameObject.FindAnyObjectByType<GameManager>() != null)
             {
-                GameManager.Instance.OutbounceUIRoutine = StartCoroutine(GameManager.Instance.FadeOutBounceUI());
-            }
+                if (GameManager.Instance.InbounceUIRoutine != null)
+                {
+                    StopCoroutine(GameManager.Instance.InbounceUIRoutine);
+                    GameManager.Instance.InbounceUIRoutine = null;
+                }
 
-            if(hasFailed == false || GameData.TotalBounces < bounces)
-            { 
-                GameManager.Instance.BouncesTotalCounted(bounces,false);
-            }
-            else
-            {
-                GameManager.Instance.BouncesTotalCounted(bounces, true);
-            }
+                if (GameManager.Instance.OutbounceUIRoutine == null)
+                {
+                    GameManager.Instance.OutbounceUIRoutine = StartCoroutine(GameManager.Instance.FadeOutBounceUI());
+                }
 
+                if (hasFailed == false || GameData.TotalBounces < bounces)
+                {
+                    GameManager.Instance.BouncesTotalCounted(bounces, false);
+                }
+                else
+                {
+                    GameManager.Instance.BouncesTotalCounted(bounces, true);
+                }
+            }
             PlayerCollision("Idle");
             AttackTrigger("Reset");
 

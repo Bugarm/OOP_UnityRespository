@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7852371494760876445}
   - component: {fileID: 2210648831431277780}
   m_Layer: 12
-  m_Name: ScoreIncrease
+  m_Name: 100ScoreIncrease3
   m_TagString: Collectables
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -77,7 +77,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 1, g: 0.9780377, b: 0, a: 1}
+  m_Color: {r: 0.94275093, g: 0, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -103,7 +103,7 @@ CircleCollider2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_LayerOverridePriority: 0
+  m_LayerOverridePriority: 100
   m_ForceSendLayers:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -134,7 +134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc38a25262f055b4b9a9af2bf8959f92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  score: 20
+  customScore: 100
 --- !u!95 &2210648831431277780
 Animator:
   serializedVersion: 5

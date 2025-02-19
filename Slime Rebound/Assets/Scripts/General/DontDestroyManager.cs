@@ -119,9 +119,12 @@ public class DontDestroyManager : Singleton<DontDestroyManager>
             SceneManager.LoadScene(level);
 
         }
+
+
         yield return new WaitForSeconds(0.35f);
         CameraFollow.Instance.UpdateCam();
 
+        BackgroundScroll.Instance.ResetBackGroundPos();
 
         while (blackTrans.color.a >= 0)
         {

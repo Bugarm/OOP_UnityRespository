@@ -68,11 +68,13 @@ public class BoxScript : MonoBehaviour
     private IEnumerator DestroyAnim()
     {
 
-        isDestroyed = true; 
+        isDestroyed = true;
 
-        GameData.Score += score;
-        GameManager.Instance.DisplayScore();
-
+        if (GameObject.FindAnyObjectByType<GameManager>() != null)
+        {
+            GameData.Score += score;
+            GameManager.Instance.DisplayScore();
+        }
         boxColl.isTrigger = true;
         boxColl.gameObject.GetComponent<Rigidbody2D>().gravityScale = 0;
 
