@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5498156785705889884}
   - component: {fileID: 3245600463637309691}
   m_Layer: 0
-  m_Name: ScoreSpawner
+  m_Name: ScoreSpawner20
   m_TagString: Untagged
   m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -45,3 +45,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 5392201174721124192, guid: 1db92bcbe06bd6b489c908f3f297bb80, type: 3}
+  customScore: 20

@@ -6,6 +6,10 @@ using UnityEngine.SceneManagement;
 public class LevelDoor : Door
 {
     public string level;
+    public int id;
+    public bool isBonus;
+    public bool isDisableOnExit;
+
     // Start is called before the first frame update
     protected override void Start()
     {
@@ -19,7 +23,10 @@ public class LevelDoor : Door
         {
             if (Input.GetKeyDown(KeyCode.W))
             {
-                SceneSwitchManager.Instance.SwitchToLevel(level);   
+                GameData.SceneTransID = id;
+                GameData.HasLevelDoor = true;
+                SceneSwitchManager.Instance.SwitchToLevel(level);
+
             }
         }
     }

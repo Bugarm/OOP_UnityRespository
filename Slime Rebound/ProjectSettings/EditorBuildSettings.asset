@@ -21,6 +21,15 @@ EditorBuildSettings:
     path: Assets/Scenes/TestRoom/TestRoom2.unity
     guid: 720edf410b97e0e45b983efe06c9a4f6
   - enabled: 1
+    path: Assets/Scenes/BonusRooms/Bonus1.unity
+    guid: 9dfc7eb2d385304478a3e8b78c608033
+  - enabled: 1
+    path: Assets/Scenes/BonusRooms/Bonus2.unity
+    guid: 0333322bcb437874eb5a926393842a46
+  - enabled: 1
+    path: Assets/Scenes/BonusRooms/BonusTemp.unity
+    guid: 94d717178abadca458aacd6b7f25e04b
+  - enabled: 1
     path: Assets/Scenes/HUB/HUB.unity
     guid: e819201b9a94718429466276444f2766
   - enabled: 1

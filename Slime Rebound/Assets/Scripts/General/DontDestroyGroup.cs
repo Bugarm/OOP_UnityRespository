@@ -214,45 +214,12 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
         player = FindAnyObjectByType<Player>().gameObject;
         // Spawns in the starting Door
         GameObject[] doorStart = GameObject.FindGameObjectsWithTag("Doors");
+        GameObject[] levelDoorStart = GameObject.FindGameObjectsWithTag("LevelDoor");
         sceneTrigger = GameObject.FindGameObjectsWithTag("SceneTrigger");
 
         //Debug.Log(GameData.HasEnteredDoor + " " + GameData.HasEnteredScreneTrig);
-        
-        if (GameData.HasEnteredDoor == true && GameData.HasEnteredScreneTrig == false)
-        {
 
-            if (doorStart == null)
-            {
-                player.transform.position = new Vector3(0, 0, 0);
-                GameData.PlayerPos = new Vector3(0, 0, 0);
-            }
-            else
-            {
-                foreach (GameObject door in doorStart)
-                {
-                    DoorRoomSwitch doorID = door.GetComponent<DoorRoomSwitch>();
-                    
-                    if (GameData.DoorID == doorID.id)
-                    {
-                        player.transform.position = new Vector3(door.transform.position.x, door.transform.position.y - 0.4f, 0);
-                        GameData.PlayerPos = new Vector3(door.transform.position.x, door.transform.position.y - 0.4f, 0);
-                        GameData.HasEnteredDoor = false;
-                        
-                    }
-                }
-            }
-
-            // Reset Player Velocity on Scene Loaded
-            Player.Instance.ResetPlayerVel();
-
-            PlayerState.IsRun = false;
-            PlayerState.IsBounceMode = false;
-            PlayerState.IsStickActive = false;
-            PlayerState.IsHeadAttack = false;
-            PlayerState.IsHeadThrown = false;
-        }
-
-        else if (GameData.HasEnteredDoor == false && GameData.HasEnteredScreneTrig == true)
+        if (GameData.HasEnteredScreneTrig == true)
         {
             //Debug.Log(GameData.SceneTransID);
 
@@ -277,6 +244,71 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
             }
 
         }
+
+        else
+        {
+            bool enterCheck = false;
+
+            if (levelDoorStart == null && GameData.HasLevelDoor == true)
+            {
+                enterCheck = true;
+            }
+
+            if (doorStart == null && GameData.HasEnteredDoor == true)
+            {
+                player.transform.position = new Vector3(0, 0, 0);
+                GameData.PlayerPos = player.transform.position;
+            }
+            
+            if(GameData.HasEnteredDoor == true || enterCheck == true)
+            { 
+                foreach (GameObject door in doorStart)
+                {
+                    DoorRoomSwitch doorID = door.GetComponent<DoorRoomSwitch>();
+
+                    if (GameData.DoorID == doorID.id)
+                    {
+                        player.transform.position = new Vector3(door.transform.position.x, door.transform.position.y - 0.4f, 0);
+                        GameData.PlayerPos = new Vector3(door.transform.position.x, door.transform.position.y - 0.4f, 0);
+                        GameData.HasEnteredDoor = false;
+                        enterCheck = false;
+
+
+                    }
+                }
+            }
+
+            if (GameData.HasLevelDoor == true)
+            {
+                foreach (GameObject levelDoor in levelDoorStart)
+                {
+                    LevelDoor lvlDoor = levelDoor.GetComponent<LevelDoor>();
+
+                    if (GameData.SceneTransID == lvlDoor.id && lvlDoor.isBonus == true)
+                    {
+                        player.transform.position = new Vector3(lvlDoor.transform.position.x, lvlDoor.transform.position.y - 0.4f, 0);
+                        GameData.PlayerPos = new Vector3(lvlDoor.transform.position.x, lvlDoor.transform.position.y - 0.4f, 0);
+                        GameData.HasLevelDoor = false;
+
+                        if (lvlDoor.isDisableOnExit == true)
+                        {
+                            // Maybe add animation here
+                            lvlDoor.gameObject.SetActive(false);
+                        }
+                    }
+                }
+            }
+
+            // Reset Player Velocity on Scene Loaded
+            Player.Instance.ResetPlayerVel();
+
+            PlayerState.IsRun = false;
+            PlayerState.IsBounceMode = false;
+            PlayerState.IsStickActive = false;
+            PlayerState.IsHeadAttack = false;
+            PlayerState.IsHeadThrown = false;
+        }
+        
     }
 
 

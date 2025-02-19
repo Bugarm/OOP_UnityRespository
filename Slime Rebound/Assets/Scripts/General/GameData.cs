@@ -18,6 +18,7 @@ public abstract class GameData : MonoBehaviour
 
     private static bool _hasEnteredDoor = true;
     private static bool _hasEnteredScreneTrig = false;
+    private static bool _hasLevelDoor = false;
 
 
     // High Score Varibles
@@ -38,7 +39,13 @@ public abstract class GameData : MonoBehaviour
         get { return _hasEnteredDoor; } 
         set { _hasEnteredDoor = value; }
     }
-    
+
+    public static bool HasLevelDoor
+    {
+        get { return _hasLevelDoor; }
+        set { _hasLevelDoor = value; }
+    }
+
     public static bool HasEnteredScreneTrig
     {
         get { return _hasEnteredScreneTrig; }

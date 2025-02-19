@@ -2648,7 +2648,7 @@ GameObject:
   - component: {fileID: 5565871211069255420}
   m_Layer: 0
   m_Name: LevelDoor
-  m_TagString: Untagged
+  m_TagString: LevelDoor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2667,7 +2667,7 @@ GameObject:
   - component: {fileID: 5565871210819841458}
   m_Layer: 0
   m_Name: LevelDoor (1)
-  m_TagString: Untagged
+  m_TagString: LevelDoor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

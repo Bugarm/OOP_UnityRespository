@@ -68,7 +68,7 @@ public class FakeWalls : MonoBehaviour
     private IEnumerator FadeEffect()
     {
 
-        while (spriteRenderer.color.a >= 0.5)
+        while (spriteRenderer.color.a >= 0.25f)
         {
             // Fade Out
             spriteRenderer.color = new Color(spriteRenderer.color.r, spriteRenderer.color.b, spriteRenderer.color.g, spriteRenderer.color.a - Time.deltaTime - 0.005f);

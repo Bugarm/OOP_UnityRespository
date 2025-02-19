@@ -8,6 +8,8 @@ public class PrefabSpawner : MonoBehaviour
     private GameObject thisObj;
     private SpriteRenderer thisRenderer;
 
+    public int customScore;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -33,6 +35,29 @@ public class PrefabSpawner : MonoBehaviour
         GameObject obj = Instantiate(prefab, thisObj.transform.position, Quaternion.identity);
 
         GameObject group = GameObject.Find("Objects");
+
+        // Custom Score Types
+        if(obj.name.StartsWith("ScoreIncrease"))
+        {
+            obj.GetComponent<ScoreItem>().score = customScore;
+
+            if (customScore >= 100)
+            {
+                obj.GetComponent<SpriteRenderer>().color = Color.green;
+                obj.transform.localScale = new Vector3(0.95f, 0.95f, 0.95f);
+            }
+            else if (customScore >= 50)
+            { 
+                obj.GetComponent<SpriteRenderer>().color = Color.magenta;
+                obj.transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
+            }
+            else if (customScore <= 5)
+            {
+                obj.GetComponent<SpriteRenderer>().color = Color.blue;
+                obj.transform.localScale = new Vector3(0.55f, 0.55f, 0.55f);
+            }
+
+        }
 
         if (group != null)
         {

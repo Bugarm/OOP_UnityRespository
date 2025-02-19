@@ -72,7 +72,7 @@ public class Player : Singleton<Player>
 
         throwArrow.SetActive(false);
         
-        jumpPower = 9.5f;
+        jumpPower = 10.5f;
         attackJumpPower = 10.4f;
     }
 
@@ -461,8 +461,14 @@ public class Player : Singleton<Player>
         // Stick to wall mode
         if (Input.GetKeyDown(KeyCode.L) && PlayerState.IsCrouch == false && PlayerState.IsHeadAttack == false && PlayerState.IsBounceMode == false)
         {
+
             if(PlayerState.IsTouchingWall == true)
-            { 
+            {
+                if(PlayerState.IsStickActive == true)
+                {
+                    PlayerState.IsStickActive = false;
+                }
+
                 if (stickModeRoutine == null)
                 {
                     stickModeRoutine = StartCoroutine(StickVelocity());
