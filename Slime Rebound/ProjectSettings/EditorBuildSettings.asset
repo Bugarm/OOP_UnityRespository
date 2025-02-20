@@ -17,7 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TestRoom/TestRoom1.unity
     guid: f12b2da20a0d20a47bbb7c24cc1f8a21
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/TestRoom/TestRoom2.unity
     guid: 720edf410b97e0e45b983efe06c9a4f6
   - enabled: 1
@@ -37,7 +37,7 @@ EditorBuildSettings:
     guid: 0e3b9155b569c8f429806c9e598446d2
   - enabled: 1
     path: Assets/Scenes/HUB/HUB2.unity
-    guid: 1e7c68216905c864c84c2de4c22c6951
+    guid: 3ebd41cd8dd98cf4c932fa694a2e9f16
   - enabled: 1
     path: Assets/Scenes/Menu/MainMenu.unity
     guid: d416f0a78a9e4c447b02a7fb233cb1df

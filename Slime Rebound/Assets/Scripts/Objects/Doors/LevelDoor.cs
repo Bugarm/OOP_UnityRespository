@@ -23,6 +23,12 @@ public class LevelDoor : Door
         {
             if (Input.GetKeyDown(KeyCode.W))
             {
+                PlayerState.DisableAllMove = true;
+
+                GameManager.Instance.sceneSwitch = true;
+                GameData.HasEnteredDoor = false;
+                GameData.HasEnteredScreneTrig = false;
+
                 GameData.SceneTransID = id;
                 GameData.HasLevelDoor = true;
                 SceneSwitchManager.Instance.SwitchToLevel(level);

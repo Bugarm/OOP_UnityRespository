@@ -12,9 +12,6 @@ public class DontDestroyManager : Singleton<DontDestroyManager>
 
     [SerializeField] private GameObject levelDontDest;
     [SerializeField] private GameObject hubDontDest;
-    GameObject blackObj;
-    Image blackTrans;
-
 
     public float offset;
 

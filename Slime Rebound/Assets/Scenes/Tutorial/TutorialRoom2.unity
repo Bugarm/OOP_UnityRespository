@@ -26293,7 +26293,7 @@ GameObject:
   - component: {fileID: 908854626993629635}
   - component: {fileID: 4648098349482690364}
   - component: {fileID: 5424288299717666117}
-  m_Layer: 8
+  m_Layer: 18
   m_Name: TextPopUp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26444,7 +26444,7 @@ GameObject:
   - component: {fileID: 2250117025288182659}
   - component: {fileID: 5991968003343676796}
   - component: {fileID: 6404139065558046469}
-  m_Layer: 8
+  m_Layer: 18
   m_Name: TextPopUp (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

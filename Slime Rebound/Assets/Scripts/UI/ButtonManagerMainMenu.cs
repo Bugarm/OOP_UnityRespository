@@ -34,22 +34,22 @@ public class ButtonManagerMainMenu : MonoBehaviour
     void QuitGame()
     {
         Debug.Log("You have clicked the exit button");
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-                        Application.Quit();
+        #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+        #else
+                Application.Quit();
     
-#endif
+        #endif
     }
 
     void OptionState()
     {
-        SceneManager.LoadScene("OptionScreen");
+        SceneSwitchManager.Instance.SwitchToLevel("OptionScreen");
     }
 
     void StartGame()
     {
-        SceneManager.LoadScene("HUB");
+        SceneSwitchManager.Instance.SwitchToLevel("HUB");
     }
 
 }

@@ -85,7 +85,7 @@ public class DontDestroyHUB : Singleton<DontDestroyHUB>
             player.transform.position = new Vector3(doorlevel.transform.position.x, doorlevel.transform.position.y - 0.4f, 0);
             GameData.PlayerPos = new Vector3(doorlevel.transform.position.x, doorlevel.transform.position.y - 0.4f, 0);
         }
-
+        PlayerState.DisableAllMove = false;
     }
 
     // Update is called once per frame

@@ -97,6 +97,7 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
         exitDoor = GameObject.FindGameObjectWithTag("ExitDoor");
         exitTrigger = GameObject.FindGameObjectWithTag("ExitTrigger");
 
+        PlayerState.DisableAllMove = false;
     }
 
     // Update is called once per frame
@@ -283,7 +284,6 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
                 foreach (GameObject levelDoor in levelDoorStart)
                 {
                     LevelDoor lvlDoor = levelDoor.GetComponent<LevelDoor>();
-
                     if (GameData.SceneTransID == lvlDoor.id && lvlDoor.isBonus == true)
                     {
                         player.transform.position = new Vector3(lvlDoor.transform.position.x, lvlDoor.transform.position.y - 0.4f, 0);
