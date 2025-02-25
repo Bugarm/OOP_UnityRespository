@@ -86,9 +86,8 @@ public class EnemyGround : Default_Entity
     }
 
     // Start is called before the first frame update
-    protected override void Start()
+    void Start()
     {
-        base.Start();
         // stops rotation
         rb.freezeRotation = true;
 
@@ -129,8 +128,9 @@ public class EnemyGround : Default_Entity
         else if(disableAI == false)
         {
             rb.velocity = Vector3.zero;
+
         }
-        
+
     }
 
     // Pointer Mode Functions //
@@ -283,7 +283,7 @@ public class EnemyGround : Default_Entity
     {
         if (disableAI == false && outOfRange == false && enemy.activeInHierarchy == true)
         {
-            if (enemy.activeInHierarchy == true && (collision.CompareTag("Level") || collision.CompareTag("Platforms") || collision.CompareTag("FloorBreakable")) && collision.IsTouching(wallDectection) && collision.IsTouching(jumpDectection))
+            if (enemy.activeInHierarchy == true && (collision.CompareTag("Level") || collision.CompareTag("OneWay") || collision.CompareTag("Box") || collision.CompareTag("Platforms") || collision.CompareTag("FloorBreakable")) && collision.IsTouching(wallDectection) && collision.IsTouching(jumpDectection))
             {
                 TurnFunc();
             }
@@ -317,7 +317,7 @@ public class EnemyGround : Default_Entity
             isOnGround = false;
 
             // Ledge Decection
-            if ((collision.CompareTag("Level") || collision.CompareTag("Platforms") || collision.CompareTag("FloorBreakable")))
+            if ((collision.CompareTag("Level") || collision.CompareTag("OneWay") || collision.CompareTag("Box") || collision.CompareTag("Platforms") || collision.CompareTag("FloorBreakable")))
             {
                 if (freeRoamMode == false)
                 {

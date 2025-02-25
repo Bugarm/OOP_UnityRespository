@@ -5,10 +5,18 @@ using UnityEngine;
 public abstract class PlayerState : MonoBehaviour
 {
     private static bool _isJump, _isDash, _isSlide, _isMove, _isRun, _isCrouch, _isPound, _isAttack, _isAttackJump, _isHeadAttack, _isHeadThrown;
-    private static bool _isTouchingWall, _isTouchingGround, _isTouchingPlatform, _isTouchingTop;
+    private static bool _isTouchingWall, _isTouchingGround, _isTouchingPlatform = false, _isTouchingTop;
     private static bool _isDamaged, _isFakeWallAllowed, _inFakeWall;
     private static bool _isBounceMode, _isHeadAttackMode, _isStickActive;
     private static bool _disableAllMove;
+    private static bool _isDestroyObj;
+
+
+    public static bool IsDestroyedObj
+    {
+        get { return _isDestroyObj; }
+        set { _isDestroyObj = value; }
+    }
 
     //
     public static bool DisableAllMove

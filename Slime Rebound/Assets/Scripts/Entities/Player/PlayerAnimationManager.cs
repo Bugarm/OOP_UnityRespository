@@ -41,6 +41,11 @@ public class PlayerAnimationManager : Singleton<PlayerAnimationManager>
                 PlayAnimation("idle");
             }
 
+            if(PlayerState.IsTouchingTop == true && (PlayerState.IsCrouch == true || PlayerState.IsSlide == true))
+            {
+                PlayAnimation("crouch");
+            }
+
             
         }
 

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.UIElements;
 using static UnityEngine.EventSystems.EventTrigger;
 
 public class Player : Singleton<Player>
@@ -89,11 +90,25 @@ public class Player : Singleton<Player>
         AttackTrigger("Reset");
     }
 
+    // to make it smoother
+    private void FixedUpdate()
+    {
+        if (PlayerState.IsTouchingPlatform == true && PlayerState.IsJump == false && PlayerState.IsDamaged == false && PlayerState.IsMove == false)
+        {
+
+            float platofrmPos = DetectionScript.Instance.GetPlatform().transform.position.x;
+            
+            //Debug.Log(platofrmPos);
+
+            player.transform.position = Vector3.MoveTowards(player.transform.position, new Vector2(platofrmPos, player.transform.position.y), Time.deltaTime * 4.5f);
+        }
+    }
+
     bool isMoving;
     // Update is called once per frame
     void Update()
     {
-
+        //Debug.Log(PlayerState.IsTouchingTop);
         //Debug.Log(GameData.HasSceneTransAnim);
         if (PlayerState.IsDamaged == true)
         {
@@ -101,14 +116,14 @@ public class Player : Singleton<Player>
         }
         else
         {
-            if(PlayerState.DisableAllMove == false)
+            if (PlayerState.DisableAllMove == false)
             { 
                 KeyPressed();
                 ResetChecks();
                 KeyReleased();
             }
             PlayerAcceleration();
-            
+
             if (PlayerState.IsBounceMode == true)
             {
                 playerRB.velocity = new Vector3(dirX, playerRB.velocity.y, 0);
@@ -123,7 +138,7 @@ public class Player : Singleton<Player>
 
         if (PlayerState.IsPound == false && PlayerState.IsSlide == false && PlayerState.IsBounceMode == false && PlayerState.IsStickActive == false && PlayerState.IsDamaged == false && PlayerState.IsCrouch == false)
         {
-            if (PlayerState.IsTouchingGround == false && playerRB.velocity.y == 0)
+            if ((PlayerState.IsTouchingGround == false && PlayerState.IsTouchingPlatform == false) && playerRB.velocity.y == 0)
             {
                 PlayerAnimationManager.Instance.PlayAnimation("jump");
             }
@@ -223,7 +238,7 @@ public class Player : Singleton<Player>
                     // Reset Velocity when it hits ground
                     dirY = 0;
                 }
-                else 
+                else if (playerRB.velocity.y > -9f)
                 {
                     // Player falls down faster every frame
                     dirY -= 0.15f;
@@ -246,15 +261,15 @@ public class Player : Singleton<Player>
                 }
             }
             
-            
             else if (PlayerState.IsStickActive == true)
             {
                 
-                if ((PlayerState.IsTouchingGround == false || PlayerState.IsTouchingPlatform == false) && PlayerState.IsTouchingWall == true)
+                if ((PlayerState.IsTouchingGround == false && PlayerState.IsTouchingPlatform == false) && PlayerState.IsTouchingWall == true)
                 {
                     // Reset Velocity when it hits ground
                     dirY = 0;
                 }
+                
                 else if ((playerRB.velocity.y < 0f) && PlayerState.IsTouchingWall == false && !(playerRB.velocity.y < -9f))
                 {
                     dirY -= 0.15f;
@@ -263,7 +278,6 @@ public class Player : Singleton<Player>
             }
 
         }
-
     }
 
     void KeyPressed()
@@ -308,7 +322,7 @@ public class Player : Singleton<Player>
             // Crouch & Slide & Jump Attack
             if (Input.GetKey(KeyCode.S) && PlayerState.IsHeadAttack == false && PlayerState.IsBounceMode == false)
             {
-                if (PlayerState.IsStickActive == false && PlayerState.IsTouchingGround == true)
+                if (PlayerState.IsStickActive == false && PlayerState.IsDash == false && (PlayerState.IsTouchingGround == true || PlayerState.IsTouchingPlatform == true))
                 {
 
                     // Collider Changes
@@ -336,7 +350,6 @@ public class Player : Singleton<Player>
                     // Attack Jump
                     if (Input.GetKeyDown(KeyCode.Space) && PlayerState.IsTouchingTop == false)
                     {
-
                         if (attackJumpRoutine == null)
                         {
                             attackJumpRoutine = StartCoroutine(AttackJumpFunc());
@@ -355,7 +368,7 @@ public class Player : Singleton<Player>
                 {
                     dirX = 0;
 
-                    if(PlayerState.IsSlide == false && PlayerState.IsCrouch == false)
+                    if(PlayerState.IsSlide == false && PlayerState.IsCrouch == false && PlayerState.IsHeadAttack == false)
                     { 
                         PlayerAnimationManager.Instance.PlayAnimation("idle");
                     }
@@ -372,16 +385,13 @@ public class Player : Singleton<Player>
                 }
                 else if (Input.GetKey(KeyCode.D) && PlayerState.IsTouchingWall == false)
                 {
-
                     PlayerState.IsMove = true;
                     if (PlayerState.IsCrouch == false || PlayerState.IsRun == false)
                     {
                         dirX = speed;
                     }
-
                 }
-
-                
+      
                 if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D) )
                 {
                     if(PlayerState.IsJump == false && PlayerState.IsPound == false && PlayerState.IsCrouch == false 
@@ -391,9 +401,6 @@ public class Player : Singleton<Player>
                         PlayerAnimationManager.Instance.PlayAnimation("walk");
                     }
                 }
-                
-
-
             }
 
             // Jump
@@ -445,7 +452,7 @@ public class Player : Singleton<Player>
         }
         
         // Stick to wall mode
-        if (Input.GetKeyDown(KeyCode.L) && PlayerState.IsCrouch == false && PlayerState.IsHeadAttack == false && PlayerState.IsBounceMode == false)
+        if (Input.GetKeyDown(KeyCode.L) && PlayerState.IsCrouch == false && PlayerState.IsHeadAttack == false && PlayerState.IsBounceMode == false && PlayerState.IsAttackJump == false)
         {
 
             if(PlayerState.IsTouchingWall == true)
@@ -553,7 +560,7 @@ public class Player : Singleton<Player>
         }
         
         // Movement Release
-        if (PlayerState.IsStickActive == false && PlayerState.IsBounceMode == false)
+        if (PlayerState.IsStickActive == false && PlayerState.IsBounceMode == false && PlayerState.IsDash == false)
         {
             // Movement
             if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))
@@ -565,27 +572,20 @@ public class Player : Singleton<Player>
             // Crouch   
             if (!Input.GetKey(KeyCode.S))
             {
-                
-                if ((PlayerState.IsCrouch == true || PlayerState.IsSlide == true) )
+                if (PlayerState.IsTouchingTop == false)
                 {
-                    if (PlayerState.IsTouchingTop == false)
-                    {
-                        PlayerState.IsSlide = false;
-                        PlayerState.IsCrouch = false;
+                    PlayerState.IsSlide = false;
+                    PlayerState.IsCrouch = false;
 
-                        // Collider Changes
-                        PlayerCollision("Idle");
+                    // Collider Changes
+                    PlayerCollision("Idle");
 
-                        speed = walkSpeed;
+                    speed = walkSpeed;
 
-                        wallCollision.offset = new Vector2(0.4836431f, -0.2430587f);
-                    }
+                    wallCollision.offset = new Vector2(0.4836431f, -0.2430587f);
 
                 }
-                
             }
-
-
         }
 
         // Bounce Release
@@ -688,7 +688,6 @@ public class Player : Singleton<Player>
     // Jumping before falling off the ledge
     IEnumerator LedgeDelay()
     {
-
         if (PlayerState.IsTouchingGround == false || PlayerState.IsTouchingPlatform == false)
         {
             offLedge = true;
@@ -728,6 +727,7 @@ public class Player : Singleton<Player>
         PlayerState.IsSlide = false;
         PlayerState.IsCrouch = true;
         PlayerState.IsRun = false;
+        speed = walkSpeed / 2;
 
         slideRoutine = null;
     }
@@ -738,7 +738,7 @@ public class Player : Singleton<Player>
         jumpRoutine = null;
         PlayerState.IsStickActive = true;
 
-        while (PlayerState.IsStickActive == true && PlayerState.IsPound == false && PlayerState.IsTouchingGround == false)
+        while (PlayerState.IsStickActive == true && PlayerState.IsPound == false && (PlayerState.IsTouchingGround == false && PlayerState.IsTouchingPlatform == false))
         {
             if (player.transform.localScale.x == -1)
             {
@@ -752,7 +752,7 @@ public class Player : Singleton<Player>
             yield return new WaitForSeconds(0.02f);
 
             // Check incase player gets stuck in a corner while in stick mode
-            if (PlayerState.IsTouchingGround == false && PlayerState.IsTouchingWall == false)
+            if ((PlayerState.IsTouchingGround == false && PlayerState.IsTouchingPlatform == true) && PlayerState.IsTouchingWall == false)
             { 
                 timer += 0.01f;
                 if(timer > 0.5f)
@@ -826,7 +826,8 @@ public class Player : Singleton<Player>
             // Increases bounce moving speed when holding run
             dirX = player.transform.localScale.x == 1 ? bounceSpeed + extraRunSpeed : -bounceSpeed - extraRunSpeed;
 
-            if (PlayerState.IsTouchingWall == true)
+            // This is where it would bounces back when collding with a wall
+            if (PlayerState.IsTouchingWall == true && GameData.HasEnteredScreneTrig == false)
             {
                 PlayerAnimationManager.Instance.PlayAnimation("squish");
 
@@ -864,7 +865,7 @@ public class Player : Singleton<Player>
             }
 
             // Stops when player does enough failed wall bounces
-            if (failedBounces >= 3)
+            if (failedBounces > 3)
             {
                 if (GameObject.FindAnyObjectByType<GameManager>() != null)
                 {
@@ -1066,7 +1067,6 @@ public class Player : Singleton<Player>
         PlayerCollision("Idle");
         PlayerAnimationManager.Instance.PlayAnimation("pound");
 
-
         // Air Time
         dirX = 0;
         dirY = 0;
@@ -1108,6 +1108,7 @@ public class Player : Singleton<Player>
         AttackTrigger("Normal-Attack");
         PlayerAnimationManager.Instance.PlayAnimation("dash");
         yield return new WaitForSeconds(0.4f);
+        yield return new WaitUntil(() => PlayerState.IsDestroyedObj == false);
         AttackTrigger("Reset");
 
         PlayerState.IsDash = false;
@@ -1119,18 +1120,27 @@ public class Player : Singleton<Player>
 
     IEnumerator JumpFunction()
     {
-        
+        float timeDelay = 0f;
         if(PlayerState.IsBounceMode == false)
         { 
             if(PlayerState.IsStickActive == false)
             { 
                 jumpTimes++;
+                //Debug.Log(jumpTimes);
                 PlayerAnimationManager.Instance.PlayAnimation("jump");
+                //StartCoroutine(AudioManager.Instance.PlayAudio("Pep", player.transform.position, true));
             }
             dirY = jumpPower;
+
+            timeDelay = 0.20f;
         }
+        else
+        {
+            timeDelay = 0.30f;
+        }
+
         PlayerState.IsJump = true;
-        yield return new WaitForSeconds(0.20f);
+        yield return new WaitForSeconds(timeDelay);
         PlayerState.IsJump = false;
 
         if (PlayerState.IsBounceMode == false)
@@ -1141,7 +1151,7 @@ public class Player : Singleton<Player>
         
         if (jumpTimes >= amountOfJumps && PlayerState.IsBounceMode == false && PlayerState.IsStickActive == false)
         {
-            yield return new WaitUntil(() => PlayerState.IsTouchingGround == true);
+            yield return new WaitUntil(() => PlayerState.IsTouchingGround == true || PlayerState.IsTouchingPlatform == true);
             jumpTimes = 0;
             jumpRoutine = null;
 
@@ -1153,7 +1163,8 @@ public class Player : Singleton<Player>
         else
         {
             jumpRoutine = null;
-            yield return new WaitUntil(() => PlayerState.IsTouchingGround == true);
+            yield return new WaitUntil(() => PlayerState.IsTouchingGround == true || PlayerState.IsTouchingPlatform == true);
+            jumpTimes = 0;
 
             if (PlayerState.IsHeadAttack == false && PlayerState.IsBounceMode == false && PlayerState.IsStickActive == false)
             {
@@ -1172,6 +1183,7 @@ public class Player : Singleton<Player>
         
         AttackTrigger("Jump-Attack");
         yield return new WaitForSeconds(0.4f);
+        yield return new WaitUntil(() => PlayerState.IsDestroyedObj == false);
         AttackTrigger("Reset");
         dirY = 0;
         PlayerState.IsAttackJump = false;

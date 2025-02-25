@@ -9,6 +9,7 @@ public class DetectionScript : Singleton<DetectionScript>
 {
     private Rigidbody2D playerRB;
     private Vector3 playerPos;
+    private int touchingBoxes;
 
     [Header("Triggers")]
     public BoxCollider2D wallTrigCol;
@@ -36,6 +37,12 @@ public class DetectionScript : Singleton<DetectionScript>
         
     }
 
+    GameObject platform;
+    public GameObject GetPlatform()
+    {
+        return platform;
+    }
+
     private void OnTriggerStay2D(Collider2D collision)
     {
 
@@ -56,7 +63,7 @@ public class DetectionScript : Singleton<DetectionScript>
         }
 
         // Level Collision
-        if (collision.CompareTag("Level") || collision.CompareTag("SwitchDoor") || collision.CompareTag("Platforms"))
+        if (collision.CompareTag("Level") || collision.CompareTag("SwitchDoor"))
         {
             if (collision.IsTouching(wallTrigCol))
             {
@@ -71,10 +78,8 @@ public class DetectionScript : Singleton<DetectionScript>
             if (collision.IsTouching(topTriggerCol))
             {
                 PlayerState.IsTouchingTop = true;
-            }
-            
+            }   
         }
-
 
         // Box Collision
         if (collision.CompareTag("Box") || collision.CompareTag("FloorBreakable"))
@@ -98,20 +103,48 @@ public class DetectionScript : Singleton<DetectionScript>
 
         if (collision.CompareTag("OneWay"))
         {
-
+                     
             if (collision.IsTouching(floorTrigCol))
             {
                 PlayerState.IsTouchingGround = true;
             }
         }
 
+        if (collision.CompareTag("Platforms"))
+        {
+            if (collision.IsTouching(floorTrigCol))
+            {
+                platform = collision.gameObject;
+                PlayerState.IsTouchingPlatform = true;
+                //Debug.Log("true");
+            }
+
+            if (collision.IsTouching(wallTrigCol))
+            {
+                PlayerState.IsTouchingWall = true;
+            }
+        }
     }
 
-    
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Box") || collision.CompareTag("FloorBreakable"))
+        {
+            if (collision.IsTouching(topTriggerCol) || collision.IsTouching(wallTrigCol))
+            {
+                touchingBoxes++;
+
+                if (touchingBoxes > 0)
+                {
+                    PlayerState.IsDestroyedObj = true;
+                }
+            }
+        }
+    }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if ((collision.CompareTag("Level") || collision.CompareTag("Platforms") || collision.CompareTag("SwitchDoor")) || collision.CompareTag("Box") || collision.CompareTag("FloorBreakable") && DetectionScript.Instance.IsDestroyed() == false)
+        if ((collision.CompareTag("Level") ||  collision.CompareTag("Box") || collision.CompareTag("FloorBreakable") || collision.CompareTag("Platforms") || collision.CompareTag("SwitchDoor")) || collision.CompareTag("Box") || collision.CompareTag("FloorBreakable") && DetectionScript.Instance.IsDestroyed() == false)
         {
             if (!collision.IsTouching(wallTrigCol))
             {
@@ -127,17 +160,28 @@ public class DetectionScript : Singleton<DetectionScript>
             {
                 PlayerState.IsTouchingTop = false;
             }
-
-            
         }
-        
 
-        if (collision.CompareTag("Platforms"))
+        if (collision.CompareTag("FloorBreakable") || collision.CompareTag("Box"))
+        {
+            if (!collision.IsTouching(topTriggerCol))
+            {
+                touchingBoxes--;
+
+                if(touchingBoxes <= 0)
+                {     
+                    PlayerState.IsDestroyedObj = false;
+                }
+            }
+        }
+
+        if (collision.CompareTag("Platforms") )
         {
             if (!collision.IsTouching(floorTrigCol))
             {
-
                 PlayerState.IsTouchingPlatform = false;
+                //Debug.Log("false");
+                
             }
 
             if (!collision.IsTouching(wallTrigCol))
@@ -148,36 +192,12 @@ public class DetectionScript : Singleton<DetectionScript>
 
         if (collision.CompareTag("OneWay"))
         {
-            if (!collision.IsTouching(wallTrigCol))
-            {
-                PlayerState.IsTouchingWall = false;
-            }
-
             if (!collision.IsTouching(floorTrigCol))
             {
-                
                 PlayerState.IsTouchingGround = false;
             }
         }
 
-        // Box Collision
-        if (collision.CompareTag("Box") || collision.CompareTag("FloorBreakable"))
-        {
-            if (!collision.IsTouching(wallTrigCol) )
-            {
-                PlayerState.IsTouchingWall = false;
-            }
-
-            if (!collision.IsTouching(floorTrigCol) )
-            {
-                PlayerState.IsTouchingGround = false;
-            }
-
-            if (!collision.IsTouching(topTriggerCol))
-            {
-                PlayerState.IsTouchingTop = false;
-            }
-        }
         //Debug.Log(collision.IsTouchingLayers(LayerMask.NameToLayer("Level")));
     }
     

@@ -146,9 +146,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boxColl: {fileID: 3110397251741081628}
-  particleBreak: {fileID: 2499312308014208717, guid: a3b1a01b5a6b61948ac7ec14bce670e5, type: 3}
   isDestroyed: 0
   score: 10
+  floorBreak: 0
 --- !u!50 &3234057784423275499
 Rigidbody2D:
   serializedVersion: 4
@@ -161,10 +161,10 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
+  m_Mass: 16.35
+  m_LinearDrag: 2.7
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 1.22
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2

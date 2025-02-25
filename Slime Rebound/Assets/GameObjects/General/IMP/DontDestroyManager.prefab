@@ -46,3 +46,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelDontDest: {fileID: 4843362288353106990, guid: 7ec3bbbe440e9aa4bbc771fc45f66e07, type: 3}
   hubDontDest: {fileID: 5331029488764551588, guid: 92aee8135e689e84897d96752fb0646c, type: 3}
+  menuDest: {fileID: 5331029488764551588, guid: 7b2cdd5665b393448aeebc0fccb38ab9, type: 3}
+  offset: 0

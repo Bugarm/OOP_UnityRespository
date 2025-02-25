@@ -11,8 +11,6 @@ public class DoorRoomSwitch : Door
     public bool hasEntered;
     private bool delay;
 
-    Coroutine delayDoorRoutine;
-
     // Start is called before the first frame update
     protected override void Start()
     {
@@ -22,7 +20,7 @@ public class DoorRoomSwitch : Door
     // Update is called once per frame
     void Update()
     {
-        if (isAtDoor == true && delay == false && GameData.HasEnteredScreneTrig == false)
+        if (isAtDoor == true && GameData.DoorDelay == false && GameData.HasEnteredScreneTrig == false)
         {
             if (Input.GetKeyDown(KeyCode.W) && Player.Instance.RetrurnPos().x == 0 && PlayerState.IsHeadAttack == false)
             {
@@ -35,19 +33,10 @@ public class DoorRoomSwitch : Door
 
                 SceneSwitchManager.Instance.SwitchRoom(switchRoomNum);
                 
-                if(delayDoorRoutine == null)
-                { 
-                    delayDoorRoutine = StartCoroutine(DelayDoorEnter());
-                }
+                
             }
         }
     }
 
-    IEnumerator DelayDoorEnter()
-    {
-        delay = true;
-        yield return new WaitForSeconds(1);
-        delay = false;
-        delayDoorRoutine = null;
-    }
+    
 }

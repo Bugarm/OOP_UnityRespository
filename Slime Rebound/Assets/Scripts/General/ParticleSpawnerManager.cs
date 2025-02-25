@@ -16,18 +16,6 @@ public class ParticleSpawnerManager : Singleton<ParticleSpawnerManager>
         base.Awake();
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public IEnumerator PlayParticle(GameObject particle, Vector2 objPos, Quaternion quat)
     {
         particleGroup = GameObject.Find("ParticleGroup");

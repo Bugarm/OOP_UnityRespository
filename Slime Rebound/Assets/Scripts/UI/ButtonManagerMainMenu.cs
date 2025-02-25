@@ -44,7 +44,7 @@ public class ButtonManagerMainMenu : MonoBehaviour
 
     void OptionState()
     {
-        SceneSwitchManager.Instance.SwitchToLevel("OptionScreen");
+        SceneSwitchManager.Instance.SwitchToLevel("MainMenuOption");
     }
 
     void StartGame()

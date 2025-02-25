@@ -10,18 +10,6 @@ public class ExitTrigger : Singleton<ExitTrigger>
         base.Awake();   
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("PlayerBody"))
@@ -36,14 +24,21 @@ public class ExitTrigger : Singleton<ExitTrigger>
         switch (scene)
         {
             case "TutorialRoom":
-                GameData.Tutorial_HighScore = GameData.Score;
+                if (GameData.Score > GameData.Tutorial_HighScore)
+                {
+                    GameData.Tutorial_HighScore = GameData.Score;
+                    SaveLoadManager.Instance.SaveImportantData();
+                }
                 break;
 
             case "ForestLevel":
-                GameData.Tutorial_HighScore = GameData.Score;
+                if (GameData.Score > GameData.Level1_HighScore)
+                {
+                    GameData.Level1_HighScore = GameData.Score;
+                    SaveLoadManager.Instance.SaveImportantData();
+                }
                 break;
 
         }
-        SaveLoadManager.Instance.SaveImportantData();
     }
 }

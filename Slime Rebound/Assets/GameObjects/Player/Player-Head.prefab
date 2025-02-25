@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 1677882204021933894}
   - component: {fileID: 6653950358542532268}
   m_Layer: 7
-  m_Name: col
+  m_Name: Head-Col
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -198,7 +198,7 @@ GameObject:
   - component: {fileID: 1778861535888218431}
   - component: {fileID: 9111937047940396715}
   m_Layer: 7
-  m_Name: RigidBody
+  m_Name: Head-RB
   m_TagString: PlayerAttack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

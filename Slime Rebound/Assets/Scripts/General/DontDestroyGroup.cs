@@ -52,22 +52,7 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
     void Start()
     {
         maxHP = 10;
-
-        sceneStart = SceneManager.GetActiveScene();
-
-        // Checks if string has a digit
-        if (sceneStart.name.Any(char.IsDigit))
-        {
-            sceneName = sceneStart.name.Substring(0, sceneStart.name.Length - 1);
-        }
-        else
-        {
-            sceneName = sceneStart.name;
-        }
-
-        GameData.LevelState = sceneName;
-
-        SaveLoadManager.Instance.SaveLevelData(sceneName);
+        SaveLoadManager.Instance.SaveLevelData(GameData.LevelState);
 
         GameObject doorStart = GameObject.FindGameObjectWithTag("DoorStart");
         // First first door in the hierarchy (IMP)
@@ -87,9 +72,10 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
             GameData.PlayerPos = new Vector3(door.transform.position.x, door.transform.position.y - 0.4f, 0);
         }
 
+
         if (doOnce == false)
         {
-            HasObjectsSpawnedOnce(sceneStart.name);
+            HasObjectsSpawnedOnce(SceneManager.GetActiveScene().name);
 
             doOnce = true;
         }
@@ -114,9 +100,9 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
         {
             exitDoor = GameObject.FindGameObjectWithTag("ExitDoor");
             exitTrigger = GameObject.FindGameObjectWithTag("ExitTrigger");
-            
 
-            StartCoroutine(DelayLevelDataLoad(scene.name));
+
+            StartCoroutine(DelayLevelDataLoad(SceneManager.GetActiveScene().name));
         }
         else
         {
@@ -139,7 +125,6 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
         yield return new WaitForSeconds(0.1f);
 
         HasObjectsSpawnedOnce(sceneName);
-        BackgroundScroll.Instance.ResetBackGroundPos();
 
         yield return new WaitForSeconds(0.01f);
 
@@ -148,6 +133,7 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
         if (hasObjSpawned == true)
         {
             SaveLoadManager.Instance.LoadLevelData(sceneName);
+            //Debug.Log(sceneName);
             hasObjSpawned = false;
             
         }
@@ -197,7 +183,7 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
                 }
             }
         }
-
+        //Debug.Log(sceneName);
         sceneLoaded.Add(sceneName);
         SaveLoadManager.Instance.SaveLevelData(sceneName);
     }

@@ -18,16 +18,13 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
 
     public void SaveImportantData()
     {
-
         mydata.tutorial_highScore = GameData.Tutorial_HighScore;
         mydata.level1_highScore = GameData.Level1_HighScore;
-
 
         string jsonToSave = JsonUtility.ToJson(mydata);
         //Debug.Log(jsonToSave);
         //Debug.Log(Application.persistentDataPath);
         System.IO.File.WriteAllText(Application.persistentDataPath + "/ImportantData.json", jsonToSave);
-
     }
 
     public void SaveDataCheckPoint(Vector3 playerPos)
@@ -77,7 +74,6 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
         //Debug.Log(loadedJson);
         //Debug.Log(Application.persistentDataPath);
         myLevelData = JsonUtility.FromJson<SerializedLevelData>(loadedJson);
-
     }
 
     public void LoadImportantData()
@@ -100,7 +96,6 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
 
     public void LoadTransData()
     {
-
         if (File.Exists(Application.persistentDataPath + "/TransData.json"))
         {
             string loadedJson = System.IO.File.ReadAllText(Application.persistentDataPath + "/TransData.json");
@@ -109,10 +104,7 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
             mydata = JsonUtility.FromJson<SerializedData>(loadedJson);
 
             GameData.SceneTransID = myTransData.nextSceneID;
-
         }
-
-
     }
 
     public void LoadCheckpointData()
@@ -208,6 +200,7 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
                 myLevelData.saveableObj_Tutorial3 = GetLevelData(sceneName);
                 break;
 
+            // Forest
             case "ForestLevel":
                 myLevelData.saveableObj_ForestLevel = GetLevelData(sceneName);
                 break;
@@ -242,6 +235,7 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
                 Reinstantiate(LevelData.SaveableObj_Tutorial3);
                 break;
 
+            // Forest
             case "ForestLevel":
                 LevelData.SaveableObj_Tutorial = myLevelData.saveableObj_ForestLevel;
                 Reinstantiate(LevelData.SaveableObj_ForestLevel);

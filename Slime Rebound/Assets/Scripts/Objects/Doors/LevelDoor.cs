@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class LevelDoor : Door
 {
+
     public string level;
     public int id;
     public bool isBonus;
@@ -21,7 +23,7 @@ public class LevelDoor : Door
     {
         if (isAtDoor == true)
         {
-            if (Input.GetKeyDown(KeyCode.W))
+            if (Input.GetKeyDown(KeyCode.W) && GameData.HasLevelDoor == false)
             {
                 PlayerState.DisableAllMove = true;
 

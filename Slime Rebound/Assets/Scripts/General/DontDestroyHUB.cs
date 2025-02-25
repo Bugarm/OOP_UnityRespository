@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -29,7 +30,6 @@ public class DontDestroyHUB : Singleton<DontDestroyHUB>
         base.Awake();
 
         DontDestroyOnLoad(this.gameObject);
-
     }
 
     // Scene Loading Managers
@@ -48,20 +48,9 @@ public class DontDestroyHUB : Singleton<DontDestroyHUB>
     // Start is called before the first frame update
     void Start()
     {
-
-        sceneStart = SceneManager.GetActiveScene();
-
-        // Checks if string has a digit
-        if (sceneStart.name.Any(char.IsDigit))
-        {
-            sceneName = sceneStart.name.Substring(0, sceneStart.name.Length - 1);
-        }
-        else
-        {
-            sceneName = sceneStart.name;
-        }
-
-        GameData.LevelState = sceneName;
+        GameData.HasSceneTransAnim = false;
+        GameData.HasEnteredDoor = false;
+        GameData.HasLevelDoor = false;
 
         GameObject doorStart = GameObject.FindGameObjectWithTag("DoorStart");
         GameObject doorlevel = GameObject.FindGameObjectWithTag("LevelDoor");
@@ -86,6 +75,8 @@ public class DontDestroyHUB : Singleton<DontDestroyHUB>
             GameData.PlayerPos = new Vector3(doorlevel.transform.position.x, doorlevel.transform.position.y - 0.4f, 0);
         }
         PlayerState.DisableAllMove = false;
+
+        SaveLoadManager.Instance.LoadImportantData();
     }
 
     // Update is called once per frame
@@ -98,6 +89,7 @@ public class DontDestroyHUB : Singleton<DontDestroyHUB>
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        SaveLoadManager.Instance.LoadImportantData();
 
         if (scene.name.StartsWith("HUB"))
         {

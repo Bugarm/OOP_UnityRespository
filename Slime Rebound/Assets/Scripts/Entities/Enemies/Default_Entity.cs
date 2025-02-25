@@ -8,12 +8,12 @@ public class Default_Entity : MonoBehaviour
 {
 
     public EnemiesSO enemiesData;
-    public Animator deathAnim;
     public CircleCollider2D deathCollider;
 
     private int powerX;
     private int powerXval;
 
+    private Animator deathAnim;
     private SpriteRenderer enemyRender;
     private ParticleSpawnerManager particleInstance;
 
@@ -39,24 +39,12 @@ public class Default_Entity : MonoBehaviour
 
         deathAnim = GetComponent<Animator>();
         enemyRender = GetComponent<SpriteRenderer>();
-
-    }
-
-    // Start is called before the first frame update
-    protected virtual void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
         
     }
 
     public IEnumerator EnemyDead()
     {
-        Player.Instance.failedBounces++;
+        Player.Instance.failedBounces += 2;
 
         //To stop from player on detecting them while dying
         enemy.tag = "Untagged";

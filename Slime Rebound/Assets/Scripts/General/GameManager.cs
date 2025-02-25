@@ -39,6 +39,9 @@ public class GameManager : Singleton<GameManager>
         maxHP = hpBarsUI.Count;
         bounceUI.alpha = 0;
         bounceUI.gameObject.SetActive(false);
+
+        GameData.ChainsInLevel = 0;
+
     }
 
     // Start is called before the first frame update
@@ -49,14 +52,11 @@ public class GameManager : Singleton<GameManager>
         GameData.Hp = hpBarsUI.Count;
         GameData.Score = 0;
         GameData.TotalBounces = 0;
-        GameData.ChainsInLevel = 0;
         GameData.HasSceneTransAnim = false;
         GameData.HasEnteredDoor = false;
 
         DisplayScore();
         DisplayHp();
-
-        BackgroundScroll.Instance.ResetBackGroundPos();
 
     }
 
@@ -82,9 +82,8 @@ public class GameManager : Singleton<GameManager>
         }
 
     }
- 
-    // Routines
 
+    // Routines
     public IEnumerator DamagePlayer()
     {
         PlayerState.IsBounceMode = false;

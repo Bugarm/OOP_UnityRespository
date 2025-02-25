@@ -4,17 +4,9 @@ using UnityEngine;
 
 public class BackgroundScroll : Singleton<BackgroundScroll>
 {
-
-    public GameObject BackGround_Back;
-    public GameObject BackGround_Front;
-
-    private Vector3 point1Pos;
-    private Vector3 point2Pos;
-
-    private Player player;
-    private Vector3 savePlayerPos;
-
-    private bool doOnce;
+    private float startPos, length;
+    public GameObject cam;
+    public float parallaxEffect;
 
     protected override void Awake()
     {
@@ -24,47 +16,27 @@ public class BackgroundScroll : Singleton<BackgroundScroll>
     // Start is called before the first frame update
     void Start()
     {
-
+        startPos = transform.position.x;
+        length = GetComponent<SpriteRenderer>().bounds.size.x;
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        player = FindObjectOfType<Player>();
+        float distanceX = cam.transform.position.x * parallaxEffect;
 
-        if (player != null)
+        float movementX = cam.transform.position.x * (1 - parallaxEffect);
+
+        transform.position = new Vector3(startPos + distanceX, cam.transform.position.y, transform.position.z);
+        // X
+        if (movementX > startPos + length)
         {
-
-            savePlayerPos = player.transform.position;
-            if(BackGround_Back != null)
-            {
-                Vector3 backBacknewPos = Vector3.MoveTowards(BackGround_Back.transform.position, new Vector3(player.transform.position.x, player.transform.position.y, 0), 22.5f * Time.deltaTime);
-                BackGround_Back.transform.position = Vector3.Slerp(BackGround_Back.transform.position, backBacknewPos, Time.deltaTime * 75);
-            }
-
-            if (BackGround_Front != null)
-            {
-                Vector3 backFrontnewPos = Vector3.MoveTowards(BackGround_Front.transform.position, new Vector3(player.transform.position.x, player.transform.position.y, 0), 24 * Time.deltaTime);
-
-                BackGround_Front.transform.position = Vector3.Slerp(BackGround_Front.transform.position, backFrontnewPos, Time.deltaTime * 84);
-            }
+            startPos += length;
         }
-    }
-
-    public void ResetBackGroundPos()
-    {
-        player = FindObjectOfType<Player>();
-        if (player != null)
+        else if (movementX < startPos - length)
         {
-            if (BackGround_Back != null)
-            {
-                BackGround_Back.transform.position = player.transform.position;
-            }
-
-            if (BackGround_Front != null)
-            {
-                BackGround_Front.transform.position = player.transform.position;
-            }
+            startPos -= length;
         }
+
     }
 }

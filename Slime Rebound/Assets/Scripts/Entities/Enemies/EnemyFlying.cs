@@ -53,10 +53,8 @@ public class EnemyFlying : Default_Entity
     }
 
     // Start is called before the first frame update
-    protected override void Start()
+    void Start()
     {
-        base.Start();
-
         // stops rotation
         rb.freezeRotation = true;
 
@@ -84,7 +82,7 @@ public class EnemyFlying : Default_Entity
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
 
         TryGetComponent<ObjectPooling>(out ObjectPooling hasPool);

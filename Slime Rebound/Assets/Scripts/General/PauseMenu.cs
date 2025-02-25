@@ -10,12 +10,17 @@ public class PauseMenu : Singleton<PauseMenu>
 
     private Canvas canvasVar;
 
+    protected override void Awake()
+    {
+        base.Awake();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         GameData.IsPaused = false;
-        canvasVar = Instantiate(pauseMenu);
-        canvasVar.gameObject.SetActive(false);
+        //canvasVar = Instantiate(pauseMenu);
+        pauseMenu.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -26,8 +31,6 @@ public class PauseMenu : Singleton<PauseMenu>
             GameData.IsPaused = !GameData.IsPaused;
             PauseFunction();
         }
-
-        
     }
 
     public void PauseFunction()
@@ -36,13 +39,13 @@ public class PauseMenu : Singleton<PauseMenu>
         {
             Time.timeScale = 0f;
 
-            canvasVar.gameObject.SetActive(true);
+            pauseMenu.gameObject.SetActive(true);
             playerHUD.SetActive(false);
         }
         else
         {
             Time.timeScale = 1.0f;
-            canvasVar.gameObject.SetActive(false);
+            pauseMenu.gameObject.SetActive(false);
             playerHUD.SetActive(true);
         }
     }

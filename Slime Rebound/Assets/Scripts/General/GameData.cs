@@ -20,6 +20,8 @@ public abstract class GameData : MonoBehaviour
     private static bool _hasEnteredScreneTrig = false;
     private static bool _hasLevelDoor = false;
 
+    private static bool _doorDelay=false;
+
 
     // High Score Varibles
 
@@ -27,6 +29,12 @@ public abstract class GameData : MonoBehaviour
     private static int _level1_HighScore;
 
     // 
+
+    public static bool DoorDelay
+    {
+        get { return _doorDelay; }
+        set { _doorDelay = value; }
+    }
 
     public static bool HasSceneTransAnim
     {

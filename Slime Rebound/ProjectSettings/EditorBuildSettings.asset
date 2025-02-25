@@ -17,9 +17,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TestRoom/TestRoom1.unity
     guid: f12b2da20a0d20a47bbb7c24cc1f8a21
-  - enabled: 0
-    path: Assets/Scenes/TestRoom/TestRoom2.unity
-    guid: 720edf410b97e0e45b983efe06c9a4f6
   - enabled: 1
     path: Assets/Scenes/BonusRooms/Bonus1.unity
     guid: 9dfc7eb2d385304478a3e8b78c608033
@@ -42,11 +39,11 @@ EditorBuildSettings:
     path: Assets/Scenes/Menu/MainMenu.unity
     guid: d416f0a78a9e4c447b02a7fb233cb1df
   - enabled: 1
-    path: Assets/Scenes/WinScreen.unity
-    guid: 111d9e95bae632144aec3c7e1d4c78c4
-  - enabled: 1
-    path: Assets/Scenes/Menu/OptionScreen.unity
+    path: Assets/Scenes/Menu/MainMenuOption.unity
     guid: 96e4c298c2b9fc04d80e9305e9f4a00b
+  - enabled: 1
+    path: Assets/Scenes/WinRoom.unity
+    guid: 111d9e95bae632144aec3c7e1d4c78c4
   - enabled: 1
     path: Assets/Scenes/Tutorial/TutorialRoom.unity
     guid: 76032bd68fcfdeb4c8a571498473a0f7

@@ -8,6 +8,11 @@ public class ButtonManagerPauseState : Singleton<ButtonManagerPauseState>
 {
     [SerializeField] List<Button> buttons;
 
+    protected override void Awake()
+    {
+        base.Awake();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -26,7 +31,10 @@ public class ButtonManagerPauseState : Singleton<ButtonManagerPauseState>
             {
                 button.onClick.AddListener(ReturnToMenu);
             }
-
+            if (button.name == "BackHUB")
+            {
+                button.onClick.AddListener(ReturnHUB);
+            }
         }
     }
 
@@ -49,8 +57,16 @@ public class ButtonManagerPauseState : Singleton<ButtonManagerPauseState>
 
     void ReturnToMenu()
     {
-        SceneManager.LoadScene("MainMenu");
+        GameData.IsPaused = false;
+        PauseMenu.Instance.PauseFunction();
+        SceneSwitchManager.Instance.SwitchToLevel("MainMenu");
     }
 
+    void ReturnHUB()
+    {
+        GameData.IsPaused = false;
+        PauseMenu.Instance.PauseFunction();
+        SceneSwitchManager.Instance.SwitchToLevel("HUB");
+    }
 
 }

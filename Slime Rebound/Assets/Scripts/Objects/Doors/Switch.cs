@@ -39,20 +39,22 @@ public class Switch : MonoBehaviour
         { 
             if (collision.CompareTag("PlayerAttack"))
             {
-                GameObject[] doors = GameObject.FindGameObjectsWithTag("SwitchDoor");
+                if(collision.name == "Head-RB")
+                { 
+                    GameObject[] doors = GameObject.FindGameObjectsWithTag("SwitchDoor");
 
-                foreach (GameObject door in doors)
-                {
-                    SwitchDoor doorSwitch = door.GetComponent<SwitchDoor>();
-                    
-                    if(doorSwitch.id == id)
+                    foreach (GameObject door in doors)
                     {
-                        StartCoroutine(ParticleSpawnerManager.Instance.PlayParticle(ParticleSpawnerManager.Instance.particleBasketWin, thisGameObj.transform.position, Quaternion.LookRotation(Vector3.up)));
-                        StartCoroutine(doorSwitch.SlideDoorOpen());     
-                        
+                        SwitchDoor doorSwitch = door.GetComponent<SwitchDoor>();
+                    
+                        if(doorSwitch.id == id)
+                        {
+                            StartCoroutine(ParticleSpawnerManager.Instance.PlayParticle(ParticleSpawnerManager.Instance.particleBasketWin, thisGameObj.transform.position, Quaternion.LookRotation(Vector3.up)));
+                            StartCoroutine(doorSwitch.SlideDoorOpen());     
+                        }
                     }
+                    switchActive = false;
                 }
-                switchActive = false;
             }
         }
     }
