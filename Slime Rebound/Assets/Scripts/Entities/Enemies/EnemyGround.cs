@@ -283,9 +283,16 @@ public class EnemyGround : Default_Entity
     {
         if (disableAI == false && outOfRange == false && enemy.activeInHierarchy == true)
         {
-            if (enemy.activeInHierarchy == true && (collision.CompareTag("Level") || collision.CompareTag("OneWay") || collision.CompareTag("Box") || collision.CompareTag("Platforms") || collision.CompareTag("FloorBreakable")) && collision.IsTouching(wallDectection) && collision.IsTouching(jumpDectection))
+            if (enemy.activeInHierarchy == true && (collision.CompareTag("Level") || collision.CompareTag("OneWay") || collision.CompareTag("Box") || collision.CompareTag("Platforms") || collision.CompareTag("FloorBreakable")) && collision.IsTouching(wallDectection))
             {
-                TurnFunc();
+                if(freeRoamMode == false)
+                { 
+                    TurnFunc();
+                }
+                else if(collision.IsTouching(jumpDectection))
+                {
+                    TurnFunc();
+                }
             }
 
             if (collision.CompareTag("PlayerAttack"))
@@ -312,32 +319,17 @@ public class EnemyGround : Default_Entity
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (disableAI == false && outOfRange == false)
-        {
-            isOnGround = false;
-
-            // Ledge Decection
-            if ((collision.CompareTag("Level") || collision.CompareTag("OneWay") || collision.CompareTag("Box") || collision.CompareTag("Platforms") || collision.CompareTag("FloorBreakable")))
-            {
-                if (freeRoamMode == false)
-                {
-                    if (!groundDectection.IsTouching(collision))
-                    {
-                        TurnFunc();
-                    }
-                }
-                else if (freeRoamMode == true)
-                {
-                    if (!pitDectection.IsTouching(collision))
-                    {
-                        TurnFunc();
-                    }
-                }
-            }
-        }
 
         if (disableAI == false)
         {
+            if (enemy.activeInHierarchy == true && (collision.CompareTag("Level") || collision.CompareTag("OneWay") || collision.CompareTag("Box") || collision.CompareTag("Platforms") || collision.CompareTag("FloorBreakable")))
+            {
+                if(!collision.IsTouching(pitDectection))
+                {
+                    TurnFunc();
+                }
+            }
+
             if (collision.CompareTag("PlayerRange"))
             {
                 if (!collision.IsTouching(deathCollider))

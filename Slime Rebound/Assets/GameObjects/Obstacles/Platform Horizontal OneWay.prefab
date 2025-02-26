@@ -172,7 +172,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c51477371248b584ebd543fe0a07eb21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pointerGroupObj: {fileID: 0}
   point1OffsetX: 7.76
   point2OffsetX: -7.38
   point1OffsetY: 7.24
