@@ -99,10 +99,11 @@ public class Player : Singleton<Player>
         {
             if(PlayerState.IsTouchingPlatform == true && PlayerState.IsStickActive == false)
             { 
-            float platofrmPosX = DetectionScript.Instance.GetPlatform().transform.position.x;
+                float platofrmPosX = DetectionScript.Instance.GetPlatform().transform.position.x;
 
-            //Debug.Log(platofrmPos);
-                player.transform.position = Vector3.MoveTowards(player.transform.position, new Vector2(platofrmPosX, player.transform.position.y), 4.5f * Time.deltaTime);
+
+                //Debug.Log(platofrmPos);
+                player.transform.position = Vector3.MoveTowards(player.transform.position, new Vector2( platofrmPosX, player.transform.position.y), 5.5f * Time.deltaTime);
             }
 
             if (PlayerState.IsTouchingPlatformSide == true && PlayerState.IsStickActive == true)
@@ -846,7 +847,7 @@ public class Player : Singleton<Player>
 
                     StartCoroutine(ParticleSpawnerManager.Instance.PlayParticle(ParticleSpawnerManager.Instance.particleSlimeSplash, new Vector2(player.transform.position.x, player.transform.position.y + 0.6f), Quaternion.LookRotation(look)));
 
-                    playerRB.velocity = new Vector3(playerRB.velocity.x, 12.3f, 0);
+                    playerRB.velocity = new Vector3(playerRB.velocity.x, 7.5f, 0);
                 }
                 else
                 {
@@ -1134,11 +1135,12 @@ public class Player : Singleton<Player>
         PlayerState.IsJump = true;
         yield return new WaitForSeconds(timeDelay);
         PlayerState.IsJump = false;
+        
 
         if (PlayerState.IsBounceMode == false)
         {
             dirY = 0;
-        
+
             // For extra jumps in mid air
             if (jumpTimes >= amountOfJumps && PlayerState.IsStickActive == false)
             {

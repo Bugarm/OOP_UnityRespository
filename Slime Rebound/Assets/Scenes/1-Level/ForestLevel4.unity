@@ -5831,6 +5831,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spiked Platform Vertical (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 7721185049982922928, guid: d87614790d172c042a9ad0888734cba0, type: 3}
+      propertyPath: direction
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
