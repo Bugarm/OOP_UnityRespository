@@ -242,6 +242,9 @@ MonoBehaviour:
   gravityPower: 6
   jumpForce: 2.26
   deathCollider: {fileID: 585860637430875147}
+  wallDectection: {fileID: 5525529669992915383}
+  pitDectection: {fileID: 6961923463136292471}
+  jumpDectection: {fileID: 8370986358598424000}
 --- !u!1 &3842584616803260508
 GameObject:
   m_ObjectHideFlags: 0
@@ -383,7 +386,7 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.02, y: -0.18}
+  m_Offset: {x: -0.02, y: -0.17}
   serializedVersion: 2
   m_Radius: 0.37
 --- !u!1 &8031037311692365274

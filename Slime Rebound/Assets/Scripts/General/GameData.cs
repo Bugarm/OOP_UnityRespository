@@ -36,12 +36,6 @@ public abstract class GameData : MonoBehaviour
         set { _doorDelay = value; }
     }
 
-    public static bool HasSceneTransAnim
-    {
-        get { return _hasSceneTransAnim; }
-        set { _hasSceneTransAnim = value; }
-    }
-
     public static bool HasEnteredDoor
     {
         get { return _hasEnteredDoor; } 

@@ -16,49 +16,94 @@ public class PlayerAnimationManager : Singleton<PlayerAnimationManager>
     // Start is called before the first frame update
     void Start()
     {
+        
+    }
+
+    private void OnEnable()
+    {
         PlayAnimation("idle");
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Idle Anim
+        
         if(PlayerState.IsStickActive == false && PlayerState.IsBounceMode == false && PlayerState.IsHeadAttack == false)
-        { 
-            if ((!Input.GetKey(KeyCode.A) || !Input.GetKey(KeyCode.D)) && PlayerState.IsAttack == false && PlayerState.IsDash == false && PlayerState.IsPound == false && PlayerState.IsCrouch == false && PlayerState.IsTouchingGround == true && PlayerState.IsMove == false && PlayerState.IsJump == false)
+        {
+            // Idle Anim
+            if (PlayerState.IsMove == false)
             {
                 PlayAnimation("idle");
             }
-            //
-            
-            if (PlayerState.IsTouchingWall == true && PlayerState.IsTouchingGround == false)
+            // Walk
+            else if(PlayerState.IsCrouch == false && PlayerState.IsSlide == false) 
+            {                
+                if(PlayerState.IsTouchingWall == true)
+                {
+                    PlayAnimation("idle");
+                }
+                else
+                {
+                    PlayAnimation("walk");
+                }
+            }
+
+            // Jump
+            if (PlayerState.IsTouchingGround == false && PlayerState.IsTouchingPlatform == false)
             {
                 PlayAnimation("jump");
             }
 
-            if (PlayerState.IsPound == true && PlayerState.IsTouchingGround == true)
-            {
-                PlayAnimation("idle");
-            }
-
-            if(PlayerState.IsTouchingTop == true && (PlayerState.IsCrouch == true || PlayerState.IsSlide == true))
+            if (PlayerState.IsCrouch == true || PlayerState.IsSlide == true)
             {
                 PlayAnimation("crouch");
             }
 
+            if(PlayerState.IsDash == true)
+            {
+                PlayAnimation("dash");
+            }
             
+            if (PlayerState.IsAttackJump == true && PlayerState.IsTouchingGround == false)
+            {
+                PlayAnimation("crouchAttack");
+            }
+
+            if(PlayerState.IsPound == true)
+            {
+                PlayAnimation("pound");
+            }
+
         }
 
-        if(PlayerState.IsStickActive == true && PlayerState.IsBounceMode == false && PlayerState.IsHeadAttack == false)
+        // Stick
+        if (PlayerState.IsStickActive == true && PlayerState.IsBounceMode == false && PlayerState.IsHeadAttack == false)
         {
             if(PlayerState.IsTouchingWall == true && PlayerState.IsTouchingGround == false)
             {
                 PlayAnimation("stick");
             }
-            else if (PlayerState.IsTouchingWall == false && PlayerState.IsTouchingGround == false && PlayerState.IsPound == false)
+            else 
             {
                 PlayAnimation("jump");
             }
+        }
+
+        // Bouncing
+        if(PlayerState.IsBounceMode == true)
+        {
+            PlayAnimation("bounce");
+        }
+
+        if(PlayerState.IsHeadAttack == true)
+        {
+            PlayAnimation("head");
+        }
+
+        // Ouch
+        if (PlayerState.IsDamaged == true)
+        {
+            PlayAnimation("damaged");
         }
     }
 

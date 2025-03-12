@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class PlayerState : MonoBehaviour
+public abstract class PlayerState
 {
-    private static bool _isJump, _isDash, _isSlide, _isMove, _isRun, _isCrouch, _isPound, _isAttack, _isAttackJump, _isHeadAttack, _isHeadThrown;
-    private static bool _isTouchingWall, _isTouchingGround, _isTouchingPlatform = false, _isTouchingTop;
+    private static bool _isJump, _isDash, _isSlide, _isMove, _isRun, _isCrouch, _isPound, _isAttack, _isAttackJump, _isHeadThrown;
+    private static bool _isTouchingWall, _isTouchingGround, _isTouchingPlatform, _isTouchingPlatformSide, _isTouchingTop;
     private static bool _isDamaged, _isFakeWallAllowed, _inFakeWall;
-    private static bool _isBounceMode, _isHeadAttackMode, _isStickActive;
+    private static bool _isBounceMode, _isHeadAttack, _isStickActive;
     private static bool _disableAllMove;
     private static bool _isDestroyObj;
 
@@ -32,12 +32,6 @@ public abstract class PlayerState : MonoBehaviour
     {
         get { return _isBounceMode; }
         set { _isBounceMode = value; }
-    }
-
-    public static bool IsHeadAttackMode
-    {
-        get { return _isHeadAttackMode; }
-        set { _isHeadAttackMode = value; }
     }
 
     public static bool IsStickActive
@@ -84,6 +78,12 @@ public abstract class PlayerState : MonoBehaviour
     {
         get { return _isTouchingPlatform; }
         set { _isTouchingPlatform = value; }
+    }
+
+    public static bool IsTouchingPlatformSide
+    {
+        get { return _isTouchingPlatformSide; }
+        set { _isTouchingPlatformSide = value; }
     }
 
     public static bool IsTouchingTop

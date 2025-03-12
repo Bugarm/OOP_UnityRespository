@@ -5,10 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class Checkpoint : MonoBehaviour
 {
+    private Animator animator;
     private bool isChecked;
     // Start is called before the first frame update
     void Start()
     {
+        animator = GetComponent<Animator>();
         isChecked = false;
     }
 
@@ -24,7 +26,8 @@ public class Checkpoint : MonoBehaviour
         {
             SaveLoadManager.Instance.SaveDataCheckPoint(this.gameObject.transform.position);
             SaveLoadManager.Instance.SaveLevelData(SceneManager.GetActiveScene().name);
-            this.gameObject.GetComponent<SpriteRenderer>().color = Color.magenta;
+            StartCoroutine(ParticleSpawnerManager.Instance.PlayParticle(ParticleSpawnerManager.Instance.particleCheckPoint,this.gameObject.transform.position,Quaternion.identity));
+            animator.SetBool("IsChecked", true);
             isChecked = true;
         }
     }

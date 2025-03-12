@@ -8,6 +8,7 @@ public class ParticleSpawnerManager : Singleton<ParticleSpawnerManager>
     public GameObject particleBasketWin;
     public GameObject particleSlimeSplash;
     public GameObject particleSlimeBoom;
+    public GameObject particleCheckPoint;
 
     private GameObject particleGroup;
 

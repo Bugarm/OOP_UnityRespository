@@ -5434,9 +5434,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   point1X: -20.4
-  point2X: 60.5
-  point1Y: 2.8
-  point2Y: 10.65
+  point2X: 60.4
+  point1Y: -10.5
+  point2Y: 9.61
 --- !u!114 &1945673200
 MonoBehaviour:
   m_ObjectHideFlags: 0

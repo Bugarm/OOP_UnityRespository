@@ -62,6 +62,24 @@ public class DetectionScript : Singleton<DetectionScript>
             }
         }
 
+        if ((collision.CompareTag("Level") || collision.CompareTag("Box") || collision.CompareTag("SwitchDoor")) && DetectionScript.Instance.IsDestroyed() == false)
+        {
+            if (collision.IsTouching(wallTrigCol))
+            {
+                PlayerState.IsTouchingWall = true;
+            }
+
+            if (collision.IsTouching(floorTrigCol))
+            {
+                PlayerState.IsTouchingGround = true;
+            }
+
+            if (collision.IsTouching(topTriggerCol))
+            {
+                PlayerState.IsTouchingTop = true;
+            }
+        }
+
         // Level Collision
         if (collision.CompareTag("Level") || collision.CompareTag("SwitchDoor"))
         {
@@ -103,7 +121,6 @@ public class DetectionScript : Singleton<DetectionScript>
 
         if (collision.CompareTag("OneWay"))
         {
-                     
             if (collision.IsTouching(floorTrigCol))
             {
                 PlayerState.IsTouchingGround = true;
@@ -114,14 +131,16 @@ public class DetectionScript : Singleton<DetectionScript>
         {
             if (collision.IsTouching(floorTrigCol))
             {
-                platform = collision.gameObject;
                 PlayerState.IsTouchingPlatform = true;
-                //Debug.Log("true");
+                platform = collision.gameObject;
             }
 
             if (collision.IsTouching(wallTrigCol))
             {
                 PlayerState.IsTouchingWall = true;
+                PlayerState.IsTouchingPlatformSide = true;
+                platform = collision.gameObject;
+
             }
         }
     }
@@ -140,11 +159,12 @@ public class DetectionScript : Singleton<DetectionScript>
                 }
             }
         }
+
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if ((collision.CompareTag("Level") ||  collision.CompareTag("Box") || collision.CompareTag("FloorBreakable") || collision.CompareTag("Platforms") || collision.CompareTag("SwitchDoor")) || collision.CompareTag("Box") || collision.CompareTag("FloorBreakable") && DetectionScript.Instance.IsDestroyed() == false)
+        if ((collision.CompareTag("Level") ||  collision.CompareTag("Box") || collision.CompareTag("SwitchDoor")) && DetectionScript.Instance.IsDestroyed() == false)
         {
             if (!collision.IsTouching(wallTrigCol))
             {
@@ -173,6 +193,11 @@ public class DetectionScript : Singleton<DetectionScript>
                     PlayerState.IsDestroyedObj = false;
                 }
             }
+
+            if (!collision.IsTouching(floorTrigCol) )
+            {
+                PlayerState.IsTouchingGround = false;
+            }
         }
 
         if (collision.CompareTag("Platforms") )
@@ -181,13 +206,15 @@ public class DetectionScript : Singleton<DetectionScript>
             {
                 PlayerState.IsTouchingPlatform = false;
                 //Debug.Log("false");
-                
             }
 
             if (!collision.IsTouching(wallTrigCol))
             {
                 PlayerState.IsTouchingWall = false;
+                PlayerState.IsTouchingPlatformSide = false;
+                //Debug.Log("false");
             }
+
         }
 
         if (collision.CompareTag("OneWay"))

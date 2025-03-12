@@ -46,10 +46,11 @@ public class EnemyGround : Default_Entity
     private bool directionRoam = false;
    
     // Triggers
-    private BoxCollider2D groundDectection;
-    private CapsuleCollider2D wallDectection;
-    private BoxCollider2D pitDectection;
-    private BoxCollider2D jumpDectection;
+    public CapsuleCollider2D wallDectection;
+    public BoxCollider2D pitDectection;
+    public BoxCollider2D jumpDectection;
+
+    private Coroutine flipRoutine;
 
     protected override void Awake()
     {
@@ -63,23 +64,11 @@ public class EnemyGround : Default_Entity
 
         // Gizmo Setup //
         setupOnce = false;
-        
 
-        groundDectection = enemy.GetComponent<BoxCollider2D>();
-        wallDectection = transform.GetChild(0).gameObject.GetComponent<CapsuleCollider2D>();
-        pitDectection = transform.GetChild(1).gameObject.GetComponent<BoxCollider2D>();
-        jumpDectection = transform.GetChild(2).gameObject.GetComponent<BoxCollider2D>();
-
-        if(freeRoamMode == true)
-        {
-            Destroy(groundDectection);
-        }
-        else
+        if(freeRoamMode == false)
         {
             // Create
             PointerCreation();
-
-            Destroy(pitDectection);
         }
 
         //Debug.Log(wallDectection);
@@ -111,7 +100,7 @@ public class EnemyGround : Default_Entity
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         
         if (disableAI == false && outOfRange == false)
@@ -128,7 +117,6 @@ public class EnemyGround : Default_Entity
         else if(disableAI == false)
         {
             rb.velocity = Vector3.zero;
-
         }
 
     }
@@ -166,12 +154,12 @@ public class EnemyGround : Default_Entity
             if (curPoint == set_point1.transform)
             {
                 // This makes sure it moves to the right direction by checking the point neg or pos //
-                rb.velocity = point1OffsetX < 0 ? new Vector2(-enemiesData.speed, 0) : new Vector2(enemiesData.speed, 0);
+                rb.velocity = point1OffsetX < 0 ? new Vector2(-enemiesData.speed * (Time.deltaTime * 54), 0) : new Vector2(enemiesData.speed * (Time.deltaTime * 54), 0);
             }
             else
             {
                 // This makes sure it moves to the right direction by checking the point neg or pos//
-                rb.velocity = point2OffsetX < 0 ? new Vector2(-enemiesData.speed, 0) : new Vector2(enemiesData.speed, 0);
+                rb.velocity = point2OffsetX < 0 ? new Vector2(-enemiesData.speed * (Time.deltaTime * 54), 0) : new Vector2(enemiesData.speed * (Time.deltaTime * 54), 0);
             }
         }
 
@@ -196,7 +184,7 @@ public class EnemyGround : Default_Entity
         enemy.transform.localScale = new Vector2((Mathf.Sign(rb.velocity.x)), enemy.transform.localScale.y);
     }
 
-    private void TurnFunc()
+    private IEnumerator TurnFunc()
     {
         // Flips GameObject not just Sprite
         enemy.transform.localScale = new Vector2((Mathf.Sign(rb.velocity.x)), enemy.transform.localScale.y);
@@ -218,13 +206,15 @@ public class EnemyGround : Default_Entity
                 curPoint = set_point1.transform;
             }
         }
+        yield return new WaitForSeconds(1);
+        flipRoutine = null;
     }
 
     // FreeRoam Mode Functions //
     private void FreeRoam()
     {
                                                 // Right                                  //Left
-        rb.velocity = directionRoam == true ? new Vector2(enemiesData.speed, curJumpForce) : new Vector2(-enemiesData.speed, curJumpForce);
+        rb.velocity = directionRoam == true ? new Vector2(enemiesData.speed * (Time.deltaTime * 54), curJumpForce) : new Vector2(-enemiesData.speed * (Time.deltaTime * 54), curJumpForce);
     }
 
     // Others //
@@ -283,15 +273,21 @@ public class EnemyGround : Default_Entity
     {
         if (disableAI == false && outOfRange == false && enemy.activeInHierarchy == true)
         {
-            if (enemy.activeInHierarchy == true && (collision.CompareTag("Level") || collision.CompareTag("OneWay") || collision.CompareTag("Box") || collision.CompareTag("Platforms") || collision.CompareTag("FloorBreakable")) && collision.IsTouching(wallDectection))
+            if (enemy.activeInHierarchy == true && (collision.CompareTag("Level") || collision.CompareTag("SwitchDoor") || collision.CompareTag("OneWay") || collision.CompareTag("Box") || collision.CompareTag("Platforms") || collision.CompareTag("FloorBreakable")) && collision.IsTouching(wallDectection))
             {
                 if(freeRoamMode == false)
                 { 
-                    TurnFunc();
+                    if(flipRoutine == null)
+                    { 
+                        flipRoutine = StartCoroutine(TurnFunc());
+                    }
                 }
                 else if(collision.IsTouching(jumpDectection))
                 {
-                    TurnFunc();
+                    if (flipRoutine == null)
+                    {
+                        flipRoutine = StartCoroutine(TurnFunc());
+                    }
                 }
             }
 
@@ -319,14 +315,16 @@ public class EnemyGround : Default_Entity
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-
         if (disableAI == false)
         {
-            if (enemy.activeInHierarchy == true && (collision.CompareTag("Level") || collision.CompareTag("OneWay") || collision.CompareTag("Box") || collision.CompareTag("Platforms") || collision.CompareTag("FloorBreakable")))
+            if (enemy.activeInHierarchy == true && (collision.CompareTag("Level") || collision.CompareTag("OneWay") || collision.CompareTag("Box") || collision.CompareTag("Platforms") || collision.CompareTag("SwitchDoor") || collision.CompareTag("FloorBreakable")))
             {
-                if(!collision.IsTouching(pitDectection))
+                if (!collision.IsTouching(pitDectection) && !collision.IsTouching(jumpDectection) && freeRoamMode == true)
                 {
-                    TurnFunc();
+                    if (flipRoutine == null)
+                    {
+                        flipRoutine = StartCoroutine(TurnFunc());
+                    }
                 }
             }
 

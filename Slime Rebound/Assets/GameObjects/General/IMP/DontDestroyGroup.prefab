@@ -394,18 +394,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1889918769773191012}
     m_Modifications:
-    - target: {fileID: -321061468402429375, guid: 9936b7b5776bb1542b6730aec25b3cb6, type: 3}
-      propertyPath: audioSources.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: -321061468402429375, guid: 9936b7b5776bb1542b6730aec25b3cb6, type: 3}
-      propertyPath: audioSources.Array.data[0]
-      value: 
-      objectReference: {fileID: 3517078363557207276, guid: 406324ab089e4da4c85bf0ee4a2275fe, type: 3}
-    - target: {fileID: -321061468402429375, guid: 9936b7b5776bb1542b6730aec25b3cb6, type: 3}
-      propertyPath: audioSources.Array.data[1]
-      value: 
-      objectReference: {fileID: 7938456772580797518, guid: ad45a558e26522e4f9ad381eec85f11d, type: 3}
     - target: {fileID: 234023522515019288, guid: 9936b7b5776bb1542b6730aec25b3cb6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.1048973
@@ -478,10 +466,6 @@ PrefabInstance:
       propertyPath: hpBarsUI.Array.data[3]
       value: 
       objectReference: {fileID: 6732512692919002280}
-    - target: {fileID: 1592399009523712291, guid: 9936b7b5776bb1542b6730aec25b3cb6, type: 3}
-      propertyPath: player
-      value: 
-      objectReference: {fileID: 2946525147099557722}
     - target: {fileID: 5504839371982922821, guid: 9936b7b5776bb1542b6730aec25b3cb6, type: 3}
       propertyPath: m_Name
       value: GameManager_Level

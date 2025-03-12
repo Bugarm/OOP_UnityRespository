@@ -53,6 +53,7 @@ MonoBehaviour:
   particleBasketWin: {fileID: 614863489156338088, guid: 43a36aa68c427e04585592f52e538ced, type: 3}
   particleSlimeSplash: {fileID: 5068521333658625299, guid: 87d73fa489e3b10429fb037915d6b0b7, type: 3}
   particleSlimeBoom: {fileID: 1777981280934896037, guid: 59650c6d645056b42824403e9c6d7c14, type: 3}
+  particleCheckPoint: {fileID: 1777981280934896037, guid: cdbdf4d85a7fa94489a875a37bae46eb, type: 3}
 --- !u!114 &1131214110422090258
 MonoBehaviour:
   m_ObjectHideFlags: 0

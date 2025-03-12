@@ -66,7 +66,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 11.93
+  m_Radius: 5.3878503
 --- !u!1 &4505044785281677860
 GameObject:
   m_ObjectHideFlags: 0
@@ -264,7 +264,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemiesData: {fileID: 11400000, guid: 801bfbbe2fc98a8479808f55edf6153b, type: 2}
-  deathAnim: {fileID: 1400714109824885247}
   deathCollider: {fileID: 1389852566835822634}
   pointers:
   - {x: 0, y: 0}

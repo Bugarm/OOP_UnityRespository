@@ -22,7 +22,7 @@ public class DoorRoomSwitch : Door
     {
         if (isAtDoor == true && GameData.DoorDelay == false && GameData.HasEnteredScreneTrig == false)
         {
-            if (Input.GetKeyDown(KeyCode.W) && Player.Instance.RetrurnPos().x == 0 && PlayerState.IsHeadAttack == false)
+            if (Input.GetKeyDown(KeyCode.W) && PlayerState.IsMove == false && PlayerState.IsHeadAttack == false)
             {
                 PlayerState.DisableAllMove = true;
                 GameData.DoorID = id;

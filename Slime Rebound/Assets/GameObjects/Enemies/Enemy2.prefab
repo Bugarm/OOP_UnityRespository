@@ -379,13 +379,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemiesData: {fileID: 11400000, guid: 9a768bd8c928cd548a511909d297141a, type: 2}
-  deathAnim: {fileID: 5308960005703587907}
   deathCollider: {fileID: 2814037115331634749}
   point1OffsetX: -2.71
   point2OffsetX: 5.23
   freeRoamMode: 0
   gravityPower: 15
   jumpForce: 8.61
+  wallDectection: {fileID: 5396252340773929636}
+  pitDectection: {fileID: 592827001649382195}
+  jumpDectection: {fileID: 1701493738028795417}
 --- !u!61 &8449950465437504098
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -14567,10 +14567,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 7605790398716607012}
     m_Modifications:
     - target: {fileID: 1739221139011068023, guid: 68079096fd5a4254080cf98016cbd114, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 2.57375
-      objectReference: {fileID: 0}
-    - target: {fileID: 1739221139011068023, guid: 68079096fd5a4254080cf98016cbd114, type: 3}
       propertyPath: m_LocalPosition.x
       value: -39.279526
       objectReference: {fileID: 0}
@@ -14613,10 +14609,6 @@ PrefabInstance:
     - target: {fileID: 8008536379996880957, guid: 68079096fd5a4254080cf98016cbd114, type: 3}
       propertyPath: m_Name
       value: ExitDoor
-      objectReference: {fileID: 0}
-    - target: {fileID: 8008536379996880957, guid: 68079096fd5a4254080cf98016cbd114, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

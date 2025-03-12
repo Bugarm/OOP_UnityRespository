@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class PlatformMove : MonoBehaviour
@@ -20,6 +22,11 @@ public class PlatformMove : MonoBehaviour
     [Header("Settings")]
     public int speed;
     public bool direction;
+    public bool randomizeSpeed;
+
+    [Header("Random Range")]
+    public int randomSpeedMin;
+    public int randomSpeedMax;
 
     //Pos
     private float startPosX;
@@ -35,6 +42,15 @@ public class PlatformMove : MonoBehaviour
     private Rigidbody2D rb;
     private Transform curPoint;
 
+    private Vector3 moveToPoint;
+    private int moveToIndex;
+
+    List<float> pointsXList = new List<float>();
+    List<float> pointsYList = new List<float>();
+
+    float dirY;
+    float dirX;
+
     private float distancePoint;
 
     private bool setupOnce = true;
@@ -46,34 +62,33 @@ public class PlatformMove : MonoBehaviour
 
         startPosX = platform.transform.position.x;
         startPosY = platform.transform.position.y;
-
-        if(pointerGroupObj == null )
-        { 
-            pointerGroupObj = GameObject.Find("Platform Pointers Group");
-        }
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        PointerCreation();
+        //PointerCreation();
+
+        pointsXList.Add(startPosX + point1OffsetX);
+        pointsXList.Add(startPosX + point2OffsetX);
+
+        pointsYList.Add(startPosY + point1OffsetY);
+        pointsYList.Add(startPosY + point2OffsetY);
 
         if (direction == false)
         {
-            set_point1.transform.position = new Vector3(platform.transform.position.x + point1OffsetX, platform.transform.position.y, 0);
-            set_point2.transform.position = new Vector3(platform.transform.position.x + point2OffsetX, platform.transform.position.y, 0);
+            dirY = platform.transform.position.y;
 
-            distancePoint = 1.4f;
+            dirX = pointsXList[moveToIndex];
         }
         else
         {
-            set_point1.transform.position = new Vector3(platform.transform.position.x, platform.transform.position.y + point1OffsetY, 0);
-            set_point2.transform.position = new Vector3(platform.transform.position.x, platform.transform.position.y + point2OffsetY, 0);
+            dirX = platform.transform.position.x;
 
-            distancePoint = 2.4f;
+            dirY = pointsYList[moveToIndex];
         }
 
-        curPoint = set_point1.transform;
+        moveToPoint = new Vector3(dirX, dirY, 0);
 
         setupOnce = false;
     }
@@ -84,83 +99,59 @@ public class PlatformMove : MonoBehaviour
         FollowPoints();
     }
 
-    private void PointerCreation()
+    private void Update()
     {
-        // Create Pointers //
-        set_point1 = new GameObject(platform.name.ToString() + " point1");
-        set_point2 = new GameObject(platform.name.ToString() + " point2");
-
-        pointGroup = new GameObject(platform.name.ToString() + " Group");
-
-        // Parenting //
-        pointGroup.transform.SetParent(pointerGroupObj.transform);
-
-        set_point1.transform.SetParent(pointGroup.transform);
-        set_point2.transform.SetParent(pointGroup.transform);
+        PointSwitch();
     }
 
     private void FollowPoints()
     {
-        // Only Moves when is Touches Ground or There's no Gravity
 
-
-        if (curPoint == set_point1.transform)
-        {
-            // This makes sure it moves to the right direction by checking the point neg or pos //
-            if(direction == false)
-            {
-                MoveDirection(speed, point1OffsetX);
-            }
-            else
-            {
-                MoveDirection(speed, point1OffsetY);
-            }
-            
-        }
-        else
-        {
-            // This makes sure it moves to the right direction by checking the point neg or pos//
-            if (direction == false)
-            {
-                MoveDirection(speed, point2OffsetX);
-            }
-            else
-            {
-                MoveDirection(speed, point2OffsetY);
-            }
-        }
-        
-
-        // Switch Point
-        if (Vector2.Distance(transform.position, curPoint.position) < distancePoint && curPoint == set_point1.transform)
-        {
-            PointSwitch(set_point2.transform);
-        }
-
-        if (Vector2.Distance(transform.position, curPoint.position) < distancePoint && curPoint == set_point2.transform)
-        {
-            PointSwitch(set_point1.transform);
-        }
+        this.gameObject.transform.position = Vector3.MoveTowards(this.transform.position, moveToPoint, speed * Time.deltaTime);
 
         //Debug.Log(platform.name + " " + Vector2.Distance(transform.position, curPoint.position));
         //Debug.Log(isOnGround);
     }
 
-    void MoveDirection(int moveSpeed, float offsetPoint)
+    private void PointSwitch()
     {
-        if (direction == false)
+        if (this.gameObject.transform.position == moveToPoint)
         {
-            rb.velocity = offsetPoint < 0 ? new Vector2(-moveSpeed, 0) : new Vector2(moveSpeed, 0);
-        }
-        else
-        {
-            rb.velocity = offsetPoint < 0 ? new Vector2(0, -moveSpeed) : new Vector2(0, moveSpeed);
-        }
-    }
+            moveToIndex++;
+            // A check to make sure it won't go higher than the length
+            if (moveToIndex >= 2)
+            {
+                moveToIndex = 0;
+            }
 
-    private void PointSwitch(Transform point)
-    {
-        curPoint = point;
+            if(direction == false)
+            {
+                dirY = platform.transform.position.y;
+                
+                dirX = pointsXList[moveToIndex];
+            }
+            else
+            {
+                dirX = platform.transform.position.x;
+
+                dirY = pointsYList[moveToIndex];
+            }
+
+            moveToPoint = new Vector3(dirX, dirY,0);
+
+            if (randomizeSpeed == true)
+            {
+                if (randomSpeedMin == randomSpeedMax || (randomSpeedMin > randomSpeedMax))
+                {
+                    Debug.LogException(new Exception("Both Random Values are either the same or the values are ordered incorrectly"));
+                }
+                else
+                {
+                    speed = UnityEngine.Random.Range(randomSpeedMin, randomSpeedMax);
+                }
+            }
+
+        }
 
     }
 

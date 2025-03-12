@@ -20,7 +20,7 @@ public class Door : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if(PlayerState.IsBounceMode == false && PlayerState.IsDamaged == false && PlayerState.IsCrouch == false && PlayerState.IsJump == false && PlayerState.IsPound == false && PlayerState.IsSlide == false && PlayerState.IsHeadAttackMode == false)
+        if(PlayerState.IsBounceMode == false && PlayerState.IsDamaged == false && PlayerState.IsCrouch == false && PlayerState.IsJump == false && PlayerState.IsPound == false && PlayerState.IsSlide == false && PlayerState.IsHeadAttack == false)
         { 
             if(collision.CompareTag("PlayerBody"))
             {

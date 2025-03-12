@@ -52,7 +52,6 @@ public class GameManager : Singleton<GameManager>
         GameData.Hp = hpBarsUI.Count;
         GameData.Score = 0;
         GameData.TotalBounces = 0;
-        GameData.HasSceneTransAnim = false;
         GameData.HasEnteredDoor = false;
 
         DisplayScore();
@@ -90,8 +89,7 @@ public class GameManager : Singleton<GameManager>
         PlayerState.IsStickActive = false;
 
         PlayerState.IsDamaged = true;
-
-        PlayerAnimationManager.Instance.PlayAnimation("damaged");
+        PlayerState.DisableAllMove = true;
 
         // KnockBack
         playerRB.gravityScale = 0.5f;
@@ -110,6 +108,7 @@ public class GameManager : Singleton<GameManager>
         DisplayHp();
 
         PlayerState.IsDamaged = false;
+        PlayerState.DisableAllMove = false;
 
         StopCoroutine(flashRoutine);
         flashRoutine = null;

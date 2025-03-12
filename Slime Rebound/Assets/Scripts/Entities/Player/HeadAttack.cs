@@ -25,21 +25,21 @@ public class HeadAttack : Singleton<HeadAttack>
             }
         }
         
-        if(!(collision.CompareTag("Level") ) && PlayerState.IsHeadThrown == true)
-        {
-            float moveSlight;
-            if (head.transform.localScale.x == -1)
-            {
-                moveSlight = -1.5f;
-            }
-            else
-            {
-                moveSlight = 1.5f;
-            }
+        //if(PlayerState.IsHeadThrown == true)
+        //{
+        //    float moveSlight;
+        //    if (head.transform.localScale.x == -1)
+        //    {
+        //        moveSlight = -1.5f;
+        //    }
+        //    else
+        //    {
+        //        moveSlight = 1.5f;
+        //    }
 
-            head.GetComponent<Rigidbody2D>().velocity = new Vector2(moveSlight, -1.5f);
-            head.GetComponent<Rigidbody2D>().gravityScale = 14;
-        }
+        //    head.GetComponent<Rigidbody2D>().velocity = new Vector2(moveSlight, -1.5f);
+        //    head.GetComponent<Rigidbody2D>().gravityScale = 14;
+        //}
 
     }
 

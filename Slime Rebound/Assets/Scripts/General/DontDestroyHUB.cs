@@ -48,7 +48,6 @@ public class DontDestroyHUB : Singleton<DontDestroyHUB>
     // Start is called before the first frame update
     void Start()
     {
-        GameData.HasSceneTransAnim = false;
         GameData.HasEnteredDoor = false;
         GameData.HasLevelDoor = false;
 

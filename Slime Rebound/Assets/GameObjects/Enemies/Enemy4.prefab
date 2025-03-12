@@ -354,13 +354,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemiesData: {fileID: 11400000, guid: 83ca3947d42fa794db6984ce153c2ea7, type: 2}
-  deathAnim: {fileID: 7231109988449806803}
   deathCollider: {fileID: 824306969888658971}
   point1OffsetX: 3.46
   point2OffsetX: -3.89
   freeRoamMode: 0
   gravityPower: 15
   jumpForce: 7.63
+  wallDectection: {fileID: 2655770448759984435}
+  pitDectection: {fileID: 1596058811787386367}
+  jumpDectection: {fileID: 2149823275255035697}
 --- !u!58 &2885289850575268320
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -432,7 +434,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.36, y: 0.28}
+    oldSize: {x: 2.25, y: 1.75}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0

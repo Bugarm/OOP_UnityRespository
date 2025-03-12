@@ -51,10 +51,10 @@ public class DontDestroyManager : Singleton<DontDestroyManager>
     void Start()
     {
         PlayerState.DisableAllMove = false;
-        GameData.HasSceneTransAnim = false;
         GameData.HasEnteredScreneTrig = false;
         GameData.HasLevelDoor = false;
         GameData.HasEnteredDoor = false;
+        
     }
 
     // Update is called once per frame
@@ -180,7 +180,6 @@ public class DontDestroyManager : Singleton<DontDestroyManager>
         }
 
         PlayerState.DisableAllMove = false;
-        GameData.HasSceneTransAnim = false;
         GameData.HasEnteredScreneTrig = false;
         GameData.HasLevelDoor = false;
         GameData.HasEnteredDoor = false;

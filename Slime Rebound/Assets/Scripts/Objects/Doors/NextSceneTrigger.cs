@@ -28,7 +28,6 @@ public class NextSceneTrigger : MonoBehaviour
         if (collision.CompareTag("PlayerBody") && delay == false && GameData.HasEnteredScreneTrig == false)
         {
             PlayerState.DisableAllMove = true;
-            GameData.HasSceneTransAnim = true;
             GameData.SceneTransID = id;
 
             GameData.HasEnteredDoor = false;

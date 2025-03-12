@@ -52,10 +52,17 @@ public class NiceNPC : MonoBehaviour
     private float startPosY;
 
     // Triggers
-    private BoxCollider2D groundDectection;
-    private CapsuleCollider2D wallDectection;
-    private BoxCollider2D pitDectection;
-    private BoxCollider2D jumpDectection;
+    public CapsuleCollider2D wallDectection;
+    public BoxCollider2D pitDectection;
+    public BoxCollider2D jumpDectection;
+
+    private Coroutine flipRoutine;
+
+
+    public void PrintOut()
+    {
+        print("AA");
+    }
 
     void Awake()
     {
@@ -69,24 +76,13 @@ public class NiceNPC : MonoBehaviour
 
         // Gizmo Setup //
         setupOnce = false;
-        
 
-        groundDectection = npc.GetComponent<BoxCollider2D>();
-        wallDectection = transform.GetChild(0).gameObject.GetComponent<CapsuleCollider2D>();
-        pitDectection = transform.GetChild(1).gameObject.GetComponent<BoxCollider2D>();
-        jumpDectection = transform.GetChild(2).gameObject.GetComponent<BoxCollider2D>();
         anim = this.gameObject.GetComponentInChildren<Animator>();
 
-        if (freeRoamMode == true)
-        {
-            Destroy(groundDectection);
-        }
-        else
+        if (freeRoamMode == false)
         {
             // Create
             PointerCreation();
-
-            Destroy(pitDectection);
         }
 
         startPosX = npc.transform.position.x;
@@ -121,7 +117,7 @@ public class NiceNPC : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         
         if (disableAI == false && outOfRange == false)
@@ -175,12 +171,12 @@ public class NiceNPC : MonoBehaviour
             if (curPoint == set_point1.transform)
             {
                 // This makes sure it moves to the right direction by checking the point neg or pos //
-                rb.velocity = point1OffsetX < 0 ? new Vector2(-5, 0) : new Vector2(5, 0);
+                rb.velocity = point1OffsetX < 0 ? new Vector2(-5 * (Time.deltaTime * 54), 0) : new Vector2(5 * (Time.deltaTime * 54), 0);
             }
             else
             {
                 // This makes sure it moves to the right direction by checking the point neg or pos//
-                rb.velocity = point2OffsetX < 0 ? new Vector2(-5, 0) : new Vector2(5, 0);
+                rb.velocity = point2OffsetX < 0 ? new Vector2(-5 * (Time.deltaTime * 54), 0) : new Vector2(5 * (Time.deltaTime * 54), 0);
             }
         }
 
@@ -205,7 +201,7 @@ public class NiceNPC : MonoBehaviour
         npc.transform.localScale = new Vector2((Mathf.Sign(rb.velocity.x)), npc.transform.localScale.y);
     }
 
-    private void TurnFunc()
+    private IEnumerator TurnFunc()
     {
         // Flips GameObject not just Sprite
         npc.transform.localScale = new Vector2((Mathf.Sign(rb.velocity.x)), npc.transform.localScale.y);
@@ -227,13 +223,15 @@ public class NiceNPC : MonoBehaviour
                 curPoint = set_point1.transform;
             }
         }
+        yield return new WaitForSeconds(1);
+        flipRoutine = null;
     }
 
     // FreeRoam Mode Functions //
     private void FreeRoam()
     {
                                                 // Right                                  //Left
-        rb.velocity = directionRoam == true ? new Vector2(2, curJumpForce) : new Vector2(-2, curJumpForce);
+        rb.velocity = directionRoam == true ? new Vector2(2 * (Time.deltaTime * 54), curJumpForce) : new Vector2(-2 * (Time.deltaTime * 54), curJumpForce);
     }
 
     // Others //
@@ -294,7 +292,20 @@ public class NiceNPC : MonoBehaviour
         {
             if (npc.activeInHierarchy == true && (collision.CompareTag("Level") || collision.CompareTag("Platforms") || collision.CompareTag("FloorBreakable")) && collision.IsTouching(wallDectection) && collision.IsTouching(jumpDectection))
             {
-                TurnFunc();
+                if (freeRoamMode == false)
+                {
+                    if (flipRoutine == null)
+                    {
+                        flipRoutine = StartCoroutine(TurnFunc());
+                    }
+                }
+                else if (collision.IsTouching(jumpDectection))
+                {
+                    if (flipRoutine == null)
+                    {
+                        flipRoutine = StartCoroutine(TurnFunc());
+                    }
+                }
             }
 
         }
@@ -322,18 +333,11 @@ public class NiceNPC : MonoBehaviour
             // Ledge Decection
             if ((collision.CompareTag("Level") || collision.CompareTag("Platforms") || collision.CompareTag("FloorBreakable")))
             {
-                if (freeRoamMode == false)
+                 if (!collision.IsTouching(pitDectection) && !collision.IsTouching(jumpDectection) && freeRoamMode == true)
                 {
-                    if (!groundDectection.IsTouching(collision))
+                    if (flipRoutine == null)
                     {
-                        TurnFunc();
-                    }
-                }
-                else if (freeRoamMode == true)
-                {
-                    if (!pitDectection.IsTouching(collision))
-                    {
-                        TurnFunc();
+                        flipRoutine = StartCoroutine(TurnFunc());
                     }
                 }
             }
