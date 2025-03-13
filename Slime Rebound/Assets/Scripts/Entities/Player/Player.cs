@@ -69,7 +69,7 @@ public class Player : Singleton<Player>
 
         throwArrow.SetActive(false);
         
-        jumpPower = 9.2f;
+        jumpPower = 9.4f;
     }
 
     // Start is called before the first frame update
@@ -101,8 +101,6 @@ public class Player : Singleton<Player>
             { 
                 float platofrmPosX = DetectionScript.Instance.GetPlatform().transform.position.x;
 
-
-                //Debug.Log(platofrmPos);
                 player.transform.position = Vector3.MoveTowards(player.transform.position, new Vector2( platofrmPosX, player.transform.position.y), 5.5f * Time.deltaTime);
             }
 
@@ -110,7 +108,6 @@ public class Player : Singleton<Player>
             {
                 float platofrmPosY = DetectionScript.Instance.GetPlatform().transform.position.y;
 
-                //Debug.Log(platofrmPos);
                 player.transform.position = Vector3.MoveTowards(player.transform.position, new Vector2(player.transform.position.x, platofrmPosY), 4.5f * Time.deltaTime);
             }
 
@@ -124,13 +121,10 @@ public class Player : Singleton<Player>
         // Player Physics
         if (PlayerState.IsDamaged == false)
         {
-            float yVelocity;
-            yVelocity = PlayerState.IsBounceMode == true ? playerRB.velocity.y : dirY ;
-
             // Player Movement Velocity Changes //
-            playerRB.velocity = new Vector3(dirX * (Time.deltaTime * 54), yVelocity * (Time.deltaTime * 54), 0);
+            playerRB.velocity = new Vector3(dirX * (Time.deltaTime * 54), dirY * (Time.deltaTime * 54), 0);
         }
-        else
+        else // Damaged No Velocity
         {
             dirX = 0; 
             dirY = 0;
@@ -149,7 +143,7 @@ public class Player : Singleton<Player>
 
         //Debug.Log(PlayerState.IsTouchingTop);
         //Debug.Log(GameData.HasSceneTransAnim);
-        //Debug.Log(PlayerState.IsStickActive);
+        //Debug.Log(PlayerState.IsTouchingGround);
     }
 
     public void ResetPlayerVel()
@@ -223,7 +217,7 @@ public class Player : Singleton<Player>
 
     void PlayerAcceleration()
     {
-        float fallSpeed = 0.65f;
+        float fallSpeed = 0.60f;
 
         if(PlayerState.IsPound == false && PlayerState.IsJump == false)
         {
@@ -239,11 +233,11 @@ public class Player : Singleton<Player>
                 {
                     // Player falls down faster every frame
                     dirY -= fallSpeed;
-                } 
+                }
             }
 
             // JumpAttack
-            else if(startFallAttack == true)
+            else if(startFallAttack == true && PlayerState.IsBounceMode == false && PlayerState.IsStickActive == false)
             {
                 if (PlayerState.IsTouchingGround == true || PlayerState.IsTouchingPlatform == true)
                 {
@@ -260,21 +254,21 @@ public class Player : Singleton<Player>
             // Gravity Delay
             else if (PlayerState.IsBounceMode == true)
             {
-                if(playerRB.velocity.y < -3.7f)
+                
+                if (PlayerState.IsTouchingGround == true || PlayerState.IsTouchingPlatform == true)
                 {
-                    if (PlayerState.IsTouchingGround == true || PlayerState.IsTouchingPlatform == true)
-                    {
-                        // Reset Velocity when it hits ground
-                        playerRB.velocity = new Vector2(playerRB.velocity.x, 0f);
-                    }
-                    else if ((playerRB.velocity.y < 0f) && PlayerState.IsTouchingWall == false && !(playerRB.velocity.y < -9f))
-                    {
-                        playerRB.velocity = new Vector2(playerRB.velocity.x, playerRB.velocity.y - 0.15f);
-                    }
+                    // Reset Velocity when it hits ground
+                    dirY = 0;
                 }
+                
+                else if (PlayerState.IsTouchingWall == false && !(playerRB.velocity.y < -9f))
+                {
+                    dirY -= fallSpeed;
+                }
+                
             }
             
-            else if (PlayerState.IsStickActive == true)
+            else if (PlayerState.IsStickActive == true && PlayerState.IsBounceMode == false)
             {
                 if ((PlayerState.IsTouchingGround == false && PlayerState.IsTouchingPlatform == false) && PlayerState.IsTouchingWall == true)
                 {
@@ -285,6 +279,7 @@ public class Player : Singleton<Player>
                 else if ((playerRB.velocity.y < 0f) && PlayerState.IsTouchingWall == false && !(playerRB.velocity.y < -9f))
                 {
                     dirY -= fallSpeed;
+
                 }       
             }
         }
@@ -416,7 +411,7 @@ public class Player : Singleton<Player>
                     }
 
                     // Bounce Jump
-                    else if(PlayerState.IsBounceMode == true)
+                    else if (PlayerState.IsBounceMode == true )
                     {
                         if (jumpRoutine == null)
                         {
@@ -429,26 +424,21 @@ public class Player : Singleton<Player>
             // Stick to wall mode
             if (Input.GetKeyDown(KeyCode.L))
             {
-                PlayerState.IsStickActive = PlayerState.IsStickActive == true ? false : true;
-
-                if (PlayerState.IsStickActive == true)
+                
+                if (PlayerState.IsTouchingWall == true && PlayerState.IsPound == false && PlayerState.IsCrouch == false 
+                    && PlayerState.IsHeadAttack == false && PlayerState.IsBounceMode == false 
+                    && PlayerState.IsAttackJump == false)
                 {
-                    if (PlayerState.IsTouchingWall == true && PlayerState.IsPound == false && PlayerState.IsCrouch == false 
-                        && PlayerState.IsHeadAttack == false && PlayerState.IsBounceMode == false 
-                        && PlayerState.IsAttackJump == false)
-                    {
-                        playerRB.sharedMaterial = stick;
+                    PlayerState.IsStickActive = true;
 
-                        if (stickModeRoutine == null)
-                        {
-                            stickModeRoutine = StartCoroutine(StickVelocity());
-                        }
+                    playerRB.sharedMaterial = stick;
+
+                    if (stickModeRoutine == null)
+                    {
+                        stickModeRoutine = StartCoroutine(StickVelocity());
                     }
                 }
-                else
-                {
-                    playerRB.sharedMaterial = slip;
-                }
+                
 
             }
 
@@ -469,7 +459,7 @@ public class Player : Singleton<Player>
             // Ground Pound
             if (Input.GetKeyDown(KeyCode.S))
             {
-                if (PlayerState.IsHeadAttack == false && PlayerState.IsTouchingWall == false)
+                if (PlayerState.IsHeadAttack == false)
                 {
                     if ((PlayerState.IsTouchingGround == false && PlayerState.IsTouchingPlatform == false))
                     {
@@ -763,7 +753,18 @@ public class Player : Singleton<Player>
                 }
             }
 
+            //Disable
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                //dirX = 0;
+                playerRB.sharedMaterial = slip;
+                yield return new WaitUntil(() => PlayerState.IsTouchingGround == true || PlayerState.IsTouchingPlatform == true);
+                PlayerState.IsStickActive = false;
+            }
+
         }
+
+
 
         dirX = 0;
         playerRB.sharedMaterial = slip;
@@ -795,9 +796,6 @@ public class Player : Singleton<Player>
             AttackTrigger("Bounce");
 
             playerRB.sharedMaterial = bounce;
-            playerRB.gravityScale = 1.7f;
-
-            dirY = 4f * (Time.deltaTime * 145);
 
             // Text Fade Effect
             if (GameObject.FindAnyObjectByType<GameManager>() != null)
@@ -826,7 +824,7 @@ public class Player : Singleton<Player>
             dirX = player.transform.localScale.x == 1 ? bounceSpeed + extraRunSpeed : -bounceSpeed - extraRunSpeed;
 
             // This is where it would bounces back when collding with a wall
-            if (PlayerState.IsTouchingWall == true && GameData.HasEnteredScreneTrig == false)
+            if ((PlayerState.IsTouchingWall == true || PlayerState.IsTouchingPlatformSide == true) && PlayerState.IsTouchingTop == false && GameData.HasEnteredScreneTrig == false)
             {
                 PlayerAnimationManager.Instance.PlayAnimation("squish");
 
@@ -846,21 +844,22 @@ public class Player : Singleton<Player>
                     Vector3 look = player.transform.localScale.x == 1 ? Vector3.right : Vector3.left;
 
                     StartCoroutine(ParticleSpawnerManager.Instance.PlayParticle(ParticleSpawnerManager.Instance.particleSlimeSplash, new Vector2(player.transform.position.x, player.transform.position.y + 0.6f), Quaternion.LookRotation(look)));
-
-                    playerRB.velocity = new Vector3(playerRB.velocity.x, 7.5f, 0);
+                    dirY = jumpPower;
                 }
                 else
                 {
                     failedBounces++;
                 }
 
-                yield return new WaitForSeconds(0.020f);
+                yield return new WaitForSeconds(0.002f);
+
+
             }
 
             // Prevents Unneccery Bouncing
-            if(PlayerState.IsTouchingTop == true)
+            if (PlayerState.IsTouchingTop == true)
             {
-                playerRB.velocity = new Vector3(playerRB.velocity.x, -0.1f * (Time.deltaTime * 245), 0);
+                dirY = 0;
             }
 
             // Stops when player does enough failed wall bounces
@@ -1115,30 +1114,34 @@ public class Player : Singleton<Player>
     IEnumerator JumpFunction()
     {
         float timeDelay = 0f;
-        if(PlayerState.IsBounceMode == false)
-        { 
-            if(PlayerState.IsStickActive == false)
-            { 
+
+        if (PlayerState.IsBounceMode == false )
+        {
+            if (PlayerState.IsStickActive == false)
+            {
+
                 jumpTimes++;
                 //Debug.Log(jumpTimes);
                 //StartCoroutine(AudioManager.Instance.PlayAudio("Pep", player.transform.position, true));
             }
+   
             dirY = jumpPower;
 
-            timeDelay = 0.20f;
+            timeDelay = 0.20f;            
         }
-        else
+        else // Bounce Settings
         {
-            timeDelay = 0.4f;
+            timeDelay = 0.30f;
         }
+        
 
         PlayerState.IsJump = true;
         yield return new WaitForSeconds(timeDelay);
         PlayerState.IsJump = false;
-        
 
         if (PlayerState.IsBounceMode == false)
         {
+
             dirY = 0;
 
             // For extra jumps in mid air

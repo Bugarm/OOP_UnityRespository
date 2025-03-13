@@ -60,6 +60,7 @@ public class DontDestroyHUB : Singleton<DontDestroyHUB>
         {
             player.transform.position = new Vector3(doorStart.transform.position.x + 0.8f, doorStart.transform.position.y - 0.4f, 0);
             GameData.PlayerPos = new Vector3(doorStart.transform.position.x + 0.8f, doorStart.transform.position.y - 0.4f, 0);
+            Debug.Log("EFWFE");
         }
         else if(doorScript != null)
         {
@@ -76,6 +77,7 @@ public class DontDestroyHUB : Singleton<DontDestroyHUB>
         PlayerState.DisableAllMove = false;
 
         SaveLoadManager.Instance.LoadImportantData();
+        SaveLoadManager.Instance.SaveDataCheckPoint(GameData.PlayerPos);
     }
 
     // Update is called once per frame

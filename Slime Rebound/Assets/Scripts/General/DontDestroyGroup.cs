@@ -30,7 +30,10 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
         base.Awake();
 
         DontDestroyOnLoad(this.gameObject);
-        
+
+        GameData.HasEnteredDoor = false;
+        GameData.HasEnteredScreneTrig = false;
+        GameData.HasLevelDoor = false;
     }
 
     // Scene Loading Managers
@@ -190,10 +193,10 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
 
     public void CheckpointLoadData()
     {
-        player.transform.position = GameData.PlayerPos;
         GameData.Hp = maxHP;
         GameManager.Instance.DisplayHp();
         GameManager.Instance.DisplayScore();
+        player.transform.position = GameData.PlayerPos;
     }
 
     public void DoorSpawnIn()
