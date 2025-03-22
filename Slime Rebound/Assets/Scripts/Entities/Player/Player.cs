@@ -1,3 +1,4 @@
+using Sirenix.Serialization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,9 +8,13 @@ using UnityEngine.Playables;
 using UnityEngine.UIElements;
 using static UnityEngine.EventSystems.EventTrigger;
 
+// Required
+[RequireComponent(typeof(Rigidbody2D))]
+
+
 public class Player : Singleton<Player>
 {
-    
+
     [Header("Settings")]
     public int walkSpeed;
     public int runSpeed;
@@ -39,9 +44,6 @@ public class Player : Singleton<Player>
     public GameObject throwArrow;
     public GameObject playerHeadStorage;
 
-    [Header("Wall Collision")]
-    public BoxCollider2D wallCollision;
-
     [Header("Player Sprite")]
     public SpriteRenderer playerSprite;
 
@@ -52,6 +54,9 @@ public class Player : Singleton<Player>
     private float dirY;
     private float jumpPower;
     private int jumpTimes;
+    float gravityPower;
+    float bounceKeyHeld;
+    bool hasBounced;
     private float speed = 4;
 
     public int failedBounces = 0;
@@ -59,7 +64,7 @@ public class Player : Singleton<Player>
     private bool offLedge;
     private bool startFallAttack;
 
-    private Coroutine ledgeDelayRoutine, slideRoutine, jumpRoutine, dashRoutine, poundRoutine, attackRoutine, attackJumpRoutine, headAttackRoutine, bounceRoutine, stickModeRoutine;
+    private Coroutine flipRoutine, ledgeDelayRoutine, slideRoutine, jumpRoutine, dashRoutine, poundRoutine, attackRoutine, attackJumpRoutine, headAttackRoutine, bounceRoutine, stickModeRoutine;
 
     protected override void Awake()
     {
@@ -70,6 +75,7 @@ public class Player : Singleton<Player>
         throwArrow.SetActive(false);
         
         jumpPower = 9.4f;
+        gravityPower = playerRB.gravityScale;
     }
 
     // Start is called before the first frame update
@@ -77,6 +83,7 @@ public class Player : Singleton<Player>
     {
         PlayerState.IsMove = false;
         PlayerState.IsBounceMode = false;
+        PlayerState.IsSlide = false;
         PlayerState.IsHeadAttack = false;
         PlayerState.IsStickActive = false;
         PlayerState.IsDamaged = false;
@@ -97,32 +104,37 @@ public class Player : Singleton<Player>
         // Platform Physics
         if (PlayerState.IsJump == false && PlayerState.IsDamaged == false && PlayerState.IsMove == false)
         {
-            if(PlayerState.IsTouchingPlatform == true && PlayerState.IsStickActive == false)
-            { 
+            if (PlayerState.IsTouchingPlatform == true && PlayerState.IsStickActive == false)
+            {
                 float platofrmPosX = DetectionScript.Instance.GetPlatform().transform.position.x;
 
-                player.transform.position = Vector3.MoveTowards(player.transform.position, new Vector2( platofrmPosX, player.transform.position.y), 5.5f * Time.deltaTime);
+                player.transform.position = Vector3.MoveTowards(player.transform.position, new Vector2(platofrmPosX, player.transform.position.y), Time.deltaTime * 5.5f);
             }
 
             if (PlayerState.IsTouchingPlatformSide == true && PlayerState.IsStickActive == true)
             {
-                float platofrmPosY = DetectionScript.Instance.GetPlatform().transform.position.y;
 
-                player.transform.position = Vector3.MoveTowards(player.transform.position, new Vector2(player.transform.position.x, platofrmPosY), 4.5f * Time.deltaTime);
+                Vector3 platofrmPos = DetectionScript.Instance.GetPlatform().transform.position;
+
+                playerRB.position = Vector3.MoveTowards(playerRB.position, platofrmPos, Time.deltaTime * 6.5f);
+
             }
-
-        }
-
-        if (PlayerState.IsTouchingPlatform == false)
-        {
-            PlayerAcceleration();
         }
 
         // Player Physics
         if (PlayerState.IsDamaged == false)
         {
             // Player Movement Velocity Changes //
-            playerRB.velocity = new Vector3(dirX * (Time.deltaTime * 54), dirY * (Time.deltaTime * 54), 0);
+            if (PlayerState.IsBounceMode == true && hasBounced == false)
+            {
+                playerRB.velocity = new Vector3(dirX * (Time.fixedDeltaTime * 60), playerRB.velocity.y, 0);
+
+            }
+            else
+            {
+                playerRB.velocity = new Vector3(dirX * (Time.fixedDeltaTime * 60), dirY * (Time.fixedDeltaTime * 60), 0);
+            }
+            
         }
         else // Damaged No Velocity
         {
@@ -133,18 +145,26 @@ public class Player : Singleton<Player>
 
     // Update is called once per frame
     void Update()
-    { 
+    {
+        
+        if (PlayerState.IsTouchingPlatform == false)
+        {
+            PlayerAcceleration();
+        }
+
         if (PlayerState.DisableAllMove == false)
-        { 
+        {         
             KeyPressed();
             ResetChecks();
             KeyReleased();
         }
-
-        //Debug.Log(PlayerState.IsTouchingTop);
+                
+        //Debug.Log(dirY);
         //Debug.Log(GameData.HasSceneTransAnim);
-        //Debug.Log(PlayerState.IsTouchingGround);
+        //Debug.Log(PlayerState.DisableAllMove);
     }
+
+    
 
     public void ResetPlayerVel()
     {
@@ -154,19 +174,7 @@ public class Player : Singleton<Player>
 
     void ResetChecks()
     {
-        // Disable when stick active Touches Ground
-        if (PlayerState.IsStickActive == true && (PlayerState.IsTouchingGround == true || PlayerState.IsTouchingPlatform == true))
-        {
-            if (stickModeRoutine != null)
-            {
-                StopCoroutine(stickModeRoutine);
-                stickModeRoutine = null;
-            }
-            dirX = 0;
-            playerRB.sharedMaterial = slip;
-            PlayerState.IsStickActive = false;
-        }
-
+        
         // Disable Jump when groundpound
         if (PlayerState.IsJump == true && PlayerState.IsPound == true)
         {
@@ -180,7 +188,7 @@ public class Player : Singleton<Player>
             PlayerState.IsBounceMode = false;
 
             playerRB.sharedMaterial = slip;
-            playerRB.gravityScale = 10; // DO smn different asp
+            playerRB.gravityScale = gravityPower; // DO smn different asp
             //Reset velocity
             dirX = 0;
         }
@@ -217,7 +225,7 @@ public class Player : Singleton<Player>
 
     void PlayerAcceleration()
     {
-        float fallSpeed = 0.60f;
+        float fallSpeed = 0.10f;
 
         if(PlayerState.IsPound == false && PlayerState.IsJump == false)
         {
@@ -292,23 +300,9 @@ public class Player : Singleton<Player>
             // Player Flipping
             if (PlayerState.IsStickActive == false && PlayerState.IsDash == false && PlayerState.IsPound == false && PlayerState.IsBounceMode == false)
             {
-                // Flips Player
-                if (Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.A))
+                if(flipRoutine == null)
                 {
-                    player.transform.localScale = new Vector2(player.transform.localScale.x, player.transform.localScale.y);
-                }
-                else
-                { 
-                    if (Input.GetKey(KeyCode.A))
-                    {
-
-                        player.transform.localScale = new Vector2(-1, player.transform.localScale.y);
-                    }
-
-                    if (Input.GetKey(KeyCode.D))
-                    {
-                        player.transform.localScale = new Vector2(1, player.transform.localScale.y);
-                    }
+                    flipRoutine = StartCoroutine(FlipPlayer());
                 }
             }
         
@@ -329,9 +323,7 @@ public class Player : Singleton<Player>
                 {
                     // Collider Changes
                     PlayerCollision("Crouch");
-
-                    wallCollision.offset = new Vector2(0.4836431f, -0.55f);
-
+                    
                     if (Input.GetKeyDown(KeyCode.S) && PlayerState.IsRun == true && slideRoutine == null && PlayerState.IsCrouch == false)
                     {
                         slideRoutine = StartCoroutine(SlideFunc());
@@ -358,27 +350,25 @@ public class Player : Singleton<Player>
             //Normal movement
             if (PlayerState.IsStickActive == false && PlayerState.IsBounceMode == false && PlayerState.IsDash == false)
             {
-                // Left and Right
-                if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.D) )
+                if (PlayerState.IsTouchingWall == false)
                 {
-                    dirX = 0;
-                }
+                    // Left and Right
+                    if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.D))
+                    {
+                        dirX = 0;
+                    }
 
-                else if (Input.GetKey(KeyCode.A))
-                {
-                    if(PlayerState.IsTouchingWall == false)
-                    { 
+                    else if (Input.GetKey(KeyCode.A))
+                    {
                         PlayerState.IsMove = true;
                         if (PlayerState.IsBounceMode == false)
                         {
                             dirX = -speed;
                         }
+                        
                     }
-                }
 
-                else if (Input.GetKey(KeyCode.D))
-                {
-                    if (PlayerState.IsTouchingWall == false)
+                    else if (Input.GetKey(KeyCode.D))
                     {
                         PlayerState.IsMove = true;
                         if (PlayerState.IsBounceMode == false)
@@ -387,7 +377,6 @@ public class Player : Singleton<Player>
                         }
                     }
                 }
-  
             }
 
             // Jump
@@ -411,7 +400,7 @@ public class Player : Singleton<Player>
                     }
 
                     // Bounce Jump
-                    else if (PlayerState.IsBounceMode == true )
+                    else if (PlayerState.IsBounceMode == true)
                     {
                         if (jumpRoutine == null)
                         {
@@ -445,13 +434,19 @@ public class Player : Singleton<Player>
             // Bounce Setup 
             if (Input.GetKey(KeyCode.K))
             {
-                if(PlayerState.IsAttackJump == false && PlayerState.IsAttack == false && PlayerState.IsDash == false && PlayerState.IsCrouch == false && PlayerState.IsPound == false && PlayerState.IsStickActive == false && PlayerState.IsJump == false)
-                { 
-                    PlayerState.IsBounceMode = true;
+                bounceKeyHeld += Time.deltaTime;
+                //Debug.Log(bounceKeyHeld);
+                if(bounceKeyHeld >= 0.4f)
+                {
+                    if(PlayerState.IsAttackJump == false && PlayerState.IsAttack == false && PlayerState.IsDash == false && PlayerState.IsCrouch == false && PlayerState.IsPound == false && PlayerState.IsStickActive == false && PlayerState.IsJump == false)
+                    { 
+                        PlayerState.IsBounceMode = true;
 
-                    if (bounceRoutine == null)
-                    {
-                        bounceRoutine = StartCoroutine(BounceFunction());
+                        if (bounceRoutine == null)
+                        {
+                            bounceRoutine = StartCoroutine(BounceFunction());
+                        }
+                        bounceKeyHeld = 0;
                     }
                 }
             }
@@ -531,16 +526,15 @@ public class Player : Singleton<Player>
         if (PlayerState.IsStickActive == false && PlayerState.IsBounceMode == false && PlayerState.IsDash == false)
         {
             // Movement
-            if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))
+            if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
             {
                 PlayerState.IsMove = false;
                 speed = walkSpeed;
-                PlayerState.IsCrouch = false;
                 dirX = 0;
             }
 
             // Crouch   
-            if (!Input.GetKey(KeyCode.S))
+            if (Input.GetKeyUp(KeyCode.S))
             {
                 if (PlayerState.IsTouchingTop == false)
                 {
@@ -551,8 +545,6 @@ public class Player : Singleton<Player>
                     PlayerCollision("Idle");
 
                     speed = walkSpeed;
-
-                    wallCollision.offset = new Vector2(0.4836431f, -0.2430587f);
 
                 }
             }
@@ -573,97 +565,139 @@ public class Player : Singleton<Player>
         {
             PlayerState.IsMove = false;
         }
+
+        if(Input.GetKeyUp(KeyCode.K))
+        {
+            bounceKeyHeld = 0;
+        }
         
     }
     
     // Collision and Triggers Setup //
     void PlayerCollision(string mode)
     {
-        switch (mode)
+        try
         {
-            case "Idle":
-                idleCollider.gameObject.SetActive(true);
+            switch (mode)
+            {
+                case "Idle":
+                    idleCollider.gameObject.SetActive(true);
 
-                crouchCollider.gameObject.SetActive(false);
-                bounceCollider.gameObject.SetActive(false);
+                    crouchCollider.gameObject.SetActive(false);
+                    bounceCollider.gameObject.SetActive(false);
 
-                break;
+                    break;
 
-            case "Crouch":
-                crouchCollider.gameObject.SetActive(true);
+                case "Crouch":
+                    crouchCollider.gameObject.SetActive(true);
 
-                idleCollider.gameObject.SetActive(false);
-                bounceCollider.gameObject.SetActive(false);
+                    idleCollider.gameObject.SetActive(false);
+                    bounceCollider.gameObject.SetActive(false);
 
-                break;
+                    break;
 
-            case "Bounce":
-                bounceCollider.gameObject.SetActive(true);
+                case "Bounce":
+                    bounceCollider.gameObject.SetActive(true);
 
-                idleCollider.gameObject.SetActive(false);
-                crouchCollider.gameObject.SetActive(false);
+                    idleCollider.gameObject.SetActive(false);
+                    crouchCollider.gameObject.SetActive(false);
 
-                break;
+                    break;
 
-            default:
-                Debug.Log("ERROR");
-                break;
+                default:
+                    Debug.Log("ERROR");
+                    break;
 
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.Log("COLLISION ERROR: " + ex.Message);
         }
     }
 
     void AttackTrigger(string mode)
     {
-        switch (mode)
+        try 
+        { 
+            switch (mode)
+            {
+                case "Normal-Attack":
+                    poundTrigger.gameObject.SetActive(false);
+                    bounceAttackTrigger.gameObject.SetActive(false);
+                    attackTrigger.gameObject.SetActive(true);
+                    jumpAttackTrigger.gameObject.SetActive(false);
+
+                    break;
+
+                case "Jump-Attack":
+                    poundTrigger.gameObject.SetActive(false);
+                    bounceAttackTrigger.gameObject.SetActive(false);
+                    attackTrigger.gameObject.SetActive(false);
+                    jumpAttackTrigger.gameObject.SetActive(true);
+
+                    break;
+
+                case "Bounce":
+                    poundTrigger.gameObject.SetActive(false);
+                    bounceAttackTrigger.gameObject.SetActive(true);
+                    attackTrigger.gameObject.SetActive(false);
+                    jumpAttackTrigger.gameObject.SetActive(false);
+
+                    break;
+
+                case "Pound":
+                    poundTrigger.gameObject.SetActive(true);
+                    bounceAttackTrigger.gameObject.SetActive(false);
+                    attackTrigger.gameObject.SetActive(false);
+                    jumpAttackTrigger.gameObject.SetActive(false);
+
+                    break;
+
+                case "Reset":
+                    poundTrigger.gameObject.SetActive(false);
+                    bounceAttackTrigger.gameObject.SetActive(false);
+                    attackTrigger.gameObject.SetActive(false);
+                    jumpAttackTrigger.gameObject.SetActive(false);
+
+                    break;
+
+                default:
+                    Debug.Log("ERROR");
+                    break;
+            }
+        }
+        catch (Exception ex)
         {
-            case "Normal-Attack":
-                poundTrigger.gameObject.SetActive(false);
-                bounceAttackTrigger.gameObject.SetActive(false);
-                attackTrigger.gameObject.SetActive(true);
-                jumpAttackTrigger.gameObject.SetActive(false);
-
-                break;
-
-            case "Jump-Attack":
-                poundTrigger.gameObject.SetActive(false);
-                bounceAttackTrigger.gameObject.SetActive(false);
-                attackTrigger.gameObject.SetActive(false);
-                jumpAttackTrigger.gameObject.SetActive(true);
-
-                break;
-
-            case "Bounce":
-                poundTrigger.gameObject.SetActive(false);
-                bounceAttackTrigger.gameObject.SetActive(true);
-                attackTrigger.gameObject.SetActive(false);
-                jumpAttackTrigger.gameObject.SetActive(false);
-
-                break;
-
-            case "Pound":
-                poundTrigger.gameObject.SetActive(true);
-                bounceAttackTrigger.gameObject.SetActive(false);
-                attackTrigger.gameObject.SetActive(false);
-                jumpAttackTrigger.gameObject.SetActive(false);
-
-                break;
-
-            case "Reset":
-                poundTrigger.gameObject.SetActive(false);
-                bounceAttackTrigger.gameObject.SetActive(false);
-                attackTrigger.gameObject.SetActive(false);
-                jumpAttackTrigger.gameObject.SetActive(false);
-
-                break;
-
-            default:
-                Debug.Log("ERROR");
-                break;
-
+            Debug.Log("ATTACK ERROR: " + ex.Message);
         }
     }
 
     // Routines //
+
+    // This had to be done because of the scene trigger box
+    IEnumerator FlipPlayer()
+    {
+        while (PlayerState.DisableAllMove == false)
+        {
+            if (!(Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.A)))
+            {
+                yield return new WaitForSeconds(0.20f);
+                if (Input.GetKey(KeyCode.A))
+                {
+                    player.transform.localScale = new Vector2(-1, player.transform.localScale.y);
+                }
+
+                else if (Input.GetKey(KeyCode.D))
+                {
+                    player.transform.localScale = new Vector2(1, player.transform.localScale.y);
+                }
+            }
+            yield return new WaitForNextFrameUnit();
+        }
+
+        flipRoutine = null;
+    }
 
     // Jumping before falling off the ledge
     IEnumerator LedgeDelay()
@@ -723,9 +757,9 @@ public class Player : Singleton<Player>
 
         while (PlayerState.IsStickActive == true && PlayerState.IsPound == false && (PlayerState.IsTouchingGround == false || PlayerState.IsTouchingPlatform == false))
         {
-            dirX = player.transform.localScale.x == 1 ? 7.5f : -7.5f;
-            
-            yield return new WaitForSeconds(0.001f);
+            dirX  = player.transform.localScale.x == 1 ? 7.5f : -7.5f;
+
+            yield return new WaitForNextFrameUnit();
 
             // Check incase player gets stuck in a corner while in stick mode
             if ((PlayerState.IsTouchingGround == false && PlayerState.IsTouchingPlatform == true) && PlayerState.IsTouchingWall == false)
@@ -756,9 +790,17 @@ public class Player : Singleton<Player>
             //Disable
             if (Input.GetKeyDown(KeyCode.L))
             {
-                //dirX = 0;
+                dirX = 0;
                 playerRB.sharedMaterial = slip;
                 yield return new WaitUntil(() => PlayerState.IsTouchingGround == true || PlayerState.IsTouchingPlatform == true);
+                PlayerState.IsStickActive = false;
+            }
+
+            // Disable when stick active Touches Ground
+            if ((PlayerState.IsTouchingGround == true || PlayerState.IsTouchingPlatform == true) && PlayerState.IsTouchingWall == false)
+            {
+                dirX = 0;
+                playerRB.sharedMaterial = slip;
                 PlayerState.IsStickActive = false;
             }
 
@@ -773,7 +815,6 @@ public class Player : Singleton<Player>
 
     IEnumerator BounceFunction()
     {
-        float oldPos = playerSprite.transform.position.x;
         int bounces = 0;
         failedBounces = 0;
         bool hasFailed = false;
@@ -785,8 +826,6 @@ public class Player : Singleton<Player>
         // Set up
         if (PlayerState.IsBounceMode == true)
         {
-            wallCollision.offset = new Vector2(0.72f, -0.2430587f);
-
             if (GameObject.FindAnyObjectByType<GameManager>() != null)
             {
                 GameManager.Instance.UpdateBounces(bounces, false);
@@ -795,6 +834,7 @@ public class Player : Singleton<Player>
             PlayerCollision("Bounce");
             AttackTrigger("Bounce");
 
+            playerRB.gravityScale = 5;
             playerRB.sharedMaterial = bounce;
 
             // Text Fade Effect
@@ -816,7 +856,6 @@ public class Player : Singleton<Player>
         // Bounce Loop
         while (PlayerState.IsBounceMode == true)
         {
-            yield return new WaitForSeconds(0.001f);
 
             extraRunSpeed = PlayerState.IsRun == true ? 1.5f : 0;
 
@@ -826,13 +865,12 @@ public class Player : Singleton<Player>
             // This is where it would bounces back when collding with a wall
             if ((PlayerState.IsTouchingWall == true || PlayerState.IsTouchingPlatformSide == true) && PlayerState.IsTouchingTop == false && GameData.HasEnteredScreneTrig == false)
             {
-                PlayerAnimationManager.Instance.PlayAnimation("squish");
 
                 player.transform.localScale = new Vector2(-(Mathf.Sign(playerRB.velocity.x)), player.transform.localScale.y);
 
                 if (PlayerState.IsJump == true)
                 {
-                    oldPos = playerSprite.transform.position.x;
+                    hasBounced = true;
                     failedBounces = 0;
                     bounces++;
 
@@ -850,9 +888,6 @@ public class Player : Singleton<Player>
                 {
                     failedBounces++;
                 }
-
-                yield return new WaitForSeconds(0.002f);
-
 
             }
 
@@ -873,7 +908,7 @@ public class Player : Singleton<Player>
                 hasFailed = true;
             }
 
-            yield return new WaitForFixedUpdate();
+            yield return new WaitForSeconds(0.02f);
 
         }
 
@@ -881,8 +916,6 @@ public class Player : Singleton<Player>
         if (PlayerState.IsBounceMode == false)
         {
             StartCoroutine(ParticleSpawnerManager.Instance.PlayParticle(ParticleSpawnerManager.Instance.particleSlimeBoom, playerSprite.transform.position, Quaternion.identity));
-
-            wallCollision.offset = new Vector2(0.4836431f, -0.2430587f);
 
             if (GameObject.FindAnyObjectByType<GameManager>() != null)
             {
@@ -910,7 +943,7 @@ public class Player : Singleton<Player>
             AttackTrigger("Reset");
 
             playerRB.sharedMaterial = slip;
-            playerRB.gravityScale = 10;
+            playerRB.gravityScale = gravityPower;
             //Reset velocity
             dirX = 0;
 
@@ -949,6 +982,7 @@ public class Player : Singleton<Player>
 
         jumpPower = 7f;
 
+        
         while (PlayerState.IsHeadAttack == true)
         {
             yield return new WaitForSeconds(0.001f);
@@ -956,7 +990,7 @@ public class Player : Singleton<Player>
             // Speed Control
             if (PlayerState.IsRun == true)
             {
-                xSpeed = 9f;      
+                xSpeed = 9f;
             }
             else
             {
@@ -964,8 +998,8 @@ public class Player : Singleton<Player>
             }
 
             // Direction
-            if(PlayerState.IsHeadThrown == false)
-            { 
+            if (PlayerState.IsHeadThrown == false)
+            {
                 if (player.transform.localScale.x == -1)
                 {
                     powerX = -xSpeed;
@@ -977,6 +1011,7 @@ public class Player : Singleton<Player>
                     arrowRotate = 36.08f;
                 }
             }
+
             // Create Head Obj
             if (obj == null && PlayerState.IsHeadThrown == false)
             {
@@ -999,14 +1034,14 @@ public class Player : Singleton<Player>
             if (PlayerState.IsHeadThrown == false)
             {
                 obj.transform.position = new Vector2(player.transform.position.x, player.transform.position.y + 0.5f);
-            }  
+            }
 
             // Upper Direction
             if (Input.GetKey(KeyCode.W))
             {
                 powerY = 9.72f;
                 headPhysics.GetComponent<Rigidbody2D>().gravityScale = headGravityPower;
-                throwArrow.transform.rotation =  Quaternion.Euler(0, 0, arrowRotate);
+                throwArrow.transform.rotation = Quaternion.Euler(0, 0, arrowRotate);
             }
 
             // Do attack
@@ -1041,7 +1076,7 @@ public class Player : Singleton<Player>
                 headAttackRoutine = null;
             }
         }
-            
+        
     }
 
     IEnumerator AttackFunction()
@@ -1078,7 +1113,7 @@ public class Player : Singleton<Player>
         PlayerState.DisableAllMove = true;
         
         StartCoroutine(ParticleSpawnerManager.Instance.PlayParticle(ParticleSpawnerManager.Instance.particleSlimeSplash, new Vector2(player.transform.position.x, player.transform.position.y - 0.6f), Quaternion.LookRotation(Vector3.down)));
-        playerRB.gravityScale = 10;
+        playerRB.gravityScale = gravityPower;
         speed = walkSpeed;
         PlayerState.IsPound = false;
 
@@ -1127,13 +1162,15 @@ public class Player : Singleton<Player>
    
             dirY = jumpPower;
 
-            timeDelay = 0.20f;            
+            timeDelay = 0.20f;
+            
         }
         else // Bounce Settings
         {
-            timeDelay = 0.30f;
+            
+            timeDelay = 0.25f;
+            
         }
-        
 
         PlayerState.IsJump = true;
         yield return new WaitForSeconds(timeDelay);
@@ -1141,9 +1178,7 @@ public class Player : Singleton<Player>
 
         if (PlayerState.IsBounceMode == false)
         {
-
             dirY = 0;
-
             // For extra jumps in mid air
             if (jumpTimes >= amountOfJumps && PlayerState.IsStickActive == false)
             {
@@ -1161,6 +1196,7 @@ public class Player : Singleton<Player>
         }
         else
         {
+            hasBounced = false;
             jumpRoutine = null;
         }
     }

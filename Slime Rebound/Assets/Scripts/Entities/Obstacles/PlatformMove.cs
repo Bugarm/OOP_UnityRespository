@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
+// Required
+[RequireComponent(typeof(Rigidbody2D))]
+
 public class PlatformMove : MonoBehaviour
 {
     [Header("Group Obj")]
@@ -93,15 +96,13 @@ public class PlatformMove : MonoBehaviour
         setupOnce = false;
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-        FollowPoints();
-    }
+    
 
     private void Update()
     {
         PointSwitch();
+        FollowPoints();
+        
     }
 
     private void FollowPoints()
@@ -137,7 +138,7 @@ public class PlatformMove : MonoBehaviour
                 dirY = pointsYList[moveToIndex];
             }
 
-            moveToPoint = new Vector3(dirX, dirY,0);
+            moveToPoint = new Vector3(dirX, dirY, 0);
 
             if (randomizeSpeed == true)
             {

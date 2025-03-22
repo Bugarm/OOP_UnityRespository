@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class SerializedData
 {
+    public string ser_levelState;
     public int ser_score;
     public int ser_health;
     public Vector3 playerPos;

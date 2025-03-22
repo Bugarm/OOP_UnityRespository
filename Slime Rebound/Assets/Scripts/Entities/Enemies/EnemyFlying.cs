@@ -4,6 +4,11 @@ using System.Drawing;
 using Unity.VisualScripting;
 using UnityEngine;
 
+// Required
+[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(CircleCollider2D))]
+
 public class EnemyFlying : Default_Entity
 {
     //[Header("Group Obj")]
@@ -27,43 +32,30 @@ public class EnemyFlying : Default_Entity
     // set up
     private ObjectPooling bulletPool;
     
-    protected Rigidbody2D rb;
-    protected SpriteRenderer enemySr;
-    private bool setupOnce = true;
-
     // Enemy Simple AI
     private Vector3 moveToPoint;
     private int moveToIndex;
 
     private bool seesPlayer;
 
-    private bool outOfRange = false;
 
     private Coroutine bulletRoutine, playerLoadRoutine;
 
     protected override void Awake()
     {
         base.Awake();
-
-        enemy = this.gameObject;
-        rb = this.gameObject.GetComponent<Rigidbody2D>();
-        enemySr = enemy.GetComponent<SpriteRenderer>();
-
-        outOfRange = true;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        // stops rotation
-        rb.freezeRotation = true;
 
         rb.gravityScale = 0;
 
         moveToPoint = new Vector3(startPosX + pointers[0].x, startPosY + pointers[0].y, 0);
 
         // Flips Enemy
-        if (Mathf.Sign(enemy.transform.position.x - moveToPoint.x) == -1)
+        if (Mathf.Sign(entity.transform.position.x - moveToPoint.x) == -1)
         {
             enemySr.flipX = false;
         }
@@ -72,12 +64,6 @@ public class EnemyFlying : Default_Entity
             enemySr.flipX = true;
         }
 
-        setupOnce = false;
-
-        outOfRange = true;
-
-        // Get Pooling
-        TryGetComponent<ObjectPooling>(out ObjectPooling hasPool);
 
     }
 
@@ -102,7 +88,7 @@ public class EnemyFlying : Default_Entity
                 GameObject normal = GameObject.Find("ObjectsToPool Normal Bullet");
                 if(normal != null)
                 { 
-                bulletPool = normal.GetComponent<ObjectPooling>();
+                    bulletPool = normal.GetComponent<ObjectPooling>();
                 }
             }
 
@@ -167,7 +153,7 @@ public class EnemyFlying : Default_Entity
 
     void FollowPoints()
     {
-        if (enemy.transform.position == moveToPoint)
+        if (entity.transform.position == moveToPoint)
         {
             moveToIndex++;
             // A check to make sure it won't go higher than the length
@@ -178,7 +164,7 @@ public class EnemyFlying : Default_Entity
             moveToPoint = new Vector3(startPosX + pointers[moveToIndex].x, startPosY + pointers[moveToIndex].y, 0);
 
             // Flips The enemy based on direction
-            if(Mathf.Sign(enemy.transform.position.x - moveToPoint.x) == -1)
+            if(Mathf.Sign(entity.transform.position.x - moveToPoint.x) == -1)
             {
                 enemySr.flipX = false;
             }
@@ -189,7 +175,7 @@ public class EnemyFlying : Default_Entity
         }
         else
         {
-            enemy.transform.position = Vector3.MoveTowards(enemy.transform.position, moveToPoint, enemiesData.speed * Time.deltaTime);
+            entity.transform.position = Vector3.MoveTowards(entity.transform.position, moveToPoint, enemiesData.speed * Time.deltaTime);
             //Debug.Log(Mathf.Sign(enemy.transform.position.x - moveToPoint.x));
         }
     }
@@ -236,7 +222,7 @@ public class EnemyFlying : Default_Entity
     {
         if (disableAI == false && outOfRange == false)
         {
-            if (enemy.activeInHierarchy == true && collision.CompareTag("PlayerBody"))
+            if (entity.activeInHierarchy == true && collision.CompareTag("PlayerBody"))
             {
                 seesPlayer = true;
                 //Debug.Log("Looked");
@@ -250,7 +236,7 @@ public class EnemyFlying : Default_Entity
     {
         if (disableAI == false && outOfRange == false)
         {
-            if (enemy.activeInHierarchy == true && collision.CompareTag("PlayerBody"))
+            if (entity.activeInHierarchy == true && collision.CompareTag("PlayerBody"))
             {
 
                 seesPlayer = false;

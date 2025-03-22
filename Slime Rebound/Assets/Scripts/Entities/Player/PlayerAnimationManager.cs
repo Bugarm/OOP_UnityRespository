@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Required
+[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(Animator))]
+
 public class PlayerAnimationManager : Singleton<PlayerAnimationManager>
 {
     private Animator playerAnim;
@@ -31,14 +35,9 @@ public class PlayerAnimationManager : Singleton<PlayerAnimationManager>
         if(PlayerState.IsStickActive == false && PlayerState.IsBounceMode == false && PlayerState.IsHeadAttack == false)
         {
             // Idle Anim
-            if (PlayerState.IsMove == false)
-            {
-                PlayAnimation("idle");
-            }
-            // Walk
-            else if(PlayerState.IsCrouch == false && PlayerState.IsSlide == false) 
+            if(PlayerState.IsCrouch == false && PlayerState.IsSlide == false) 
             {                
-                if(PlayerState.IsTouchingWall == true)
+                if(PlayerState.IsTouchingWall == true || PlayerState.IsMove == false)
                 {
                     PlayAnimation("idle");
                 }
@@ -49,7 +48,7 @@ public class PlayerAnimationManager : Singleton<PlayerAnimationManager>
             }
 
             // Jump
-            if (PlayerState.IsTouchingGround == false && PlayerState.IsTouchingPlatform == false)
+            if (PlayerState.IsTouchingGround == false && PlayerState.IsTouchingPlatform == false && PlayerState.IsTouchingPlatformSide == false)
             {
                 PlayAnimation("jump");
             }
@@ -79,11 +78,11 @@ public class PlayerAnimationManager : Singleton<PlayerAnimationManager>
         // Stick
         if (PlayerState.IsStickActive == true && PlayerState.IsBounceMode == false && PlayerState.IsHeadAttack == false)
         {
-            if(PlayerState.IsTouchingWall == true && PlayerState.IsTouchingGround == false)
+            if(PlayerState.IsTouchingWall == true && PlayerState.IsTouchingGround == false && PlayerState.IsTouchingPlatform == false) 
             {
                 PlayAnimation("stick");
             }
-            else 
+            else if(PlayerState.IsJump == true)
             {
                 PlayAnimation("jump");
             }
@@ -92,7 +91,15 @@ public class PlayerAnimationManager : Singleton<PlayerAnimationManager>
         // Bouncing
         if(PlayerState.IsBounceMode == true)
         {
-            PlayAnimation("bounce");
+            if(PlayerState.IsTouchingWall == true)
+            {
+                PlayAnimation("squish");
+            }
+            else
+            {
+                PlayAnimation("bounce");
+            }
+            
         }
 
         if(PlayerState.IsHeadAttack == true)

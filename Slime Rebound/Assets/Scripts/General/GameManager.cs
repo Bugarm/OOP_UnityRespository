@@ -62,24 +62,19 @@ public class GameManager : Singleton<GameManager>
     // Update is called once per frame
     void Update()
     {
-        if(GameData.Hp <= 0)
+        
+
+    }
+
+    public void CheckHP()
+    {
+        if (GameData.Hp <= 0)
         {
-            if(SaveLoadManager.Instance.hasSavedOnce == false)
-            {
-                SceneManager.LoadScene(GameData.LevelState);
-                SaveLoadManager.Instance.LoadCheckpointData();
-                SaveLoadManager.Instance.LoadLevelData(SceneManager.GetActiveScene().name);
-                DontDestroyGroup.Instance.CheckpointLoadData();
-            }
-            else
-            {
-                SaveLoadManager.Instance.LoadCheckpointData();
-                SaveLoadManager.Instance.LoadLevelData(SceneManager.GetActiveScene().name);
-                DontDestroyGroup.Instance.CheckpointLoadData();
-
-            }
+            SaveLoadManager.Instance.LoadCheckpointData();
+            StartCoroutine(DontDestroyManager.Instance.ScreenTrans(false, GameData.LevelState));
+            SaveLoadManager.Instance.LoadLevelData(SceneManager.GetActiveScene().name);
+            DontDestroyGroup.Instance.CheckpointLoadData();
         }
-
     }
 
     // Routines
@@ -116,6 +111,8 @@ public class GameManager : Singleton<GameManager>
         playerRB.gravityScale = 10f;
         player.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().color = Color.white;
         PlayerAnimationManager.Instance.PlayAnimation("idle");
+
+        CheckHP();
 
         // Delay before getting damaged again
         yield return new WaitForSeconds(1.5f);

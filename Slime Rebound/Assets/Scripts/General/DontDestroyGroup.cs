@@ -75,6 +75,7 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
             GameData.PlayerPos = new Vector3(door.transform.position.x, door.transform.position.y - 0.4f, 0);
         }
 
+        SaveLoadManager.Instance.SaveDataCheckPoint(GameData.PlayerPos, SceneManager.GetActiveScene().name);
 
         if (doOnce == false)
         {
@@ -123,7 +124,10 @@ public class DontDestroyGroup : Singleton<DontDestroyGroup>
 
         ExitTrigger.Instance.gameObject.SetActive(false);
 
-        DoorSpawnIn();
+        if(GameData.Hp > 0)
+        {
+            DoorSpawnIn();
+        }
 
         yield return new WaitForSeconds(0.1f);
 

@@ -1469,6 +1469,10 @@ PrefabInstance:
       value: DoubleDoor
       objectReference: {fileID: 0}
     - target: {fileID: 5307288627518051441, guid: 935021bf1635d9244a42e5224f102b16, type: 3}
+      propertyPath: id
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5307288627518051441, guid: 935021bf1635d9244a42e5224f102b16, type: 3}
       propertyPath: switchRoomNum
       value: 4
       objectReference: {fileID: 0}
@@ -1511,6 +1515,10 @@ PrefabInstance:
     - target: {fileID: 5411971954594162324, guid: 935021bf1635d9244a42e5224f102b16, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8003323554710155740, guid: 935021bf1635d9244a42e5224f102b16, type: 3}
+      propertyPath: id
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8003323554710155740, guid: 935021bf1635d9244a42e5224f102b16, type: 3}
       propertyPath: switchRoomNum

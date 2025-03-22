@@ -5,6 +5,9 @@ using Unity.VisualScripting;
 using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
 
+// Required
+[RequireComponent(typeof(Rigidbody2D))]
+
 public class DetectionScript : Singleton<DetectionScript>
 {
     private Rigidbody2D playerRB;
@@ -25,15 +28,20 @@ public class DetectionScript : Singleton<DetectionScript>
 
     }
 
-    // Start is called before the first frame update
-    void Start()
+    private void Update()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
+        if(PlayerState.IsCrouch == true ||  PlayerState.IsSlide == true)
+        {
+            wallTrigCol.offset = new Vector2(0.4836431f, -0.55f);
+        }
+        else if (PlayerState.IsBounceMode == true)
+        {
+            wallTrigCol.offset = new Vector2(0.72f, -0.2430587f);
+        }
+        else
+        {
+            wallTrigCol.offset = new Vector2(0.4836431f, -0.2430587f);
+        }
         
     }
 
@@ -158,6 +166,14 @@ public class DetectionScript : Singleton<DetectionScript>
                     PlayerState.IsDestroyedObj = true;
                 }
             }
+        }
+
+        if(collision.CompareTag("Enemies"))
+        {
+           if(collision.IsTouching(Player.Instance.bounceAttackTrigger))
+           {
+               Player.Instance.failedBounces += 2;
+           }
         }
 
     }

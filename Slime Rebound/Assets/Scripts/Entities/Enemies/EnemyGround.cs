@@ -6,6 +6,11 @@ using UnityEngine.UI;
 using System.Drawing;
 using Unity.VisualScripting;
 
+// Required
+[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(CircleCollider2D))]
+
 public class EnemyGround : Default_Entity
 {
     // Settings
@@ -24,26 +29,22 @@ public class EnemyGround : Default_Entity
     public int gravityPower;
     public float jumpForce;
 
-    //
-    protected Rigidbody2D rb;
-    protected SpriteRenderer enemySr;
-
     // Enemy Simple AI
-    private GameObject set_point1;
-    private GameObject set_point2;
+    protected GameObject set_point1;
+    protected GameObject set_point2;
 
-    private GameObject pointGroup;
+    protected GameObject pointGroup;
 
-    private float yOffset = -0.5f;
-    private float curJumpForce = 0;
+    protected float yOffset = -0.5f;
+    protected float curJumpForce = 0;
 
-    private Transform curPoint;
+    protected Transform curPoint;
 
-    private bool outOfRange = false;
     // Others
-    private bool setupOnce = true;
-    private bool isOnGround = false;
-    private bool directionRoam = false;
+    protected bool isOnGround = false;
+    protected bool directionRoam = false;
+
+    protected float speed;
    
     // Triggers
     public CapsuleCollider2D wallDectection;
@@ -52,30 +53,30 @@ public class EnemyGround : Default_Entity
 
     private Coroutine flipRoutine;
 
+    private void OnEnable()
+    {
+        speed = enemiesData.speed;
+    }
+
     protected override void Awake()
     {
         base.Awake();
         // Set up //
-
-        rb = this.gameObject.GetComponent<Rigidbody2D>();
-        enemySr = enemy.GetComponent<SpriteRenderer>();
-
         pointerGroupObj = GameObject.Find("EnemyPointsGroup");
 
         // Gizmo Setup //
-        setupOnce = false;
 
         if(freeRoamMode == false)
         {
             // Create
             PointerCreation();
         }
-
+        
         //Debug.Log(wallDectection);
     }
 
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
         // stops rotation
         rb.freezeRotation = true;
@@ -87,20 +88,19 @@ public class EnemyGround : Default_Entity
         {
             
             //This will offset the pointer pos depends on the set position added to the starting enemy pos
-            set_point1.transform.position = new Vector3(enemy.transform.position.x + point1OffsetX, this.gameObject.transform.position.y + yOffset, 0);
-            set_point2.transform.position = new Vector3(enemy.transform.position.x + point2OffsetX, this.gameObject.transform.position.y + yOffset, 0);
+            set_point1.transform.position = new Vector3(entity.transform.position.x + point1OffsetX, this.gameObject.transform.position.y + yOffset, 0);
+            set_point2.transform.position = new Vector3(entity.transform.position.x + point2OffsetX, this.gameObject.transform.position.y + yOffset, 0);
 
             // Decides what direction to start // 
             DirectionStart();
   
             curPoint = set_point1.transform;
 
-            outOfRange = true;
         }
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         
         if (disableAI == false && outOfRange == false)
@@ -122,13 +122,13 @@ public class EnemyGround : Default_Entity
     }
 
     // Pointer Mode Functions //
-    private void PointerCreation()
+    protected void PointerCreation()
     {
         // Create Pointers //
-        set_point1 = new GameObject(enemy.name.ToString() + " point1");
-        set_point2 = new GameObject(enemy.name.ToString() + " point2");
+        set_point1 = new GameObject(entity.name.ToString() + " point1");
+        set_point2 = new GameObject(entity.name.ToString() + " point2");
 
-        pointGroup = new GameObject(enemy.name.ToString() + " Group");
+        pointGroup = new GameObject(entity.name.ToString() + " Group");
 
         // Parenting //
         pointGroup.transform.SetParent(pointerGroupObj.transform);
@@ -138,14 +138,14 @@ public class EnemyGround : Default_Entity
     }
 
     // This Function will decide what direction will move at first //
-    private void DirectionStart()
+    protected void DirectionStart()
     {
-        enemy.transform.localScale =
-            point1OffsetX < 0 ? new Vector2((Mathf.Sign(rb.velocity.x)), enemy.transform.localScale.y) : new Vector2(-(Mathf.Sign(rb.velocity.x)), enemy.transform.localScale.y);
+        entity.transform.localScale =
+            point1OffsetX < 0 ? new Vector2((Mathf.Sign(rb.velocity.x)), entity.transform.localScale.y) : new Vector2(-(Mathf.Sign(rb.velocity.x)), entity.transform.localScale.y);
     }
 
     // Follows the Points //
-    private void FollowPoints()
+    protected void FollowPoints()
     {
         // Only Moves when is Touches Ground or There's no Gravity
 
@@ -154,12 +154,12 @@ public class EnemyGround : Default_Entity
             if (curPoint == set_point1.transform)
             {
                 // This makes sure it moves to the right direction by checking the point neg or pos //
-                rb.velocity = point1OffsetX < 0 ? new Vector2(-enemiesData.speed * (Time.deltaTime * 54), 0) : new Vector2(enemiesData.speed * (Time.deltaTime * 54), 0);
+                rb.velocity = point1OffsetX < 0 ? new Vector2(-speed * (Time.deltaTime * 54), 0) : new Vector2(speed * (Time.deltaTime * 54), 0);
             }
             else
             {
                 // This makes sure it moves to the right direction by checking the point neg or pos//
-                rb.velocity = point2OffsetX < 0 ? new Vector2(-enemiesData.speed * (Time.deltaTime * 54), 0) : new Vector2(enemiesData.speed * (Time.deltaTime * 54), 0);
+                rb.velocity = point2OffsetX < 0 ? new Vector2(-speed * (Time.deltaTime * 54), 0) : new Vector2(speed * (Time.deltaTime * 54), 0);
             }
         }
 
@@ -178,16 +178,16 @@ public class EnemyGround : Default_Entity
         //Debug.Log(isOnGround);
     }
 
-    private void PointSwitch(Transform point)
+    protected void PointSwitch(Transform point)
     {
         curPoint = point;
-        enemy.transform.localScale = new Vector2((Mathf.Sign(rb.velocity.x)), enemy.transform.localScale.y);
+        entity.transform.localScale = new Vector2((Mathf.Sign(rb.velocity.x)), entity.transform.localScale.y);
     }
 
-    private IEnumerator TurnFunc()
+    protected IEnumerator TurnFunc()
     {
         // Flips GameObject not just Sprite
-        enemy.transform.localScale = new Vector2((Mathf.Sign(rb.velocity.x)), enemy.transform.localScale.y);
+        entity.transform.localScale = new Vector2((Mathf.Sign(rb.velocity.x)), entity.transform.localScale.y);
 
         if (freeRoamMode == true)
         {
@@ -211,7 +211,7 @@ public class EnemyGround : Default_Entity
     }
 
     // FreeRoam Mode Functions //
-    private void FreeRoam()
+    protected void FreeRoam()
     {
                                                 // Right                                  //Left
         rb.velocity = directionRoam == true ? new Vector2(enemiesData.speed * (Time.deltaTime * 54), curJumpForce) : new Vector2(-enemiesData.speed * (Time.deltaTime * 54), curJumpForce);
@@ -243,14 +243,14 @@ public class EnemyGround : Default_Entity
         }
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)  
     {
         if(disableAI == false && outOfRange == false)
         { 
             isOnGround = true;
 
             // Wall Dectection
-            if (enemy.activeInHierarchy == true && collision.CompareTag("Level") && collision.IsTouching(wallDectection))
+            if (entity.activeInHierarchy == true && collision.CompareTag("Level") && collision.IsTouching(wallDectection))
             {
                 
                 if (!jumpDectection.IsTouching(collision))
@@ -260,7 +260,7 @@ public class EnemyGround : Default_Entity
                 }
             
             }
-            else if (enemy.activeInHierarchy == true && !wallDectection.IsTouching(collision))
+            else if (entity.activeInHierarchy == true && !wallDectection.IsTouching(collision))
             {
                 curJumpForce = 0;
             }
@@ -271,9 +271,9 @@ public class EnemyGround : Default_Entity
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (disableAI == false && outOfRange == false && enemy.activeInHierarchy == true)
+        if (disableAI == false && outOfRange == false && entity.activeInHierarchy == true)
         {
-            if (enemy.activeInHierarchy == true && (collision.CompareTag("Level") || collision.CompareTag("SwitchDoor") || collision.CompareTag("OneWay") || collision.CompareTag("Box") || collision.CompareTag("Platforms") || collision.CompareTag("FloorBreakable")) && collision.IsTouching(wallDectection))
+            if (entity.activeInHierarchy == true && (collision.CompareTag("Level") || collision.CompareTag("SwitchDoor") || collision.CompareTag("OneWay") || collision.CompareTag("Box") || collision.CompareTag("Platforms") || collision.CompareTag("FloorBreakable")) && collision.IsTouching(wallDectection))
             {
                 if(freeRoamMode == false)
                 { 
@@ -317,7 +317,7 @@ public class EnemyGround : Default_Entity
     {
         if (disableAI == false)
         {
-            if (enemy.activeInHierarchy == true && (collision.CompareTag("Level") || collision.CompareTag("OneWay") || collision.CompareTag("Box") || collision.CompareTag("Platforms") || collision.CompareTag("SwitchDoor") || collision.CompareTag("FloorBreakable")))
+            if (entity.activeInHierarchy == true && (collision.CompareTag("Level") || collision.CompareTag("OneWay") || collision.CompareTag("Box") || collision.CompareTag("Platforms") || collision.CompareTag("SwitchDoor") || collision.CompareTag("FloorBreakable")))
             {
                 if (!collision.IsTouching(pitDectection) && !collision.IsTouching(jumpDectection) && freeRoamMode == true)
                 {

@@ -60,7 +60,7 @@ public class DontDestroyHUB : Singleton<DontDestroyHUB>
         {
             player.transform.position = new Vector3(doorStart.transform.position.x + 0.8f, doorStart.transform.position.y - 0.4f, 0);
             GameData.PlayerPos = new Vector3(doorStart.transform.position.x + 0.8f, doorStart.transform.position.y - 0.4f, 0);
-            Debug.Log("EFWFE");
+            //Debug.Log("EFWFE");
         }
         else if(doorScript != null)
         {
@@ -77,7 +77,7 @@ public class DontDestroyHUB : Singleton<DontDestroyHUB>
         PlayerState.DisableAllMove = false;
 
         SaveLoadManager.Instance.LoadImportantData();
-        SaveLoadManager.Instance.SaveDataCheckPoint(GameData.PlayerPos);
+        SaveLoadManager.Instance.SaveDataCheckPoint(GameData.PlayerPos, SceneManager.GetActiveScene().name);
     }
 
     // Update is called once per frame
@@ -158,18 +158,12 @@ public class DontDestroyHUB : Singleton<DontDestroyHUB>
                 NextSceneTrigger trig = sceneTrig.GetComponent<NextSceneTrigger>();
                 if (GameData.SceneTransID == trig.id)
                 {
-                    if (trig.transform.localScale.x == -1)
-                    {
-                        offset = 3;
-                    }
-                    else
-                    {
-                        offset = -3;
-                    }
+
+                    offset = trig.transform.localScale.x == -1 ? 4 : -4;
 
                     player.transform.position = new Vector3(sceneTrig.transform.position.x + offset, sceneTrig.transform.position.y - 0.4f, 0);
                     GameData.PlayerPos = new Vector3(sceneTrig.transform.position.x + offset, sceneTrig.transform.position.y - 0.4f, 0);
-                    GameData.HasEnteredScreneTrig = false;
+                    //GameData.HasEnteredScreneTrig = false;
                 }
             }
 

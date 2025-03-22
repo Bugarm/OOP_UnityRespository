@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEditor;
+using System;
+
+// Required
+[RequireComponent(typeof(Rigidbody2D))]
 
 public class Default_Entity : MonoBehaviour
 {
@@ -13,62 +17,75 @@ public class Default_Entity : MonoBehaviour
     private int powerX;
     private int powerXval;
 
-    private Animator deathAnim;
-    private SpriteRenderer enemyRender;
-    private ParticleSpawnerManager particleInstance;
+    protected Rigidbody2D rb;
+    protected SpriteRenderer enemySr;
+
+    protected Animator anim;
+    protected SpriteRenderer enemyRender;
+    protected ParticleSpawnerManager particleInstance;
 
     protected bool disableAI;
 
-    protected GameObject enemy;
+    protected GameObject entity;
 
     protected float startPosX;
     protected float startPosY;
 
+    protected bool outOfRange = false;
+    protected bool setupOnce = true;
+
     protected Coroutine colorFlashRoutine;
+
 
     //
     protected virtual void Awake()
     {
-        enemy = this.gameObject;
+        entity = this.gameObject;
 
-        startPosX = enemy.transform.position.x;
-        startPosY = enemy.transform.position.y;
+        startPosX = entity.transform.position.x;
+        startPosY = entity.transform.position.y;
 
         powerXval = 4;
         disableAI = false;
+        setupOnce = false;
 
-        deathAnim = GetComponent<Animator>();
-        enemyRender = GetComponent<SpriteRenderer>();
-        
+        anim = GetComponentInChildren<Animator>();
+        rb = entity.GetComponent<Rigidbody2D>();
+        enemySr = entity.GetComponent<SpriteRenderer>();
+
+        outOfRange = true;
+
+        // stops rotation
+        rb.freezeRotation = true;  
+
     }
 
     public IEnumerator EnemyDead()
     {
-        Player.Instance.failedBounces += 2;
 
         //To stop from player on detecting them while dying
-        enemy.tag = "Untagged";
+        entity.tag = "Untagged";
 
         disableAI = true;
 
         // Explode Here Effect Here
-        deathAnim.SetBool("IsDeath", true);
+        anim.SetBool("IsDeath", true);
 
-        enemy.GetComponent<Rigidbody2D>().gravityScale = 0.5f;
+        entity.GetComponent<Rigidbody2D>().gravityScale = 0.5f;
 
-        powerX = Mathf.Sign(enemy.GetComponent<Rigidbody2D>().velocity.x) < 0 ? -powerXval : powerXval;
-        enemy.GetComponent<Rigidbody2D>().velocity = new Vector3(powerX, 3,1);
+        powerX = Mathf.Sign(entity.GetComponent<Rigidbody2D>().velocity.x) < 0 ? -powerXval : powerXval;
+        entity.GetComponent<Rigidbody2D>().velocity = new Vector3(powerX, 3,1);
 
         yield return new WaitForSeconds(0.7f);
-        enemyRender.enabled = false;
-        enemy.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
-        enemy.GetComponent<Rigidbody2D>().gravityScale = 0f;
+        enemySr.enabled = false;
+        entity.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+        entity.GetComponent<Rigidbody2D>().gravityScale = 0f;
 
         GameData.Score += enemiesData.score;
         GameManager.Instance.DisplayScore();
 
         yield return new WaitForSeconds(1f);
-        Destroy(enemy);
+        Destroy(entity);
     }
 
 

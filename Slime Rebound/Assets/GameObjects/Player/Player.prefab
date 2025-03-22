@@ -594,7 +594,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1062285544238779552
 Transform:
   m_ObjectHideFlags: 0
@@ -696,7 +696,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &958310402044235674
 Transform:
   m_ObjectHideFlags: 0
@@ -1032,7 +1032,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.087228954, y: -0.94466996}
+  m_Offset: {x: -0.087228954, y: -0.98803616}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -1043,7 +1043,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.41012156, y: 0.5503819}
+  m_Size: {x: 0.41012156, y: 0.6371143}
   m_EdgeRadius: 0
 --- !u!1 &6379015096038598786
 GameObject:
@@ -1117,7 +1117,6 @@ MonoBehaviour:
   headAttack: {fileID: 1441067748464465878, guid: 912396f0708c2c041b4ad100a24c8b93, type: 3}
   headGravityPower: 2
   throwArrow: {fileID: 2613286925354151224}
-  playerHeadStorage: {fileID: 0}
   wallCollision: {fileID: 8659519319265619268}
   playerSprite: {fileID: 2628909129785102683}
   failedBounces: 0
@@ -1134,9 +1133,9 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 3.21
+  m_LinearDrag: 4.9
   m_AngularDrag: 0.05
-  m_GravityScale: 7.67
+  m_GravityScale: 11.69
   m_Material: {fileID: 6200000, guid: 3dbb20fcef7c3e245a742a352b0868a0, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
@@ -1145,8 +1144,8 @@ Rigidbody2D:
     serializedVersion: 2
     m_Bits: 0
   m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_SleepingMode: 2
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!114 &5914262025164930502
 MonoBehaviour:
@@ -1290,7 +1289,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &119660700786489235
 Transform:
   m_ObjectHideFlags: 0

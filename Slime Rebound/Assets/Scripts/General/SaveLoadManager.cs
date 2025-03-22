@@ -27,12 +27,14 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
         System.IO.File.WriteAllText(Application.persistentDataPath + "/ImportantData.json", jsonToSave);
     }
 
-    public void SaveDataCheckPoint(Vector3 playerPos)
+    public void SaveDataCheckPoint(Vector3 playerPos,string sceneName)
     {
         mydata.ser_score = GameData.Score;
         mydata.ser_health = GameData.Hp;
         mydata.chainsLeft = GameData.ChainsInLevel;
         mydata.totalBounces = GameData.TotalBounces;
+        mydata.ser_levelState = sceneName;
+        
         mydata.playerPos = playerPos;
 
         hasSavedOnce = true;
@@ -120,6 +122,7 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
             GameData.Score = mydata.ser_score;
             GameData.ChainsInLevel = mydata.chainsLeft;
             GameData.PlayerPos = mydata.playerPos;
+            GameData.LevelState = mydata.ser_levelState;
         }
 
     }
