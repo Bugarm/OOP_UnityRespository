@@ -286,7 +286,7 @@ SpriteRenderer:
   m_SortingLayerID: -957843865
   m_SortingLayer: 6
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 1ef66750fffd55a48903b2c8ad468084, type: 3}
+  m_Sprite: {fileID: -1422305872, guid: c2d59a57f3f5b9544b58fa8be1d638a9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -391,8 +391,8 @@ Transform:
   m_GameObject: {fileID: 2570019781410263732}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0.2306, z: 0}
+  m_LocalScale: {x: 1, y: 1.3807209, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8398999908843789498}
@@ -429,7 +429,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.65, y: -0.4247719}
+  m_Offset: {x: 0.7395937, y: -0.29038066}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: -0.2, y: 0.88}
@@ -440,7 +440,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.1521568, y: 1.1267974}
+  m_Size: {x: 1.3313442, y: 1.3955799}
   m_EdgeRadius: 0
 --- !u!212 &1130511673919609130
 SpriteRenderer:
@@ -1057,6 +1057,7 @@ GameObject:
   - component: {fileID: 3604176934007594281}
   - component: {fileID: 2597825698608133649}
   - component: {fileID: 5914262025164930502}
+  - component: {fileID: 5039105035198330411}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1102,7 +1103,7 @@ MonoBehaviour:
   walkSpeed: 4
   runSpeed: 6
   bounceSpeed: 6
-  dashPower: 9
+  dashPower: 8
   amountOfJumps: 2
   slip: {fileID: 6200000, guid: 3dbb20fcef7c3e245a742a352b0868a0, type: 2}
   stick: {fileID: 6200000, guid: a8243dece83deca4c9f05be634571715, type: 2}
@@ -1117,7 +1118,7 @@ MonoBehaviour:
   headAttack: {fileID: 1441067748464465878, guid: 912396f0708c2c041b4ad100a24c8b93, type: 3}
   headGravityPower: 2
   throwArrow: {fileID: 2613286925354151224}
-  wallCollision: {fileID: 8659519319265619268}
+  playerHeadStorage: {fileID: 0}
   playerSprite: {fileID: 2628909129785102683}
   failedBounces: 0
 --- !u!50 &2597825698608133649
@@ -1143,7 +1144,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 2
   m_CollisionDetection: 1
   m_Constraints: 4
@@ -1162,6 +1163,18 @@ MonoBehaviour:
   wallTrigCol: {fileID: 8659519319265619268}
   floorTrigCol: {fileID: 6328353723741828510}
   topTriggerCol: {fileID: 7424255838794632895}
+--- !u!114 &5039105035198330411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6379015096038598786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a121652a56db94d428eee1e818ba8584, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6402261470639470098
 GameObject:
   m_ObjectHideFlags: 0

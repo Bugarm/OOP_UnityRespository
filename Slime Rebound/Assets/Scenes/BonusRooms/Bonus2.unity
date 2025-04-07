@@ -10005,6 +10005,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemiesData: {fileID: 11400000, guid: 801bfbbe2fc98a8479808f55edf6153b, type: 2}
   deathCollider: {fileID: 1389852567952072513}
+  deathSFX: {fileID: 2022112580509249498, guid: c2419506646ba7240a5a65291948c0db, type: 3}
   pointers:
   - {x: 0, y: 2.83}
   - {x: 0, y: -4.57}
@@ -10013,6 +10014,7 @@ MonoBehaviour:
   fireRateDelay: 1
   playerRangeObj: {fileID: 1914103486743012733}
   shootPointObj: {fileID: 4505044786312914255}
+  fireSFX: {fileID: 2022112580509249498, guid: b2c06301c58f18d4887f054f3f451d9a, type: 3}
 --- !u!114 &2577096612789683684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10027,6 +10029,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemiesData: {fileID: 11400000, guid: 801bfbbe2fc98a8479808f55edf6153b, type: 2}
   deathCollider: {fileID: 1389852567732035335}
+  deathSFX: {fileID: 2022112580509249498, guid: c2419506646ba7240a5a65291948c0db, type: 3}
   pointers:
   - {x: 0, y: -2.73}
   - {x: 0, y: 4.71}
@@ -10035,6 +10038,7 @@ MonoBehaviour:
   fireRateDelay: 1.5
   playerRangeObj: {fileID: 1914103486388167995}
   shootPointObj: {fileID: 4505044786663630089}
+  fireSFX: {fileID: 2022112580509249498, guid: b2c06301c58f18d4887f054f3f451d9a, type: 3}
 --- !u!1 &3257869083721467278
 GameObject:
   m_ObjectHideFlags: 0
@@ -10448,6 +10452,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 761cc089c8187514db4cbca38d5161ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  doorOpenSFX: {fileID: 0}
   level: TutorialRoom2
   id: 3
   isBonus: 1

@@ -73,6 +73,10 @@ public class PlayerAnimationManager : Singleton<PlayerAnimationManager>
                 PlayAnimation("pound");
             }
 
+            if(PlayerState.IsAttack == true)
+            {
+                PlayAnimation("attack");
+            }
         }
 
         // Stick
@@ -112,6 +116,8 @@ public class PlayerAnimationManager : Singleton<PlayerAnimationManager>
         {
             PlayAnimation("damaged");
         }
+
+        
     }
 
     public void PlayAnimation(string mode)
@@ -152,7 +158,7 @@ public class PlayerAnimationManager : Singleton<PlayerAnimationManager>
                 playerAnim.SetBool("IsDashAttack", false);
 
                 playerAnim.SetBool("IsHeadAttack", false);
-
+                playerAnim.SetBool("IsStick", false);
                 break;
 
             case "crouch":

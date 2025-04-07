@@ -6,6 +6,9 @@ using UnityEngine.SceneManagement;
 public class Door : MonoBehaviour
 {
     protected bool isAtDoor;
+
+    public AudioSource doorOpenSFX;
+
     // Start is called before the first frame update
     protected virtual void Start()
     {

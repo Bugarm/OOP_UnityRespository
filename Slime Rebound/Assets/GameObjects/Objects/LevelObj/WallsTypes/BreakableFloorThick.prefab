@@ -104,6 +104,7 @@ MonoBehaviour:
   isDestroyed: 0
   score: 0
   floorBreak: 0
+  breakSFX: {fileID: 2022112580509249498, guid: 855db29a15ba8fe4f923f557e302ca2f, type: 3}
 --- !u!61 &2550717707647548043
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -302,6 +303,7 @@ MonoBehaviour:
   isDestroyed: 0
   score: 0
   floorBreak: 1
+  breakSFX: {fileID: 2022112580509249498, guid: 855db29a15ba8fe4f923f557e302ca2f, type: 3}
 --- !u!61 &2430359740892752008
 BoxCollider2D:
   m_ObjectHideFlags: 0

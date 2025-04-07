@@ -3,7 +3,9 @@ guid: 4b20d67b597f61c4d8567a794a3fce6b
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - boxColl: {instanceID: 0}
+  - breakSFX: {fileID: 2022112580509249498, guid: 855db29a15ba8fe4f923f557e302ca2f, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

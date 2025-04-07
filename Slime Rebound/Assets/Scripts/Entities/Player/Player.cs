@@ -90,6 +90,7 @@ public class Player : Singleton<Player>
         PlayerState.DisableAllMove = false;
         PlayerState.IsTouchingPlatform = false;
         PlayerState.IsPound = false;
+        PlayerState.IsHeadThrown = false;
     }
 
     private void OnEnable()
@@ -116,7 +117,7 @@ public class Player : Singleton<Player>
 
                 Vector3 platofrmPos = DetectionScript.Instance.GetPlatform().transform.position;
 
-                playerRB.position = Vector3.MoveTowards(playerRB.position, platofrmPos, Time.deltaTime * 6.5f);
+                playerRB.position = Vector3.MoveTowards(playerRB.position, new Vector2(player.transform.position.x, platofrmPos.y), Time.deltaTime * 6.5f);
 
             }
         }
@@ -147,6 +148,8 @@ public class Player : Singleton<Player>
     void Update()
     {
         
+
+        //
         if (PlayerState.IsTouchingPlatform == false)
         {
             PlayerAcceleration();
@@ -483,7 +486,7 @@ public class Player : Singleton<Player>
             // Dash & Attack
             else if (Input.GetKeyDown(KeyCode.J))
             {
-                if(PlayerState.IsHeadAttack == false && PlayerState.IsAttackJump == false)
+                if(PlayerState.IsHeadAttack == false && PlayerState.IsAttackJump == false && PlayerState.IsCrouch == false)
                 { 
                     // Dash
                     if (PlayerState.IsMove == true && PlayerState.IsTouchingWall == false && PlayerState.IsCrouch == false && playerRB.velocity.x != 0f)
@@ -495,7 +498,7 @@ public class Player : Singleton<Player>
                     }
 
                     //Attack
-                    if (attackRoutine == null && dashRoutine == null && playerRB.velocity.y == 0f)
+                    if (attackRoutine == null && dashRoutine == null && playerRB.velocity.y == 0f )
                     {
                         attackRoutine = StartCoroutine(AttackFunction());
                     }
@@ -534,7 +537,7 @@ public class Player : Singleton<Player>
             }
 
             // Crouch   
-            if (Input.GetKeyUp(KeyCode.S))
+            if (!Input.GetKey(KeyCode.S))
             {
                 if (PlayerState.IsTouchingTop == false)
                 {
@@ -678,11 +681,11 @@ public class Player : Singleton<Player>
     // This had to be done because of the scene trigger box
     IEnumerator FlipPlayer()
     {
-        while (PlayerState.DisableAllMove == false)
+        while (PlayerState.DisableAllMove == false && PlayerState.IsBounceMode == false)
         {
             if (!(Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.A)))
             {
-                yield return new WaitForSeconds(0.20f);
+                yield return new WaitForSeconds(0.18f);
                 if (Input.GetKey(KeyCode.A))
                 {
                     player.transform.localScale = new Vector2(-1, player.transform.localScale.y);
@@ -754,7 +757,7 @@ public class Player : Singleton<Player>
     {
         float timer = 0;
         jumpRoutine = null;
-
+        
         while (PlayerState.IsStickActive == true && PlayerState.IsPound == false && (PlayerState.IsTouchingGround == false || PlayerState.IsTouchingPlatform == false))
         {
             dirX  = player.transform.localScale.x == 1 ? 7.5f : -7.5f;
@@ -806,7 +809,7 @@ public class Player : Singleton<Player>
 
         }
 
-
+        PlayerState.IsStickActive = false;
 
         dirX = 0;
         playerRB.sharedMaterial = slip;
@@ -961,6 +964,7 @@ public class Player : Singleton<Player>
         PlayerState.IsHeadThrown = false;
         GameObject obj;
         GameObject headRender, headPhysics;
+        Animator headAnim = null;
 
         float powerX, powerY;
         float arrowRotate;
@@ -1017,53 +1021,62 @@ public class Player : Singleton<Player>
             {
                 obj = Instantiate(headAttack, player.transform.position, Quaternion.identity);
                 obj.transform.SetParent(playerHeadStorage.transform);
-                obj.transform.position = new Vector2(player.transform.position.x, player.transform.position.y + 0.5f);
+                obj.transform.position = new Vector2(player.transform.position.x, player.transform.position.y + 0.1f);
 
                 headPhysics = obj.transform.GetChild(0).gameObject;
                 headRender = obj.transform.GetChild(1).gameObject;
 
+                headPhysics.GetComponent<Rigidbody2D>().gravityScale = 0;
+                headAnim = headPhysics.GetComponent<Animator>();
+
                 headPhysics.SetActive(false);
                 headRender.SetActive(true);
+
+
             }
 
+            // No gravity for Head
             powerY = 0;
-            headPhysics.GetComponent<Rigidbody2D>().gravityScale = 0;
             throwArrow.transform.rotation = Quaternion.Euler(0, 0, 0);
 
-            // Follows Player
-            if (PlayerState.IsHeadThrown == false)
-            {
-                obj.transform.position = new Vector2(player.transform.position.x, player.transform.position.y + 0.5f);
+            if(obj != null)
+            { 
+                // Follows Player
+                if (PlayerState.IsHeadThrown == false)
+                {
+                    obj.transform.position = new Vector2(player.transform.position.x, player.transform.position.y + 0.1f);
+                    obj.transform.localScale = new Vector2(player.transform.localScale.x, player.transform.localScale.y);
+                }
+
+                // Upper Direction
+                if (Input.GetKey(KeyCode.W))
+                {
+                    powerY = 9.72f;
+                    headPhysics.GetComponent<Rigidbody2D>().gravityScale = headGravityPower;
+                    throwArrow.transform.rotation = Quaternion.Euler(0, 0, arrowRotate);
+                }
+
+                // Do attack
+                if (Input.GetKeyDown(KeyCode.J) && PlayerState.IsHeadThrown == false)
+                {
+                    throwArrow.SetActive(false);
+
+                    headPhysics.SetActive(true);
+                    headRender.SetActive(false);
+
+                    headPhysics.GetComponent<Rigidbody2D>().velocity = new Vector2(powerX, powerY);
+                    headAnim.SetBool("HeadSpin", true);
+
+                    PlayerState.IsHeadThrown = true;
+
+                    obj = null;
+
+                    // Cooldown
+                    yield return new WaitForSeconds(1.8f);
+                    PlayerState.IsHeadThrown = false;
+                    throwArrow.SetActive(true);
+                }
             }
-
-            // Upper Direction
-            if (Input.GetKey(KeyCode.W))
-            {
-                powerY = 9.72f;
-                headPhysics.GetComponent<Rigidbody2D>().gravityScale = headGravityPower;
-                throwArrow.transform.rotation = Quaternion.Euler(0, 0, arrowRotate);
-            }
-
-            // Do attack
-            if (Input.GetKeyDown(KeyCode.J) && PlayerState.IsHeadThrown == false)
-            {
-                throwArrow.SetActive(false);
-
-                headPhysics.SetActive(true);
-                headRender.SetActive(false);
-
-                headPhysics.GetComponent<Rigidbody2D>().velocity = new Vector2(powerX, powerY);
-
-                PlayerState.IsHeadThrown = true;
-
-                obj = null;
-
-                // Cooldown
-                yield return new WaitForSeconds(1.8f);
-
-                throwArrow.SetActive(true);
-            }
-
             // Cancel Attack
             if (PlayerState.IsHeadThrown == false && (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.K) || Input.GetKey(KeyCode.L)))
             {
@@ -1083,10 +1096,11 @@ public class Player : Singleton<Player>
     {
         PlayerState.IsAttack = true;
         AttackTrigger("Normal-Attack");
-        PlayerAnimationManager.Instance.PlayAnimation("attack");
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.3f);
         AttackTrigger("Reset");
         PlayerState.IsAttack = false;
+
+        yield return new WaitForSeconds(0.5f); // cooldown
 
         attackRoutine = null;
     }
@@ -1124,24 +1138,25 @@ public class Player : Singleton<Player>
         AttackTrigger("Reset");
 
         PlayerState.DisableAllMove = false;
-
+        
         poundRoutine = null;
     }
 
     IEnumerator DashFunction()
     {
+
         dirX = player.transform.localScale.x == 1 ? dashPower : -dashPower;
 
         PlayerState.IsDash = true;
 
         AttackTrigger("Normal-Attack");
-        yield return new WaitForSeconds(0.4f);
         yield return new WaitUntil(() => PlayerState.IsDestroyedObj == false);
+        yield return new WaitForSeconds(0.3f);
         AttackTrigger("Reset");
-
-        PlayerState.IsDash = false;
         dirX = 0;
-        yield return new WaitForSeconds(0.4f);
+        PlayerState.IsDash = false;
+
+        yield return new WaitForSeconds(0.5f); // cooldown
 
         dashRoutine = null;
     }
@@ -1215,6 +1230,7 @@ public class Player : Singleton<Player>
 
         yield return new WaitUntil(() => PlayerState.IsTouchingGround == true || PlayerState.IsTouchingPlatform == true);
         StartCoroutine(ParticleSpawnerManager.Instance.PlayParticle(ParticleSpawnerManager.Instance.particleSlimeSplash, new Vector2(player.transform.position.x, player.transform.position.y - 0.6f), Quaternion.LookRotation(Vector3.down)));
+
         PlayerState.IsAttackJump = false;
         startFallAttack = false;
 

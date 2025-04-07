@@ -80,10 +80,10 @@ public class HighScoreUpdate : Singleton<HighScoreUpdate>
                 switch (highName)
                 {
                     case "TutScore":
-                        highScoreTut.text = "Total Score: " + GameData.Tutorial_HighScore.ToString();
+                        highScoreTut.text = "High Score: " + GameData.Tutorial_HighScore.ToString();
                         break;
                     case "FortScore":
-                        highScoreForest.text = "Total Score: " + GameData.Level1_HighScore.ToString();
+                        highScoreForest.text = "High Score: " + GameData.Level1_HighScore.ToString();
                         break;
                 }
             }

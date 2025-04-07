@@ -326,7 +326,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
@@ -344,6 +344,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemiesData: {fileID: 11400000, guid: 9a768bd8c928cd548a511909d297141a, type: 2}
   deathCollider: {fileID: 2814037115331634749}
+  deathSFX: {fileID: 2022112580509249498, guid: c2419506646ba7240a5a65291948c0db, type: 3}
   point1OffsetX: -2.71
   point2OffsetX: 5.23
   freeRoamMode: 0

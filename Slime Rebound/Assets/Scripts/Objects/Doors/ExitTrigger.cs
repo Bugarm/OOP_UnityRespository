@@ -15,7 +15,7 @@ public class ExitTrigger : Singleton<ExitTrigger>
         if (collision.CompareTag("PlayerBody"))
         {
             CheckStateAndSave(GameData.LevelState);
-            SceneSwitchManager.Instance.SwitchToLevel("HUB");
+            SceneSwitchManager.Instance.SwitchToLevel("MainMenuWinRoom");
         }
     }
 
@@ -37,6 +37,7 @@ public class ExitTrigger : Singleton<ExitTrigger>
                     GameData.Level1_HighScore = GameData.Score;
                     SaveLoadManager.Instance.SaveImportantData();
                 }
+
                 break;
 
         }

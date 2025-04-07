@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class CameraFollow : Singleton<CameraFollow>
 {
     private GameObject cam;
 
-    private bool isTouching;
     private bool isActiveOnce;
 
     [Header("X Point")]
@@ -24,6 +24,8 @@ public class CameraFollow : Singleton<CameraFollow>
 
     private Player player;
     private Vector3 savePlayerPos;
+    private Vector3 velocity = Vector3.zero;
+    private Vector3 offset = new Vector3(0f,0.5f,-10f);
 
     float camStart1X;
     float camStart2X;
@@ -31,19 +33,23 @@ public class CameraFollow : Singleton<CameraFollow>
     float camStart1Y;
     float camStart2Y;
 
+    private float smoothTime;
+
     protected override void Awake()
     {
         base.Awake();
+        cam = this.gameObject;
+
+
     }
 
     // Start is called before the first frame update
     void Start()
     {
 
-        cam = this.gameObject;
+        smoothTime = 0.25f;
         point1Pos = new Vector3(cam.transform.position.x + point1X, cam.transform.position.y, -10);
         point2Pos = new Vector3(cam.transform.position.x + point2X, cam.transform.position.y, -10);
-
         
         isActiveOnce = true;
 
@@ -53,6 +59,8 @@ public class CameraFollow : Singleton<CameraFollow>
         camStart1Y = cam.transform.position.y + point1Y;
         camStart2Y = cam.transform.position.y + point2Y;
 
+        
+        
     }
 
     // Update is called once per frame
@@ -60,41 +68,31 @@ public class CameraFollow : Singleton<CameraFollow>
     {
         player = FindObjectOfType<Player>();
 
-        if (player != null)
+        if(player != null)
         { 
             savePlayerPos = player.transform.position;
 
-            float camX = cam.transform.position.x;
-            float camY = cam.transform.position.y;
-
-            //X
-            if (camX > camStart1X && camX < camStart2X)
+            if ((transform.position.x > camStart1X && transform.position.x < camStart2X) && (transform.position.y > camStart1Y && transform.position.y < camStart2Y))
             {
-                this.transform.position = new Vector3(savePlayerPos.x, this.transform.position.y + 1, -10);
+                transform.position = Vector3.SmoothDamp(transform.position, savePlayerPos + offset, ref velocity, smoothTime);
             }
-            else if (player.transform.position.x > camStart1X && player.transform.position.x < camStart2X)
+            else // when players moves to the mid of the cam
             {
-                this.transform.position = new Vector3(cam.transform.position.x + -(Mathf.Sign(cam.transform.position.x)), savePlayerPos.y + 1, -10);
+                //X
+                if (Mathf.RoundToInt(player.GetComponent<Rigidbody2D>().position.x) == Mathf.RoundToInt(transform.position.x)) // Move cam back to player
+                {
+                    float valOffsetX = transform.position.x > 0 ? -5.25f : 5.25f;
+                    transform.position = Vector3.SmoothDamp(transform.position, new Vector3(transform.position.x + valOffsetX, transform.position.y, -10f), ref velocity, smoothTime);
+                }
+                //Y
+                if (Mathf.RoundToInt(player.GetComponent<Rigidbody2D>().position.y) == Mathf.RoundToInt(transform.position.y)) // Move cam back to player
+                {
+                    float valOffsetY = transform.position.y > 0 ? -1.25f : 1.25f;
+                    transform.position = Vector3.SmoothDamp(transform.position, new Vector3(transform.position.x, transform.position.y + valOffsetY, -10f), ref velocity, smoothTime);
+                }
             }
-
-            //Y
-            if (camY > camStart1Y && camY < camStart2Y)
-            {
-                this.transform.position = new Vector3(this.transform.position.x, savePlayerPos.y + 1, -10);
-            }
-            else if (player.transform.position.y > camStart1Y && player.transform.position.y < camStart2Y)
-            {
-                this.transform.position = new Vector3(cam.transform.position.x, savePlayerPos.y + -(Mathf.Sign(cam.transform.position.x)), -10);
-            }
+            
         }
-
-    }
-
-    public void UpdateCam()
-    {
-        player = FindObjectOfType<Player>();
-
-        this.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 1, -10);
     }
 
     private void OnDrawGizmos()
@@ -102,11 +100,11 @@ public class CameraFollow : Singleton<CameraFollow>
 
         if(isActiveOnce == false)
         {
-            Gizmos.DrawWireSphere(new Vector3(this.gameObject.transform.position.x + point1X, this.gameObject.transform.position.y, -10), 0.5f);
-            Gizmos.DrawWireSphere(new Vector3(this.gameObject.transform.position.x + point2X, this.gameObject.transform.position.y, -10), 0.5f);
+            Gizmos.DrawWireSphere(new Vector3(transform.position.x + point1X, transform.position.y, -10), 0.5f);
+            Gizmos.DrawWireSphere(new Vector3(transform.position.x + point2X, transform.position.y, -10), 0.5f);
 
-            Gizmos.DrawWireSphere(new Vector3(this.gameObject.transform.position.x , this.gameObject.transform.position.y + point1Y, -10), 0.5f);
-            Gizmos.DrawWireSphere(new Vector3(this.gameObject.transform.position.x , this.gameObject.transform.position.y + point2Y, -10), 0.5f);
+            Gizmos.DrawWireSphere(new Vector3(transform.position.x , transform.position.y + point1Y, -10), 0.5f);
+            Gizmos.DrawWireSphere(new Vector3(transform.position.x , transform.position.y + point2Y, -10), 0.5f);
         }
       
     }

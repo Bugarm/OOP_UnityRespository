@@ -28,6 +28,7 @@ TagManager:
   - FloorBreakable
   - OneWay
   - LevelDoor
+  - BackgroundMusic
   layers:
   - Default
   - TransparentFX

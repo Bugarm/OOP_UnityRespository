@@ -3,7 +3,10 @@ guid: e590aa3aec83d6b4d827906cd60330b9
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - enemiesData: {instanceID: 0}
+  - deathCollider: {instanceID: 0}
+  - deathSFX: {fileID: 2022112580509249498, guid: c2419506646ba7240a5a65291948c0db, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

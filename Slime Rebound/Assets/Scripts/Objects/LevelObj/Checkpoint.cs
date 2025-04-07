@@ -7,6 +7,8 @@ public class Checkpoint : MonoBehaviour
 {
     private Animator animator;
     private bool isChecked;
+
+    public AudioSource collectedSFX;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,6 +26,7 @@ public class Checkpoint : MonoBehaviour
     {
         if (isChecked == false && collision.CompareTag("PlayerBody"))
         {
+            StartCoroutine(AudioManager.Instance.PlaySFXManual(collectedSFX,this.gameObject.transform.position));
             SaveLoadManager.Instance.SaveDataCheckPoint(this.gameObject.transform.position, SceneManager.GetActiveScene().name);
             SaveLoadManager.Instance.SaveLevelData(SceneManager.GetActiveScene().name);
             StartCoroutine(ParticleSpawnerManager.Instance.PlayParticle(ParticleSpawnerManager.Instance.particleCheckPoint,this.gameObject.transform.position,Quaternion.identity));

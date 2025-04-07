@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 50458862977405752}
   - component: {fileID: 715685331234656444}
   - component: {fileID: 799050090123783586}
+  - component: {fileID: 6773740513460904500}
   m_Layer: 8
   m_Name: Sprite
   m_TagString: Untagged
@@ -106,6 +107,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6773740513460904500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 867354606542074286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2243a4534a0b1c4297c9ae3758f4f7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ribbitSFX: {fileID: 2022112580509249498, guid: cc083ae683110e843ba4d2d555863112, type: 3}
 --- !u!1 &1382304422615111390
 GameObject:
   m_ObjectHideFlags: 0
@@ -246,7 +260,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
@@ -264,6 +278,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemiesData: {fileID: 0}
   deathCollider: {fileID: 3262195930522149209}
+  deathSFX: {fileID: 0}
   point1OffsetX: -2.96
   point2OffsetX: 4.36
   freeRoamMode: 0

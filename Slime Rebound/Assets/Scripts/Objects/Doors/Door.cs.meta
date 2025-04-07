@@ -3,7 +3,8 @@ guid: c7f859a6c1618564f911bfbe5c5ce881
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - doorOpenSFX: {fileID: 2022112580509249498, guid: 15744b85987d7cf4098c9057b4041b58, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

@@ -3,7 +3,9 @@ guid: a50d4ff421803c147a509ac5a6bf25f5
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - winSFX: {fileID: 2022112580509249498, guid: ab80af254c0406c40a5d017efea617fc, type: 3}
+  - particlePlay: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 234023522515019288}
   - component: {fileID: 317381565666975327}
   - component: {fileID: 6111968868941069064}
-  - component: {fileID: -321061468402429375}
   - component: {fileID: 1592399009523712291}
   - component: {fileID: 9055407155491440187}
   - component: {fileID: 2465203562587741407}
@@ -74,20 +73,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hasSavedOnce: 0
---- !u!114 &-321061468402429375
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5504839371982922821}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b500b92b23371147b4b0cce5359ba05, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  audioSourcesSFX: []
-  audioSourcesMusic: []
 --- !u!114 &1592399009523712291
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -112,7 +97,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1927134bb8a30146bae79ed6d30406f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pauseMenu: {fileID: 0}
   playerHUD: {fileID: 0}
 --- !u!114 &2465203562587741407
 MonoBehaviour:

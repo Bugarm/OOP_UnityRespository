@@ -7,12 +7,15 @@ public class HeadAttack : Singleton<HeadAttack>
 {
     private GameObject head;
 
+    Animator headAnim;
+
     private Coroutine headDestroy;
 
     protected override void Awake()
     {
         base.Awake();
         head = this.gameObject;
+        headAnim = GetComponent<Animator>();
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -20,33 +23,22 @@ public class HeadAttack : Singleton<HeadAttack>
         if((collision.CompareTag("Level") || collision.CompareTag("Platforms") || collision.CompareTag("FloorBreakable") || collision.CompareTag("Box") || collision.CompareTag("SkeleChain") || collision.CompareTag("Enemies") || collision.CompareTag("Box") || collision.CompareTag("Obsticales")) && PlayerState.IsHeadThrown == true)
         {
             if(headDestroy == null)
-            { 
+            {
+                headAnim.SetBool("HeadSpin", false);
                 headDestroy = StartCoroutine(DestroyHead());
             }
         }
-        
-        //if(PlayerState.IsHeadThrown == true)
-        //{
-        //    float moveSlight;
-        //    if (head.transform.localScale.x == -1)
-        //    {
-        //        moveSlight = -1.5f;
-        //    }
-        //    else
-        //    {
-        //        moveSlight = 1.5f;
-        //    }
-
-        //    head.GetComponent<Rigidbody2D>().velocity = new Vector2(moveSlight, -1.5f);
-        //    head.GetComponent<Rigidbody2D>().gravityScale = 14;
-        //}
 
     }
 
     private void OnBecameInvisible()
     {
-        PlayerState.IsHeadThrown = false;
-        Destroy(head.transform.parent.gameObject);
+        if (headDestroy == null && head.activeInHierarchy == true)
+        {
+            headAnim.SetBool("HeadSpin", false);
+            PlayerState.IsHeadThrown = false;
+            headDestroy = StartCoroutine(DestroyHead());
+        }
     }
 
     private IEnumerator DestroyHead()
@@ -61,6 +53,7 @@ public class HeadAttack : Singleton<HeadAttack>
         StartCoroutine(ParticleSpawnerManager.Instance.PlayParticle(ParticleSpawnerManager.Instance.particleSlimeSplash, this.gameObject.transform.position, Quaternion.LookRotation(look))); 
 
         yield return new WaitForSeconds(1f);
+        headAnim.SetBool("HeadSpin", false);
         Destroy(head.transform.parent.gameObject);
         headDestroy = null;
     }

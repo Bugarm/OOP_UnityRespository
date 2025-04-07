@@ -14,6 +14,8 @@ public class Default_Entity : MonoBehaviour
     public EnemiesSO enemiesData;
     public CircleCollider2D deathCollider;
 
+    public AudioSource deathSFX;
+
     private int powerX;
     private int powerXval;
 
@@ -62,7 +64,7 @@ public class Default_Entity : MonoBehaviour
 
     public IEnumerator EnemyDead()
     {
-
+        StartCoroutine(AudioManager.Instance.PlaySFXManual(deathSFX,this.gameObject.transform.position));
         //To stop from player on detecting them while dying
         entity.tag = "Untagged";
 

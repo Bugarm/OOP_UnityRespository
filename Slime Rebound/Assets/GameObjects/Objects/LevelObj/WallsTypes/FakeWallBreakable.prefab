@@ -173,9 +173,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boxColl: {fileID: 4949420389486640063}
-  particleBreak: {fileID: 2499312308014208717, guid: a3b1a01b5a6b61948ac7ec14bce670e5, type: 3}
   isDestroyed: 0
   score: 0
+  floorBreak: 0
+  breakSFX: {fileID: 2022112580509249498, guid: 855db29a15ba8fe4f923f557e302ca2f, type: 3}
 --- !u!95 &7896327850711784089
 Animator:
   serializedVersion: 5

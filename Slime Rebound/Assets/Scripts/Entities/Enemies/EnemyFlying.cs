@@ -29,6 +29,9 @@ public class EnemyFlying : Default_Entity
     public GameObject playerRangeObj;
     public GameObject shootPointObj;
 
+    [Header("Audio")]
+    public AudioSource fireSFX;
+
     // set up
     private ObjectPooling bulletPool;
     
@@ -144,6 +147,8 @@ public class EnemyFlying : Default_Entity
                     getBullet.transform.rotation = shootPointObj.transform.rotation;
 
                     getBullet.SetActive(true);
+
+                    StartCoroutine(AudioManager.Instance.PlaySFXManual(fireSFX,entity.transform.position));
                 }
             }
             yield return new WaitForSeconds(fireRateDelay);

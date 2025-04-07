@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9120492875460334077}
   - component: {fileID: 4184507661709361451}
+  - component: {fileID: 5208100309893797941}
   m_Layer: 0
   m_Name: DontDestroyManager
   m_TagString: Untagged
@@ -48,3 +49,28 @@ MonoBehaviour:
   hubDontDest: {fileID: 5331029488764551588, guid: 92aee8135e689e84897d96752fb0646c, type: 3}
   menuDest: {fileID: 5331029488764551588, guid: 7b2cdd5665b393448aeebc0fccb38ab9, type: 3}
   offset: 0
+--- !u!114 &5208100309893797941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8070142563377632134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b500b92b23371147b4b0cce5359ba05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioSourcesSFX:
+  - {fileID: 7862508093276404270, guid: d9a59b7992cadb645afdf6b3b5317a56, type: 3}
+  - {fileID: 7862508093276404270, guid: 0bbe1b4ad17e3bd4fa2c3c3f8ba3924b, type: 3}
+  - {fileID: 6750501682794120695, guid: dc462ae0237aa0c4b80dffdc28525656, type: 3}
+  - {fileID: 1700946290188889600, guid: 865ef1d634009fa45996999ebd9f07b2, type: 3}
+  - {fileID: 7862508093276404270, guid: 2d9f5736eb5df5b459b38a5f8d157077, type: 3}
+  - {fileID: 7862508093276404270, guid: 4a75d6b7d5d56a6448f56c49a0a0b1a0, type: 3}
+  audioSourcesMusic:
+  - {fileID: 9043093074723667319, guid: a51056ba924510f438c3ed34b48c85b7, type: 3}
+  - {fileID: 9043093074723667319, guid: 01edfdecf44caf04d89b99bbfaa0b8f4, type: 3}
+  - {fileID: 9043093074723667319, guid: 3e764f7061df8494ba8dd75452ebb30b, type: 3}
+  - {fileID: 9043093074723667319, guid: c6ccea456ed4be7408eaf6c4a1f7d10e, type: 3}
+  - {fileID: 9043093074723667319, guid: dcd9e6a8eab3ef744ad0576993621958, type: 3}

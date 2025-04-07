@@ -10359,11 +10359,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2038054568717985995, guid: b3bd0d9d2823b534eb9cb1000f2e13a6, type: 3}
       propertyPath: point1OffsetY
-      value: 3.91
+      value: 1.69
       objectReference: {fileID: 0}
     - target: {fileID: 2038054568717985995, guid: b3bd0d9d2823b534eb9cb1000f2e13a6, type: 3}
       propertyPath: point2OffsetY
-      value: -5.25
+      value: -2.92
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -22185,9 +22185,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 926818605925254646, guid: f29c86de580041648888114a190d5709, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 971c7a2aa83689e40952b6d994583a21, type: 3}
     - target: {fileID: 2792584916576047273, guid: f29c86de580041648888114a190d5709, type: 3}
       propertyPath: m_Name
       value: TextPopUp (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7833932677433023901, guid: f29c86de580041648888114a190d5709, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 7833932677433023901, guid: f29c86de580041648888114a190d5709, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 7833932677433023901, guid: f29c86de580041648888114a190d5709, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2.03
       objectReference: {fileID: 0}
     - target: {fileID: 7833932677433023901, guid: f29c86de580041648888114a190d5709, type: 3}
       propertyPath: m_LocalPosition.x
@@ -22228,6 +22244,10 @@ PrefabInstance:
     - target: {fileID: 7833932677433023901, guid: f29c86de580041648888114a190d5709, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7833932677433023901, guid: f29c86de580041648888114a190d5709, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -26697,9 +26717,9 @@ Transform:
   m_GameObject: {fileID: 732223240789667087}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 26.47, y: 11.277025, z: -5.8820443}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 26.47, y: 10.73, z: -5.8820443}
+  m_LocalScale: {x: 0.65, y: 0.65, z: 0.65}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1397529029}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -26826,7 +26846,7 @@ EdgeCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1940900628970541461}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -26927,6 +26947,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51b1a4bfae0d4e942a4575ff089f6355, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  doorOpenSFX: {fileID: 2022112580509249498, guid: 15744b85987d7cf4098c9057b4041b58, type: 3}
   switchRoomNum: 1
   id: 0
   hasEntered: 0
@@ -27381,6 +27402,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 761cc089c8187514db4cbca38d5161ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  doorOpenSFX: {fileID: 0}
   level: Bonus1
   id: 2
   isBonus: 1
@@ -27827,6 +27849,7 @@ MonoBehaviour:
   isDestroyed: 0
   score: 0
   floorBreak: 0
+  breakSFX: {fileID: 2022112580509249498, guid: 855db29a15ba8fe4f923f557e302ca2f, type: 3}
 --- !u!114 &5254386498442044197
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27843,6 +27866,7 @@ MonoBehaviour:
   isDestroyed: 0
   score: 0
   floorBreak: 1
+  breakSFX: {fileID: 2022112580509249498, guid: 855db29a15ba8fe4f923f557e302ca2f, type: 3}
 --- !u!1 &5261780547014189240
 GameObject:
   m_ObjectHideFlags: 0
@@ -28076,10 +28100,6 @@ PrefabInstance:
     - target: {fileID: 3379353338200785009, guid: 7d31f58074aa86444900bf8e2f22adc0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5102446240776649202, guid: 7d31f58074aa86444900bf8e2f22adc0, type: 3}
-      propertyPath: floorBreak
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6635624241901845831, guid: 7d31f58074aa86444900bf8e2f22adc0, type: 3}
       propertyPath: m_Name

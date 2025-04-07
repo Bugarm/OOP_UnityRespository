@@ -14,6 +14,8 @@ public class BoxScript : MonoBehaviour
 
     public bool floorBreak;
 
+    public AudioSource breakSFX;
+
     Coroutine destroyRoutine;
 
     // Start is called before the first frame update
@@ -69,6 +71,8 @@ public class BoxScript : MonoBehaviour
     {
 
         isDestroyed = true;
+
+        StartCoroutine(AudioManager.Instance.PlaySFXManual(breakSFX, this.gameObject.transform.position));
 
         if (GameObject.FindAnyObjectByType<GameManager>() != null)
         {

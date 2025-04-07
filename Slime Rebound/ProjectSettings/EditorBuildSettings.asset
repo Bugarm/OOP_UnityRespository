@@ -6,11 +6,20 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Menu/MainMenu.unity
+    guid: d416f0a78a9e4c447b02a7fb233cb1df
+  - enabled: 1
+    path: Assets/Scenes/Menu/MainMenuOption.unity
+    guid: 96e4c298c2b9fc04d80e9305e9f4a00b
+  - enabled: 1
+    path: Assets/Scenes/Menu/MainMenuWinRoom.unity
+    guid: 111d9e95bae632144aec3c7e1d4c78c4
+  - enabled: 1
     path: Assets/Scenes/1-Level/ForestLevel.unity
     guid: d5b0337bf34875642b7a6344613fc5a0
   - enabled: 1
     path: Assets/Scenes/1-Level/ForestLevel1.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+    guid: b08f4cb1e98e05e4aa5fcbc58b6b73c4
   - enabled: 1
     path: Assets/Scenes/1-Level/ForestLevel2.unity
     guid: e0d26f7b7d3c6a54e8a13d67980bb721
@@ -47,15 +56,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/HUB/HUB2.unity
     guid: 3ebd41cd8dd98cf4c932fa694a2e9f16
-  - enabled: 1
-    path: Assets/Scenes/Menu/MainMenu.unity
-    guid: d416f0a78a9e4c447b02a7fb233cb1df
-  - enabled: 1
-    path: Assets/Scenes/Menu/MainMenuOption.unity
-    guid: 96e4c298c2b9fc04d80e9305e9f4a00b
-  - enabled: 1
-    path: Assets/Scenes/WinRoom.unity
-    guid: 111d9e95bae632144aec3c7e1d4c78c4
   - enabled: 1
     path: Assets/Scenes/Tutorial/TutorialRoom.unity
     guid: 76032bd68fcfdeb4c8a571498473a0f7

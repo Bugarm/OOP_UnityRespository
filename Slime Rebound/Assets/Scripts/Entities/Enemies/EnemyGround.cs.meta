@@ -3,7 +3,13 @@ guid: 3a3fb89616008c44badbb3c296812d17
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - enemiesData: {instanceID: 0}
+  - deathCollider: {instanceID: 0}
+  - deathSFX: {fileID: 2022112580509249498, guid: c2419506646ba7240a5a65291948c0db, type: 3}
+  - wallDectection: {instanceID: 0}
+  - pitDectection: {instanceID: 0}
+  - jumpDectection: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

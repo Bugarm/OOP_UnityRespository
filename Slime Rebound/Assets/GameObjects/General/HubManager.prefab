@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1887661988245863511}
   - component: {fileID: 5581175507088758678}
-  - component: {fileID: 1131214110422090258}
   - component: {fileID: 1025730421531338684}
   - component: {fileID: 4540175930738523144}
   - component: {fileID: 3169060969694858766}
@@ -54,22 +53,6 @@ MonoBehaviour:
   particleSlimeSplash: {fileID: 5068521333658625299, guid: 87d73fa489e3b10429fb037915d6b0b7, type: 3}
   particleSlimeBoom: {fileID: 1777981280934896037, guid: 59650c6d645056b42824403e9c6d7c14, type: 3}
   particleCheckPoint: {fileID: 1777981280934896037, guid: cdbdf4d85a7fa94489a875a37bae46eb, type: 3}
---- !u!114 &1131214110422090258
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7927652616597988756}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b500b92b23371147b4b0cce5359ba05, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  audioSourcesSFX:
-  - {fileID: 7938456772580797518, guid: ad45a558e26522e4f9ad381eec85f11d, type: 3}
-  - {fileID: 3517078363557207276, guid: 406324ab089e4da4c85bf0ee4a2275fe, type: 3}
-  audioSourcesMusic: []
 --- !u!114 &1025730421531338684
 MonoBehaviour:
   m_ObjectHideFlags: 0

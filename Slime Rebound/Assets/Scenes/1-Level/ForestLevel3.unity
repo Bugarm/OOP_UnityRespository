@@ -37532,6 +37532,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5307288627518051441, guid: 935021bf1635d9244a42e5224f102b16, type: 3}
+      propertyPath: doorOpenSFX
+      value: 
+      objectReference: {fileID: 2022112580509249498, guid: 15744b85987d7cf4098c9057b4041b58, type: 3}
+    - target: {fileID: 5307288627518051441, guid: 935021bf1635d9244a42e5224f102b16, type: 3}
       propertyPath: switchRoomNum
       value: 4
       objectReference: {fileID: 0}
@@ -37579,6 +37583,10 @@ PrefabInstance:
       propertyPath: id
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 8003323554710155740, guid: 935021bf1635d9244a42e5224f102b16, type: 3}
+      propertyPath: doorOpenSFX
+      value: 
+      objectReference: {fileID: 2022112580509249498, guid: 15744b85987d7cf4098c9057b4041b58, type: 3}
     - target: {fileID: 8003323554710155740, guid: 935021bf1635d9244a42e5224f102b16, type: 3}
       propertyPath: switchRoomNum
       value: 4
@@ -38708,6 +38716,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5208100309893797941, guid: bff495606628ab243a8852e5ec11c987, type: 3}
+      propertyPath: audioSourcesSFX.Array.size
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 8070142563377632134, guid: bff495606628ab243a8852e5ec11c987, type: 3}
       propertyPath: m_Name
       value: DontDestroyManager
@@ -39596,6 +39608,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DoubleDoor
       objectReference: {fileID: 0}
+    - target: {fileID: 5307288627518051441, guid: 935021bf1635d9244a42e5224f102b16, type: 3}
+      propertyPath: doorOpenSFX
+      value: 
+      objectReference: {fileID: 2022112580509249498, guid: 15744b85987d7cf4098c9057b4041b58, type: 3}
     - target: {fileID: 5307288627518051441, guid: 935021bf1635d9244a42e5224f102b16, type: 3}
       propertyPath: switchRoomNum
       value: 2
@@ -41356,9 +41372,33 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 881839211}
     m_Modifications:
+    - target: {fileID: 86917657609030398, guid: abafc04b7f30a1b48a71fa884ce88125, type: 3}
+      propertyPath: m_Size.x
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 86917657609030398, guid: abafc04b7f30a1b48a71fa884ce88125, type: 3}
+      propertyPath: m_SpriteTilingProperty.newSize.x
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1123891464303382686, guid: abafc04b7f30a1b48a71fa884ce88125, type: 3}
+      propertyPath: m_Size.x
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3224597793644120439, guid: abafc04b7f30a1b48a71fa884ce88125, type: 3}
+      propertyPath: m_Size.x
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 6156031434541310353, guid: abafc04b7f30a1b48a71fa884ce88125, type: 3}
       propertyPath: m_Name
       value: BreakableFloorThick (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6651872882982185192, guid: abafc04b7f30a1b48a71fa884ce88125, type: 3}
+      propertyPath: m_Size.x
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6651872882982185192, guid: abafc04b7f30a1b48a71fa884ce88125, type: 3}
+      propertyPath: m_SpriteTilingProperty.newSize.x
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6899471096126901294, guid: abafc04b7f30a1b48a71fa884ce88125, type: 3}
       propertyPath: m_LocalPosition.x
@@ -41400,6 +41440,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8605044106301322080, guid: abafc04b7f30a1b48a71fa884ce88125, type: 3}
+      propertyPath: breakSFX
+      value: 
+      objectReference: {fileID: 2022112580509249498, guid: 855db29a15ba8fe4f923f557e302ca2f, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -41577,11 +41621,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 754827505399686653, guid: a928141fbad27e44a97849f7a067edb1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 21.12
+      value: 20.92
       objectReference: {fileID: 0}
     - target: {fileID: 754827505399686653, guid: a928141fbad27e44a97849f7a067edb1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -6.46
+      value: -6.56
       objectReference: {fileID: 0}
     - target: {fileID: 754827505399686653, guid: a928141fbad27e44a97849f7a067edb1, type: 3}
       propertyPath: m_LocalPosition.z

@@ -134,6 +134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 006f431a48085794cbcc9087329fdd03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collectSFX: {fileID: 2022112580509249498, guid: 6f09db8c8abe70140be0b1fe7efe241b, type: 3}
 --- !u!95 &418322931999001028
 Animator:
   serializedVersion: 5

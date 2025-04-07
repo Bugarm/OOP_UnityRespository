@@ -6,10 +6,18 @@ public class ScoreItem : MonoBehaviour
 {
     public int customScore;
 
+    private SpriteRenderer scoreRender;
+
+    private Coroutine routineScore;
+
+    public AudioSource collectSFX;
+
     // Start is called before the first frame update
     void Start()
     {
         GameObject obj = this.gameObject;
+
+        scoreRender = obj.GetComponent<SpriteRenderer>();
 
         if (customScore >= 100)
         {
@@ -35,12 +43,21 @@ public class ScoreItem : MonoBehaviour
     {
         if (collision.CompareTag("PlayerBody"))
         {
-            GameData.Score += customScore;
-            GameManager.Instance.DisplayScore();
-
-            Destroy(this.gameObject);
+            if(routineScore == null)
+            {
+                routineScore = StartCoroutine(CollectDelay());
+            }
         }
     }
 
+    private IEnumerator CollectDelay()
+    {
+        StartCoroutine(AudioManager.Instance.PlaySFXManual(collectSFX, this.gameObject.transform.position));
+        GameData.Score += customScore;
+        GameManager.Instance.DisplayScore();
+        scoreRender.enabled = false;
+        yield return new WaitForSeconds(collectSFX.clip.length);
+        Destroy(this.gameObject);
+    }
 
 }

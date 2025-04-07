@@ -13,10 +13,7 @@ public class SkeleChain : MonoBehaviour
 
     private Coroutine deathRoutine;
 
-    private void Awake()
-    {
-        
-    }
+    public AudioSource breakSFX;
 
     // Start is called before the first frame update
     void Start()
@@ -47,6 +44,8 @@ public class SkeleChain : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         //Debug.Log(player);
         playerRB = player.GetComponentInParent<Rigidbody2D>();
+
+        StartCoroutine(AudioManager.Instance.PlaySFXManual(breakSFX, this.gameObject.transform.position));
 
         GameData.ChainsInLevel--;
         

@@ -387,7 +387,7 @@ SpriteRenderer:
   m_SortingLayerID: 1681514863
   m_SortingLayer: 9
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 53a2db4e1586a2a4597daddcf38d1f43, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c5b220d69c1fe334d80b062a182e03d8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -447,5 +447,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Objectid: switch
   id: 1
+  winSFX: {fileID: 2022112580509249498, guid: ab80af254c0406c40a5d017efea617fc, type: 3}
   particlePlay: {fileID: 614863489156338088, guid: 43a36aa68c427e04585592f52e538ced, type: 3}
   switchActive: 0

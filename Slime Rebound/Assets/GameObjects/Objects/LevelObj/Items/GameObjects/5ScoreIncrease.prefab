@@ -135,6 +135,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   customScore: 5
+  collectSFX: {fileID: 2022112580509249498, guid: 6f09db8c8abe70140be0b1fe7efe241b, type: 3}
 --- !u!95 &2210648831431277780
 Animator:
   serializedVersion: 5

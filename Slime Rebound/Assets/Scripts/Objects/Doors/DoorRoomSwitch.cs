@@ -24,6 +24,7 @@ public class DoorRoomSwitch : Door
         {
             if (Input.GetKeyDown(KeyCode.W) && PlayerState.IsMove == false && PlayerState.IsHeadAttack == false)
             {
+                StartCoroutine(AudioManager.Instance.PlaySFXManual(doorOpenSFX,this.gameObject.transform.position));
                 PlayerState.DisableAllMove = true;
                 GameData.DoorID = id;
 

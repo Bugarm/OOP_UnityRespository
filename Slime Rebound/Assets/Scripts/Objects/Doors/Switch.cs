@@ -9,6 +9,8 @@ public class Switch : MonoBehaviour
 
     public int id;
 
+    public AudioSource winSFX;
+
     public GameObject particlePlay;
 
     private GameObject thisGameObj;
@@ -49,6 +51,8 @@ public class Switch : MonoBehaviour
                     
                         if(doorSwitch.id == id)
                         {
+                            StartCoroutine(AudioManager.Instance.PlaySFXManual(winSFX, this.gameObject.transform.position));
+
                             StartCoroutine(ParticleSpawnerManager.Instance.PlayParticle(ParticleSpawnerManager.Instance.particleBasketWin, thisGameObj.transform.position, Quaternion.LookRotation(Vector3.up)));
                             StartCoroutine(doorSwitch.SlideDoorOpen());     
                         }

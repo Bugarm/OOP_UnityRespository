@@ -73,8 +73,8 @@ SpriteRenderer:
   m_SortingLayerID: -957843865
   m_SortingLayer: 6
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: 1a3d2a541c3325e42a2230d38873d86e, type: 3}
-  m_Color: {r: 0.27772337, g: 0.745283, b: 0.28769648, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 4358b2eb8faf2b44caabaee4b4f6f29f, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -197,6 +197,7 @@ GameObject:
   - component: {fileID: 1717160667446091881}
   - component: {fileID: 1778861535888218431}
   - component: {fileID: 9111937047940396715}
+  - component: {fileID: 1145088745390942525}
   m_Layer: 7
   m_Name: Head-RB
   m_TagString: PlayerAttack
@@ -246,7 +247,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 4
+  m_Constraints: 0
 --- !u!212 &1717160667446091881
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -285,11 +286,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -213551657
-  m_SortingLayer: 4
+  m_SortingLayerID: -957843865
+  m_SortingLayer: 6
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: 1a3d2a541c3325e42a2230d38873d86e, type: 3}
-  m_Color: {r: 0.27772337, g: 0.745283, b: 0.28769648, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 4358b2eb8faf2b44caabaee4b4f6f29f, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -346,3 +347,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08f86bbc2196fc545937748901852f5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &1145088745390942525
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6641029810346127149}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: dd5cde02daf289d458929c74295c9365, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

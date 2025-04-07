@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: d2243a4534a0b1c4297c9ae3758f4f7e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - ribbitSFX: {fileID: 2022112580509249498, guid: cc083ae683110e843ba4d2d555863112, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
